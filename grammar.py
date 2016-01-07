@@ -171,7 +171,26 @@ def t_newline(t):
     t.lexer.lineno += t.value.count("\n")
 
 
-start = 'translation-unit'
+precedence = (
+    ('left', 'COMMA'),
+    ('right', 'ASSIGNMENT', 'MUL_EQUAL', 'DIV_EQUAL', 'MOD_EQUAL',
+     'PLUS_EQUAL', 'MINUS_EQUAL', 'SHIFT_RIGHT_EQUAL', 'SHIFT_LEFT_EQUAL',
+     'AND_EQUAL', 'OR_EQUAL', 'XOR_EQUAL'),
+    ('left', 'LOGICAL_OR'),
+    ('left', 'LOGICAL_AND'),
+    ('left', 'BITWISE_OR'),
+    ('left', 'BITWISE_EXCLUSIVE_OR'),
+    ('left', 'BITWISE_AND'),
+    ('left', 'EQUALITY', 'INEQUALITY'),
+    ('left', 'LESS', 'GREATER', 'LESS_OR_EQUAL', 'GREATER_OR_EQUAL'),
+    ('left', 'SHIFT_LEFT', 'SHIFT_RIGHT'),
+    ('left', 'PLUS', 'MINUS'),
+    ('left', 'MULTIPLY', 'DIVISION', 'MODULO'),
+    ('right', 'LOGICAL_NOT', 'BITWISE_NOT', 'INCREMENT', 'DECREMENT'),
+    ('left', 'SCOPE_RESOLUTION_OPERATOR'),
+)
+
+start = 'function-definition'
 
 
 def p_error(p):
@@ -971,5 +990,5 @@ def p_operator(p):
 
 lexer = ply.lex.lex()
 parser = ply.yacc.yacc()
-print(parser.parse(input=r'int a(){}', lexer=lexer, debug=False))
+print(parser.parse(input=r'int a(){}', lexer=lexer, debug=True))
 # cpl_ast_traverse.generate_cpp(parser.parse(input="10"))
