@@ -1,7 +1,7 @@
 import ply.lex
 import ply.yacc
 import lexer
-import cpl_ast
+import risha_ast
 
 tokens = lexer.tokens
 
@@ -29,23 +29,23 @@ start = 'translation-unit'
 
 def create_args(p):
     if len(p) == 1:
-        p[0] = cpl_ast.Node()
+        p[0] = risha_ast.Node()
     elif len(p) == 2:
-        p[0] = cpl_ast.Node(p[1])
+        p[0] = risha_ast.Node(p[1])
     elif len(p) == 2:
-        p[0] = cpl_ast.Node(p[1])
+        p[0] = risha_ast.Node(p[1])
     elif len(p) == 3:
-        p[0] = cpl_ast.Node(p[1], p[2])
+        p[0] = risha_ast.Node(p[1], p[2])
     elif len(p) == 4:
-        p[0] = cpl_ast.Node(p[1], p[2], p[3])
+        p[0] = risha_ast.Node(p[1], p[2], p[3])
     elif len(p) == 5:
-        p[0] = cpl_ast.Node(p[1], p[2], p[3], p[4])
+        p[0] = risha_ast.Node(p[1], p[2], p[3], p[4])
     elif len(p) == 6:
-        p[0] = cpl_ast.Node(p[1], p[2], p[3], p[4], p[5])
+        p[0] = risha_ast.Node(p[1], p[2], p[3], p[4], p[5])
     elif len(p) == 7:
-        p[0] = cpl_ast.Node(p[1], p[2], p[3], p[4], p[5], p[6])
+        p[0] = risha_ast.Node(p[1], p[2], p[3], p[4], p[5], p[6])
     elif len(p) == 8:
-        p[0] = cpl_ast.Node(p[1], p[2], p[3], p[4], p[5], p[6], p[7])
+        p[0] = risha_ast.Node(p[1], p[2], p[3], p[4], p[5], p[6], p[7])
 
 
 def p_error(p):

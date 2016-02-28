@@ -1,4 +1,4 @@
-import cpl_ast
+import risha_ast
 
 
 def generate_cpp(node, file_name):
@@ -7,8 +7,8 @@ def generate_cpp(node, file_name):
 
 
 def traverse(node, file):
-    if isinstance(node, cpl_ast.Node):
+    if isinstance(node, risha_ast.Node):
         for child in node.childs:
             traverse(child, file)
     else:
-        print(node, file=file)
+        print(node, file=file, end='')
