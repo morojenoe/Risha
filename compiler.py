@@ -1,6 +1,6 @@
 import argparse
 import grammar
-import risha_ast_traverse
+import print_visitor
 
 
 def parse_args():
@@ -24,6 +24,12 @@ def get_output_file_name(settings):
     return settings['o']
 
 
+def generate_cpp(ast, output_file):
+    with open(output_file, 'w', encoding='utf-8') as cpp_file:
+        visitor = print_visitor.PrintVisitor(cpp_file)
+        ast.accept(visitor)
+
+
 def main():
     settings = parse_args()
     input_file = get_input_file_name(settings)
@@ -32,7 +38,8 @@ def main():
     lexer = grammar.lexer
     parser = grammar.parser
     ast = parser.parse(input=source_code, lexer=lexer)
-    risha_ast_traverse.generate_cpp(ast, output_file)
+    generate_cpp(ast, output_file)
+    # risha_ast_traverse.generate_cpp(ast, output_file)
 
 
 if __name__ == '__main__':
