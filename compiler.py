@@ -39,7 +39,6 @@ def main():
     parser = grammar.parser
     ast = parser.parse(input=source_code, lexer=lexer)
     generate_cpp(ast, output_file)
-    # risha_ast_traverse.generate_cpp(ast, output_file)
 
 
 if __name__ == '__main__':
