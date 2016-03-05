@@ -2,6 +2,7 @@ import ply.lex
 import ply.yacc
 import lexer
 import risha_ast
+import logging
 
 tokens = lexer.tokens
 
@@ -401,6 +402,11 @@ def p_declaration_statement(p):
     p[0] = p[1]
 
 
+"""
+  Declarations
+"""
+
+
 def p_declaration_seq(p):
     """ declaration-seq : declaration
                         | declaration-seq declaration """
@@ -512,8 +518,7 @@ def p_trailing_type_specifier_seq(p):
 
 
 def p_simple_type_specifier(p):
-    """ simple-type-specifier : nested-name-specifier type-name
-                              | type-name
+    """ simple-type-specifier : type-name
                               | CHAR
                               | BOOL
                               | SHORT
@@ -524,6 +529,7 @@ def p_simple_type_specifier(p):
                               | DOUBLE
                               | VOID
                               | AUTO """
+    #                         | nested-name-specifier type-name
     create_args(p)
 
 
@@ -535,11 +541,16 @@ def p_type_name(p):
 
 
 def p_elaborated_type_specifier(p):
-    """ elaborated-type-specifier : class-key nested-name-specifier IDENTIFIER
-                                  | class-key IDENTIFIER
-                                  | ENUM nested-name-specifier IDENTIFIER
-                                  | ENUM IDENTIFIER """
+    """ elaborated-type-specifier : class-key IDENTIFIER
+                                  | enum-key IDENTIFIER """
+    #                             | class-key nested-name-specifier IDENTIFIER
+    #                             | ENUM nested-name-specifier IDENTIFIER
     create_args(p)
+
+
+"""
+  Declarations.Enums
+"""
 
 
 def p_enum_name(p):
@@ -551,22 +562,27 @@ def p_enum_specifier(p):
     """ enum-specifier : enum-head L_CURLY R_CURLY
                        | enum-head L_CURLY enumerator-list R_CURLY
                        | enum-head L_CURLY enumerator-list COMMA R_CURLY """
-    create_args(p)
+    enum_key = p[1][0]
+    enum_name = p[1][1]
+    if len(p) == 4:
+        p[0] = risha_ast.EnumNode(enum_key, enum_name, None)
+    else:
+        p[0] = risha_ast.EnumNode(enum_key, enum_name, p[3])
 
 
 def p_enum_head(p):
     """ enum-head : enum-key
-                  | enum-key IDENTIFIER
-                  | enum-key enum-base
-                  | enum-key IDENTIFIER enum-base
-                  | enum-key nested-name-specifier IDENTIFIER
-                  | enum-key nested-name-specifier IDENTIFIER enum-base """
-    create_args(p)
+                  | enum-key IDENTIFIER """
+    #             | enum-key enum-base
+    #             | enum-key IDENTIFIER enum-base
+    #             | enum-key nested-name-specifier IDENTIFIER
+    #             | enum-key nested-name-specifier IDENTIFIER enum-base
+    p[0] = (p[1], None) if len(p) == 2 else (p[1], p[2])
 
 
 def p_opaque_enum_declaration(p):
-    """ opaque-enum-declaration : enum-key IDENTIFIER
-                                | enum-key IDENTIFIER enum-base """
+    """ opaque-enum-declaration : enum-key IDENTIFIER """
+    #                           | enum-key IDENTIFIER enum-base
     create_args(p)
 
 
@@ -574,29 +590,35 @@ def p_enum_key(p):
     """ enum-key : ENUM
                  | ENUM CLASS
                  | ENUM STRUCT """
-    create_args(p)
+    p[0] = None if len(p) == 2 else p[2]
 
 
-def p_enum_base(p):
-    """ enum-base : COLON type-specifier-seq """
-    create_args(p)
+# def p_enum_base(p):
+#     """ enum-base : COLON type-specifier-seq """
+#     create_args(p)
 
 
 def p_enumerator_list(p):
     """ enumerator-list : enumerator-definition
                         | enumerator-list COMMA enumerator-definition """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[0] = list(p[1]) + [p[3]]
 
 
 def p_enumerator_definition(p):
     """ enumerator-definition : enumerator
                               | enumerator ASSIGNMENT constant-expression """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = (p[1], None)
+    else:
+        p[0] = (p[1], p[3])
 
 
 def p_enumerator(p):
     """ enumerator : IDENTIFIER """
-    create_args(p)
+    p[0] = p[1]
 
 
 """
@@ -607,7 +629,7 @@ def p_enumerator(p):
 def p_init_declarator_list(p):
     """ init-declarator-list : init-declarator
                              | init-declarator-list COMMA init-declarator """
-    create_args(p)
+    p[0] = [p[1]] if len(p) == 2 else list(p[1]) + [p[3]]
 
 
 def p_init_declarator(p):
@@ -648,11 +670,7 @@ def p_trailing_return_type(p):
 def p_cv_qualifier_seq(p):
     """ cv-qualifier-seq : cv-qualifier
                          | cv-qualifier cv-qualifier-seq """
-    create_args(p)
-    # if len(p) == 2:
-    #     p[0] = [p[1]]
-    # else:
-    #     p[0] = [p[1]] + list(p[2])
+    p[0] = [p[1]] if len(p) == 2 else [p[1]] + list(p[2])
 
 
 def p_cv_qualifier(p):
@@ -802,7 +820,7 @@ def p_braced_init_list(p):
 
 def p_class_name(p):
     """ class-name : IDENTIFIER """
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_class_specifier(p):
@@ -813,13 +831,12 @@ def p_class_specifier(p):
 
 def p_class_head(p):
     """ class-head : class-key class-head-name """
-    create_args(p)
+    p[0] = p[2]
 
 
 def p_class_head_name(p):
-    """ class-head-name : class-name
-                        | nested-name-specifier class-name """
-    create_args(p)
+    """ class-head-name : class-name """
+    p[0] = p[1]
 
 
 def p_class_key(p):

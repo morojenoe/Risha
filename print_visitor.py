@@ -56,3 +56,31 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if if_node.else_statement is not None:
             self._print(' else')
             if_node.else_statement.accept(self)
+
+    def visit_class(self, class_node):
+        self._print('struct ')
+        if class_node.class_name is not None:
+            self._print(class_node.class_name)
+            self._print(' {\n')
+        for alias in class_node.alias_declarations:
+            alias.accept(self)
+        for declaration in class_node.declarations:
+            declaration.accept(self)
+        for function in class_node.functions:
+            function.accept(self)
+        self._print('}\n')
+
+    def visit_enum(self, enum_node):
+        self._print('enum')
+        if enum_node.enum_key is not None:
+            self._print(' ' + enum_node.enum_key)
+        if enum_node.enum_name is not None:
+            self._print(' ' + enum_node.enum_name)
+        self._print(' {\n')
+        for enumerator in enum_node.enumerators:
+            self._print(enumerator[0])
+            if enumerator[1] is not None:
+                self._print(' = ')
+                enumerator[1].accept(self)
+            self._print(',\n')
+        self._print('}')

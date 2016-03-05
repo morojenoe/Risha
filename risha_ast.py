@@ -13,8 +13,13 @@ class Node(ASTNode):
 
     def accept(self, visitor):
         for child in self.childs:
+            if child is None:
+                continue
             if isinstance(child, ASTNode):
                 child.accept(visitor)
+            elif isinstance(child, list):
+                for children_of_child in child:
+                    children_of_child.accept(visitor)
             else:
                 visitor.visit(child)
 
@@ -63,3 +68,27 @@ class ParameterDeclarationNode(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_parameter_declaration(self)
+
+
+class ClassNode(ASTNode):
+    def __init__(self, class_name, alias_declarations, functions, declarations):
+        self.class_name = class_name
+        if alias_declarations is not None:
+            self.alias_declarations = alias_declarations
+        else:
+            self.alias_declarations = []
+        self.functions = functions if functions is not None else []
+        self.declarations = declarations if declarations is not None else []
+
+    def accept(self, visitor):
+        visitor.visit_class(self)
+
+
+class EnumNode(ASTNode):
+    def __init__(self, enum_key, enum_name, enumerators):
+        self.enum_key = enum_key
+        self.enum_name = enum_name
+        self.enumerators = enumerators if enumerators is not None else []
+
+    def accept(self, visitor):
+        visitor.visit_enum(self)
