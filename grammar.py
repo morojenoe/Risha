@@ -22,7 +22,7 @@ precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLY', 'DIVISION', 'MODULO'),
     ('right', 'LOGICAL_NOT', 'BITWISE_NOT', 'INCREMENT', 'DECREMENT'),
-    ('left', 'SCOPE_RESOLUTION_OPERATOR'),
+    # ('left', 'SCOPE_RESOLUTION_OPERATOR'),
 )
 
 start = 'translation-unit'
@@ -101,6 +101,13 @@ def p_boolean_literal(p):
 """
 
 
+def build_binary_expression_node(p):
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.BinaryOperation(p[1], p[2], p[3])
+
+
 def p_constant_expression(p):
     """ constant-expression : conditional-expression """
     p[0] = p[1]
@@ -109,7 +116,10 @@ def p_constant_expression(p):
 def p_expression(p):
     """ expression : assignment-expression
                    | expression COMMA assignment-expression """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.ExpressionNode().add_expression(p[1])
+    else:
+        p[0] = p[1].add_expression(p[3])
 
 
 def p_assignment_expression(p):
@@ -130,50 +140,53 @@ def p_assignment_operator(p):
                             | AND_EQUAL
                             | OR_EQUAL
                             | XOR_EQUAL """
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_conditional_expression(p):
     """ conditional-expression : logical-or-expression
                                | logical-or-expression QUESTION expression COLON assignment-expression """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.TernaryOperationNode(p[1], p[3], p[5])
 
 
 def p_logical_or_expression(p):
     """ logical-or-expression : logical-and-expression
                               | logical-or-expression LOGICAL_OR logical-and-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_logical_and_expression(p):
     """ logical-and-expression : inclusive-or-expression
                                | logical-and-expression LOGICAL_AND inclusive-or-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_inclusive_or_expression(p):
     """ inclusive-or-expression : exclusive-or-expression
                                 | inclusive-or-expression BITWISE_OR exclusive-or-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_exclusive_or_expression(p):
     """ exclusive-or-expression : and-expression
                                 | exclusive-or-expression BITWISE_EXCLUSIVE_OR and-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_and_expression(p):
     """ and-expression : equality-expression
                        | and-expression BITWISE_AND equality-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_equality_expression(p):
     """ equality-expression : relational-expression
                             | equality-expression EQUALITY relational-expression
                             | equality-expression INEQUALITY relational-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_relational_expression(p):
@@ -182,21 +195,21 @@ def p_relational_expression(p):
                               | relational-expression LESS_OR_EQUAL shift-expression
                               | relational-expression GREATER shift-expression
                               | relational-expression GREATER_OR_EQUAL shift-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_shift_expression(p):
     """ shift-expression : additive-expression
                          | shift-expression SHIFT_LEFT additive-expression
                          | shift-expression SHIFT_RIGHT additive-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_additive_expression(p):
     """ additive-expression : multiplicative-expression
                             | additive-expression PLUS multiplicative-expression
                             | additive-expression MINUS multiplicative-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_multiplicative_expression(p):
@@ -204,13 +217,16 @@ def p_multiplicative_expression(p):
                                   | multiplicative-expression MULTIPLY cast-expression
                                   | multiplicative-expression DIVISION cast-expression
                                   | multiplicative-expression MODULO cast-expression """
-    create_args(p)
+    build_binary_expression_node(p)
 
 
 def p_cast_expression(p):
     """ cast-expression : unary-expression
                         | L_PAREN type-id R_PAREN cast-expression """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.CastExpression(p[4], p[2])
 
 
 def p_unary_expression(p):
@@ -226,7 +242,7 @@ def p_unary_operator(p):
                        | MINUS
                        | LOGICAL_NOT
                        | BITWISE_NOT """
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_postfix_expression(p):
@@ -244,39 +260,39 @@ def p_postfix_expression(p):
 
 def p_primary_expression(p):
     """ primary-expression : literal
-                           | THIS
                            | L_PAREN expression R_PAREN
                            | id-expression """
+    #                      | THIS
     create_args(p)
 
 
 def p_id_expression(p):
-    """ id-expression : unqualified-id
-                      | qualified-id """
-    create_args(p)
+    """ id-expression : unqualified-id """
+    #                 | qualified-id
+    p[0] = p[1]
 
 
-def p_qualified_id(p):
-    """ qualified-id : nested-name-specifier unqualified-id """
-    create_args(p)
+# def p_qualified_id(p):
+#     """ qualified-id : nested-name-specifier unqualified-id """
+#     create_args(p)
 
 
 def p_unqualified_id(p):
     """ unqualified-id : IDENTIFIER
                        | operator-function-id """
-    create_args(p)
+    p[0] = p[1]
 
 
-def p_nested_name_specifier(p):
-    """ nested-name-specifier : SCOPE_RESOLUTION_OPERATOR
-                              | type-name SCOPE_RESOLUTION_OPERATOR
-                              | nested-name-specifier IDENTIFIER SCOPE_RESOLUTION_OPERATOR """
-    create_args(p)
+# def p_nested_name_specifier(p):
+#     """ nested-name-specifier : SCOPE_RESOLUTION_OPERATOR
+#                               | type-name SCOPE_RESOLUTION_OPERATOR
+#                               | nested-name-specifier IDENTIFIER SCOPE_RESOLUTION_OPERATOR """
+#     create_args(p)
 
 
 def p_expression_list(p):
     """ expression-list : initializer-list """
-    create_args(p)
+    p[0] = p[1]
 
 
 """

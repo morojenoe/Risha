@@ -92,3 +92,44 @@ class EnumNode(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_enum(self)
+
+
+class TernaryOperationNode(ASTNode):
+    def __init__(self, logical_expression, true_expression, false_expression):
+        self.logical_expression = logical_expression
+        self.true_expression = true_expression
+        self.false_expression = false_expression
+
+    def accept(self, visitor):
+        visitor.visit_ternary_operation(self)
+
+
+class BinaryOperation(ASTNode):
+    def __init__(self, first_expression, operation, second_expression):
+        self.left_expression = first_expression
+        self.operation = operation
+        self.right_expression = second_expression
+
+    def accept(self, visitor):
+        visitor.visit_binary_operation(self)
+
+
+class CastExpression(ASTNode):
+    def __init__(self, cast_expression, new_type):
+        self.cast_expression = cast_expression
+        self.new_type = new_type
+
+    def accept(self, visitor):
+        visitor.visit_cast_expression(self)
+
+
+class ExpressionNode(ASTNode):
+    def __init__(self):
+        self.expressions = []
+
+    def add_expression(self, expression):
+        self.expressions.append(expression)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_expression(self)

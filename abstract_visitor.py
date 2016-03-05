@@ -29,3 +29,19 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_enum(self, enum_node):
         pass
+
+    @abc.abstractclassmethod
+    def visit_ternary_operation(self, ternary_operation):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_binary_operation(self, binary_operation):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_cast_expression(self, cast_expression):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_expression(self, expression_node):
+        pass

@@ -84,3 +84,27 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
                 enumerator[1].accept(self)
             self._print(',\n')
         self._print('}')
+
+    def visit_ternary_operation(self, ternary_operation):
+        ternary_operation.logical_expression.accept(self)
+        self._print('? ')
+        ternary_operation.true_expression.accpet(self)
+        self._print(' : ')
+        ternary_operation.false_expression.accept(self)
+
+    def visit_binary_operation(self, binary_operation):
+        binary_operation.left_expression.accept(self)
+        self._print(' {0} '.format(binary_operation.operation))
+        binary_operation.right_expression.accept(self)
+
+    def visit_cast_expression(self, cast_expression):
+        self._print('(')
+        cast_expression.new_type.accept(self)
+        self._print(')')
+        cast_expression.cast_expression.accept(self)
+
+    def visit_expression(self, expression_node):
+        for it, expression in enumerate(expression_node.expressions):
+            if it > 0:
+                self._print(', ')
+            expression.accept(self)
