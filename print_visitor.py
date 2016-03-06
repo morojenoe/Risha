@@ -142,3 +142,23 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         class_member_access.object_expression.accept(self)
         self._print('.')
         class_member_access.member_expression.accept(self)
+
+    def visit_initializer_list(self, initializer_list):
+        for it, elem in enumerate(initializer_list.initializer_clauses):
+            if it > 0:
+                self._print(', ')
+            elem.accept(self)
+
+    def visit_braced_init_list(self, braced_init_list):
+        self._print('{')
+        braced_init_list.initializer_list.accept(self)
+        self._print('}')
+
+    def visit_equal_initializer(self, equal_initializer):
+        self._print(' = ')
+        equal_initializer.initializer_clause.accept(self)
+
+    def visit_enclosed_in_paren(self, enclosed_in_paren):
+        self._print('(')
+        enclosed_in_paren.expression.accept(self)
+        self._print(')')

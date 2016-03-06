@@ -65,3 +65,19 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_member_access(self, class_member_access):
         pass
+
+    @abc.abstractclassmethod
+    def visit_initializer_list(self, initializer_list):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_braced_init_list(self, braced_init_list):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_equal_initializer(self, equal_initializer):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_enclosed_in_paren(self, enclosed_in_paren):
+        pass

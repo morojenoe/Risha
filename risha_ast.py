@@ -178,3 +178,39 @@ class ClassMemberAccess(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_member_access(self)
+
+
+class InitializerListNode(ASTNode):
+    def __init__(self):
+        self.initializer_clauses = []
+
+    def add_clause(self, clause):
+        self.initializer_clauses.append(clause)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_initializer_list(self)
+
+
+class BracedInitializerListNode(ASTNode):
+    def __init__(self, initializer_list):
+        self.initializer_list = initializer_list
+
+    def accept(self, visitor):
+        visitor.visit_braced_init_list(self)
+
+
+class EqualInitializerNode(ASTNode):
+    def __init__(self, initializer_clause):
+        self.initializer_clause = initializer_clause
+
+    def accept(self, visitor):
+        visitor.visit_equal_initializer(self)
+
+
+class EnclosedInParenthesisNode(ASTNode):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def accept(self, visitor):
+        visitor.visit_enclosed_in_paren(self)

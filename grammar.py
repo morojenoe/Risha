@@ -824,32 +824,45 @@ def p_function_body(p):
 def p_initializer(p):
     """ initializer : brace-or-equal-initializer
                     | L_PAREN expression-list R_PAREN """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.EnclosedInParenthesisNode(p[2])
 
 
 def p_brace_or_equal_initializer(p):
     """ brace-or-equal-initializer : ASSIGNMENT initializer-clause
                                    | braced-init-list """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.EqualInitializerNode(p[2])
 
 
 def p_initializer_clause(p):
     """ initializer-clause : assignment-expression
                            | braced-init-list """
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_initializer_list(p):
     """ initializer-list : initializer-clause
                          | initializer-list COMMA initializer-clause """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.InitializerListNode().add_clause(p[1])
+    else:
+        p[0] = p[1].add_clause(p[3])
 
 
 def p_braced_init_list(p):
     """ braced-init-list : L_CURLY initializer-list R_CURLY
                          | L_CURLY initializer-list COMMA R_CURLY
                          | L_CURLY R_CURLY """
-    create_args(p)
+    if len(p) == 3:
+        p[0] = risha_ast.BracedInitializerListNode(
+            risha_ast.InitializerListNode())
+    else:
+        p[0] = risha_ast.BracedInitializerListNode(p[2])
 
 
 """
