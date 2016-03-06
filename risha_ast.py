@@ -133,3 +133,30 @@ class ExpressionNode(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_expression(self)
+
+
+class PrefixUnaryExpressionNode(ASTNode):
+    def __init__(self, operator, expression):
+        self.operator = operator
+        self.expression = expression
+
+    def accept(self, visitor):
+        visitor.visit_prefix_unary(self)
+
+
+class PostfixUnaryExpressionNode(ASTNode):
+    def __init__(self, expression, operator):
+        self.expression = expression
+        self.operator = operator
+
+    def accept(self, visitor):
+        visitor.visit_postfix_unary(self)
+
+
+class FunctionCallNode(ASTNode):
+    def __init__(self, function, parameters):
+        self.function = function
+        self.parameters = parameters
+
+    def accept(self, visitor):
+        visitor.visit_function_call(self)

@@ -12,16 +12,21 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print('{ }')
             return
 
-        self._print('{\n')
+        self._print('{')
+        self._print_new_line()
         self.indentation += self.inc_indentation
         for statement in compound_statement.statements:
             statement.accept(self)
-            self._print('\n')
+            self._print_new_line()
         self.indentation -= self.inc_indentation
-        self._print('}\n')
+        self._print('}')
+        self._print_new_line()
 
     def _print(self, text):
         print(text, file=self.output, end='')
+
+    def _print_new_line(self):
+        print('\n', file=self.output, end='')
 
     def visit(self, elem):
         self._print(elem + ' ')
@@ -61,14 +66,16 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print('struct ')
         if class_node.class_name is not None:
             self._print(class_node.class_name)
-            self._print(' {\n')
+            self._print(' {')
+            self._print_new_line()
         for alias in class_node.alias_declarations:
             alias.accept(self)
         for declaration in class_node.declarations:
             declaration.accept(self)
         for function in class_node.functions:
             function.accept(self)
-        self._print('}\n')
+        self._print('}')
+        self._print_new_line()
 
     def visit_enum(self, enum_node):
         self._print('enum')
@@ -76,13 +83,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print(' ' + enum_node.enum_key)
         if enum_node.enum_name is not None:
             self._print(' ' + enum_node.enum_name)
-        self._print(' {\n')
+        self._print(' {')
+        self._print_new_line()
         for enumerator in enum_node.enumerators:
             self._print(enumerator[0])
             if enumerator[1] is not None:
                 self._print(' = ')
                 enumerator[1].accept(self)
-            self._print(',\n')
+            self._print(',')
+            self._print_new_line()
         self._print('}')
 
     def visit_ternary_operation(self, ternary_operation):
@@ -108,3 +117,17 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             if it > 0:
                 self._print(', ')
             expression.accept(self)
+
+    def visit_prefix_unary(self, prefix_unary):
+        self._print(prefix_unary.operator)
+        prefix_unary.expression.accept(self)
+
+    def visit_postfix_unary(self, postfix_unary):
+        postfix_unary.expression.accept(self)
+        self._print(postfix_unary.operator)
+
+    def visit_function_call(self, function_call):
+        function_call.function.accept(self)
+        self._print('(')
+        function_call.parameters.accept(self)
+        self._print(')')

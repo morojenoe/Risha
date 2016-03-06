@@ -234,7 +234,10 @@ def p_unary_expression(p):
                          | INCREMENT cast-expression
                          | DECREMENT cast-expression
                          | unary-operator cast-expression """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.PrefixUnaryExpressionNode(p[1], p[2])
 
 
 def p_unary_operator(p):
@@ -248,14 +251,27 @@ def p_unary_operator(p):
 def p_postfix_expression(p):
     """ postfix-expression : primary-expression
                            | postfix-expression L_BRACKET expression R_BRACKET
-                           | postfix-expression L_PAREN R_PAREN
+                           | postfix-expression L_BRACKET braced-init-list R_BRACKET
+                           | postfix-expression DOT id-expression """
+    create_args(p)
+
+
+def p_postfix_expression_func_call(p):
+    """ postfix-expression : postfix-expression L_PAREN R_PAREN
                            | postfix-expression L_PAREN  expression-list  R_PAREN
                            | simple-type-specifier L_PAREN R_PAREN
-                           | simple-type-specifier L_PAREN expression-list R_PAREN
-                           | postfix-expression DOT id-expression
-                           | postfix-expression INCREMENT
+                           | simple-type-specifier L_PAREN expression-list R_PAREN """
+    if len(p) == 4:
+        # TODO: change none to empty ExpressionListNode
+        p[0] = risha_ast.FunctionCallNode(p[1], None)
+    else:
+        p[0] = risha_ast.FunctionCallNode(p[1], p[3])
+
+
+def p_postfix_expression_inc_dec(p):
+    """ postfix-expression : postfix-expression INCREMENT
                            | postfix-expression DECREMENT """
-    create_args(p)
+    p[0] = risha_ast.PostfixUnaryExpressionNode(p[1], p[2])
 
 
 def p_primary_expression(p):
