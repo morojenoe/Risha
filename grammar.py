@@ -250,10 +250,17 @@ def p_unary_operator(p):
 
 def p_postfix_expression(p):
     """ postfix-expression : primary-expression
-                           | postfix-expression L_BRACKET expression R_BRACKET
-                           | postfix-expression L_BRACKET braced-init-list R_BRACKET
                            | postfix-expression DOT id-expression """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.ClassMemberAccess(p[1], p[3])
+
+
+def p_postfix_expression_array_subscription(p):
+    """ postfix-expression : postfix-expression L_BRACKET expression R_BRACKET
+                           | postfix-expression L_BRACKET braced-init-list R_BRACKET """
+    p[0] = risha_ast.ArraySubscriptionNode(p[1], p[3])
 
 
 def p_postfix_expression_func_call(p):

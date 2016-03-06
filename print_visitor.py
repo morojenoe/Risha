@@ -131,3 +131,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print('(')
         function_call.parameters.accept(self)
         self._print(')')
+
+    def visit_array_subscription(self, array_subscription):
+        array_subscription.array_expression.accept(self)
+        self._print('[')
+        array_subscription.subscription_expression.accept(self)
+        self._print(']')
+
+    def visit_member_access(self, class_member_access):
+        class_member_access.object_expression.accept(self)
+        self._print('.')
+        class_member_access.member_expression.accept(self)

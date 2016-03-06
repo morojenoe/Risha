@@ -58,3 +58,10 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     def visit_function_call(self, function_call):
         pass
 
+    @abc.abstractclassmethod
+    def visit_array_subscription(self, array_subscription):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_member_access(self, class_member_access):
+        pass

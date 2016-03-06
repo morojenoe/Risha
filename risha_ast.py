@@ -160,3 +160,21 @@ class FunctionCallNode(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_function_call(self)
+
+
+class ArraySubscriptionNode(ASTNode):
+    def __init__(self, array_expression, subscript_expression):
+        self.array_expression = array_expression
+        self.subscript_expression = subscript_expression
+
+    def accept(self, visitor):
+        visitor.visit_array_subscription(self)
+
+
+class ClassMemberAccess(ASTNode):
+    def __init__(self, object_expression, member_expression):
+        self.object_expression = object_expression
+        self.member_expression = member_expression
+
+    def accept(self, visitor):
+        visitor.visit_member_access(self)
