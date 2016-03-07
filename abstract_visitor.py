@@ -90,3 +90,22 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     def visit_program(self, program):
         pass
 
+    @abc.abstractclassmethod
+    def visit_identifier(self, identifier_node):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_enum_key(self, enum_key):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_enum_head(self, enum_head):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_enumerator(self, enumerator):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_enumerator_list(self, enumerator_list):
+        pass

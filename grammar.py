@@ -300,9 +300,13 @@ def p_id_expression(p):
 #     create_args(p)
 
 
-def p_unqualified_id(p):
-    """ unqualified-id : IDENTIFIER
-                       | operator-function-id """
+def p_unqualified_id_identifier(p):
+    """ unqualified-id : IDENTIFIER """
+    p[0] = risha_ast.IdentifierNode(p[1])
+
+
+def p_unqualified_id_operator_function(p):
+    """ unqualified-id : operator-function-id """
     p[0] = p[1]
 
 
@@ -472,7 +476,7 @@ def p_block_declaration(p):
 
 def p_alias_declaration(p):
     """ alias-declaration : USING IDENTIFIER ASSIGNMENT type-id SEMICOLON """
-    p[0] = risha_ast.AliasDeclarationNode(p[2], p[4])
+    p[0] = risha_ast.AliasDeclarationNode(risha_ast.IdentifierNode(p[2]), p[4])
 
 
 def p_simple_declaration(p):
@@ -518,7 +522,7 @@ def p_function_specifier(p):
 
 def p_typedef_name(p):
     """ typedef-name : IDENTIFIER """
-    p[0] = p[1]
+    p[0] = risha_ast.IdentifierNode(p[1])
 
 
 def p_type_specifier(p):
@@ -593,70 +597,64 @@ def p_elaborated_type_specifier(p):
 
 def p_enum_name(p):
     """ enum-name : IDENTIFIER """
-    p[0] = p[1]
+    p[0] = risha_ast.IdentifierNode(p[1])
 
 
 def p_enum_specifier(p):
     """ enum-specifier : enum-head L_CURLY R_CURLY
                        | enum-head L_CURLY enumerator-list R_CURLY
                        | enum-head L_CURLY enumerator-list COMMA R_CURLY """
-    enum_key = p[1][0]
-    enum_name = p[1][1]
     if len(p) == 4:
-        p[0] = risha_ast.EnumNode(enum_key, enum_name, None)
+        p[0] = risha_ast.EnumNode(p[1], risha_ast.EnumeratorList())
     else:
-        p[0] = risha_ast.EnumNode(enum_key, enum_name, p[3])
+        p[0] = risha_ast.EnumNode(p[1], p[3])
 
 
 def p_enum_head(p):
     """ enum-head : enum-key
                   | enum-key IDENTIFIER """
-    #             | enum-key enum-base
-    #             | enum-key IDENTIFIER enum-base
-    #             | enum-key nested-name-specifier IDENTIFIER
-    #             | enum-key nested-name-specifier IDENTIFIER enum-base
-    p[0] = (p[1], None) if len(p) == 2 else (p[1], p[2])
+    if len(p) == 2:
+        p[0] = risha_ast.EnumHead(p[1], None)
+    else:
+        p[0] = risha_ast.EnumHead(p[1], risha_ast.IdentifierNode(p[2]))
 
 
 def p_opaque_enum_declaration(p):
     """ opaque-enum-declaration : enum-key IDENTIFIER """
-    #                           | enum-key IDENTIFIER enum-base
-    create_args(p)
+    p[0] = risha_ast.EnumHead(p[1], risha_ast.IdentifierNode(p[2]))
 
 
 def p_enum_key(p):
     """ enum-key : ENUM
                  | ENUM CLASS
                  | ENUM STRUCT """
-    p[0] = None if len(p) == 2 else p[2]
-
-
-# def p_enum_base(p):
-#     """ enum-base : COLON type-specifier-seq """
-#     create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.EnumKeyNode('')
+    else:
+        p[0] = risha_ast.EnumKeyNode(p[2])
 
 
 def p_enumerator_list(p):
     """ enumerator-list : enumerator-definition
                         | enumerator-list COMMA enumerator-definition """
     if len(p) == 2:
-        p[0] = [p[1]]
+        p[0] = risha_ast.EnumeratorList().add_enumerator(p[1])
     else:
-        p[0] = list(p[1]) + [p[3]]
+        p[0] = p[1].add_enumerator(p[3])
 
 
 def p_enumerator_definition(p):
     """ enumerator-definition : enumerator
                               | enumerator ASSIGNMENT constant-expression """
     if len(p) == 2:
-        p[0] = (p[1], None)
+        p[0] = risha_ast.Enumerator(p[1], None)
     else:
-        p[0] = (p[1], p[3])
+        p[0] = risha_ast.Enumerator(p[1], p[3])
 
 
 def p_enumerator(p):
     """ enumerator : IDENTIFIER """
-    p[0] = p[1]
+    p[0] = risha_ast.IdentifierNode(p[1])
 
 
 """
@@ -871,7 +869,7 @@ def p_braced_init_list(p):
 
 def p_class_name(p):
     """ class-name : IDENTIFIER """
-    p[0] = p[1]
+    p[0] = risha_ast.IdentifierNode(p[1])
 
 
 def p_class_specifier(p):

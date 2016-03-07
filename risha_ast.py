@@ -85,9 +85,8 @@ class ClassNode(ASTNode):
 
 
 class EnumNode(ASTNode):
-    def __init__(self, enum_key, enum_name, enumerators):
-        self.enum_key = enum_key
-        self.enum_name = enum_name
+    def __init__(self, enum_head, enumerators):
+        self.enum_head = enum_head
         self.enumerators = enumerators if enumerators is not None else []
 
     def accept(self, visitor):
@@ -234,3 +233,49 @@ class ProgramNode(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_program(self)
+
+
+class IdentifierNode(ASTNode):
+    def __init__(self, identifier):
+        self.identifier = identifier
+
+    def accept(self, visitor):
+        visitor.visit_identifier(self)
+
+
+class EnumKeyNode(ASTNode):
+    def __init__(self, enum_key):
+        self.enum_key = enum_key
+
+    def accept(self, visitor):
+        visitor.visit_enum_key(self)
+
+
+class EnumHead(ASTNode):
+    def __init__(self, enum_key, identifier):
+        self.enum_key = enum_key
+        self.identifier = identifier
+
+    def accept(self, visitor):
+        visitor.visit_enum_head(self)
+
+
+class Enumerator(ASTNode):
+    def __init__(self, enumerator, const_expression):
+        self.enumerator = enumerator
+        self.const_expression = const_expression
+
+    def accept(self, visitor):
+        visitor.visit_enumerator(self)
+
+
+class EnumeratorList(ASTNode):
+    def __init__(self):
+        self.enumerators = []
+
+    def add_enumerator(self, enumerator):
+        self.enumerators.append(enumerator)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_enumerator_list(self)

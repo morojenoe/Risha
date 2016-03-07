@@ -49,7 +49,9 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self.indentation -= self.inc_indentation
 
     def visit_alias_declaration(self, alias_declaration):
-        self._print('using {id} = '.format(id=alias_declaration.identifier))
+        self._print('using ')
+        alias_declaration.identifier.accept(self)
+        self._print(' = ')
         alias_declaration.type_id.accept(self)
         self._print(';')
 
@@ -78,20 +80,11 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print_new_line()
 
     def visit_enum(self, enum_node):
-        self._print('enum')
-        if enum_node.enum_key is not None:
-            self._print(' ' + enum_node.enum_key)
-        if enum_node.enum_name is not None:
-            self._print(' ' + enum_node.enum_name)
+        enum_node.enum_head.accept(self)
         self._print(' {')
         self._print_new_line()
-        for enumerator in enum_node.enumerators:
-            self._print(enumerator[0])
-            if enumerator[1] is not None:
-                self._print(' = ')
-                enumerator[1].accept(self)
-            self._print(',')
-            self._print_new_line()
+        enum_node.enumerators.accept(self)
+        self._print_new_line()
         self._print('}')
 
     def visit_ternary_operation(self, ternary_operation):
@@ -173,3 +166,28 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_program(self, program):
         for declaration in program.declarations:
             declaration.accept(self)
+
+    def visit_identifier(self, identifier_node):
+        self._print(identifier_node.identifier)
+
+    def visit_enum_key(self, enum_key):
+        self._print('enum {}'.format(enum_key.enum_key))
+
+    def visit_enum_head(self, enum_head):
+        enum_head.enum_key.accept(self)
+        self._print(' ')
+        if enum_head.identifier is not None:
+            enum_head.identifier.accept(self)
+
+    def visit_enumerator_list(self, enumerator_list):
+        for it, enumerator in enumerate(enumerator_list.enumerators):
+            if it > 0:
+                self._print(',')
+                self._print_new_line()
+            enumerator.accept(self)
+
+    def visit_enumerator(self, enumerator):
+        enumerator.enumerator.accept(self)
+        if enumerator.const_expression is not None:
+            self._print(' = ')
+            enumerator.const_expression.accept(self)
