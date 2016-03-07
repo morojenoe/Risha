@@ -24,7 +24,7 @@ class Node(ASTNode):
                 visitor.visit(child)
 
 
-class ForNode(ASTNode):
+class ForLoop(ASTNode):
     def __init__(self, for_init_statement, condition, expression, statement):
         self.for_init_statement = for_init_statement
         self.condition = condition
@@ -35,7 +35,7 @@ class ForNode(ASTNode):
         visitor.visit_for(self)
 
 
-class CompoundStatementNode(ASTNode):
+class CompoundStatement(ASTNode):
     def __init__(self, statements):
         self.statements = statements
 
@@ -43,7 +43,7 @@ class CompoundStatementNode(ASTNode):
         visitor.visit_compound_statement(self)
 
 
-class AliasDeclarationNode(ASTNode):
+class AliasDeclaration(ASTNode):
     def __init__(self, identifier, type_id):
         self.identifier = identifier
         self.type_id = type_id
@@ -52,7 +52,7 @@ class AliasDeclarationNode(ASTNode):
         visitor.visit_alias_declaration(self)
 
 
-class IfNode(ASTNode):
+class IfStatement(ASTNode):
     def __init__(self, condition, statement, else_statement):
         self.condition = condition
         self.statement = statement
@@ -62,7 +62,7 @@ class IfNode(ASTNode):
         visitor.visit_if(self)
 
 
-class ParameterDeclarationNode(ASTNode):
+class ParameterDeclaration(ASTNode):
     def __init__(self):
         pass
 
@@ -70,7 +70,7 @@ class ParameterDeclarationNode(ASTNode):
         visitor.visit_parameter_declaration(self)
 
 
-class ClassNode(ASTNode):
+class ClassDefinition(ASTNode):
     def __init__(self, class_name, alias_declarations, functions, declarations):
         self.class_name = class_name
         if alias_declarations is not None:
@@ -84,7 +84,7 @@ class ClassNode(ASTNode):
         visitor.visit_class(self)
 
 
-class EnumNode(ASTNode):
+class EnumDefinition(ASTNode):
     def __init__(self, enum_head, enumerators):
         self.enum_head = enum_head
         self.enumerators = enumerators if enumerators is not None else []
@@ -93,7 +93,7 @@ class EnumNode(ASTNode):
         visitor.visit_enum(self)
 
 
-class TernaryOperationNode(ASTNode):
+class TernaryOperation(ASTNode):
     def __init__(self, logical_expression, true_expression, false_expression):
         self.logical_expression = logical_expression
         self.true_expression = true_expression
@@ -122,7 +122,7 @@ class CastExpression(ASTNode):
         visitor.visit_cast_expression(self)
 
 
-class ExpressionNode(ASTNode):
+class Expression(ASTNode):
     def __init__(self):
         self.expressions = []
 
@@ -134,7 +134,7 @@ class ExpressionNode(ASTNode):
         visitor.visit_expression(self)
 
 
-class PrefixUnaryExpressionNode(ASTNode):
+class PrefixUnaryExpression(ASTNode):
     def __init__(self, operator, expression):
         self.operator = operator
         self.expression = expression
@@ -143,7 +143,7 @@ class PrefixUnaryExpressionNode(ASTNode):
         visitor.visit_prefix_unary(self)
 
 
-class PostfixUnaryExpressionNode(ASTNode):
+class PostfixUnaryExpression(ASTNode):
     def __init__(self, expression, operator):
         self.expression = expression
         self.operator = operator
@@ -152,7 +152,7 @@ class PostfixUnaryExpressionNode(ASTNode):
         visitor.visit_postfix_unary(self)
 
 
-class FunctionCallNode(ASTNode):
+class FunctionCall(ASTNode):
     def __init__(self, function, parameters):
         self.function = function
         self.parameters = parameters
@@ -161,7 +161,7 @@ class FunctionCallNode(ASTNode):
         visitor.visit_function_call(self)
 
 
-class ArraySubscriptionNode(ASTNode):
+class ArraySubscription(ASTNode):
     def __init__(self, array_expression, subscript_expression):
         self.array_expression = array_expression
         self.subscript_expression = subscript_expression
@@ -179,7 +179,7 @@ class ClassMemberAccess(ASTNode):
         visitor.visit_member_access(self)
 
 
-class InitializerListNode(ASTNode):
+class InitializerList(ASTNode):
     def __init__(self):
         self.initializer_clauses = []
 
@@ -191,7 +191,7 @@ class InitializerListNode(ASTNode):
         visitor.visit_initializer_list(self)
 
 
-class BracedInitializerListNode(ASTNode):
+class BracedInitializerList(ASTNode):
     def __init__(self, initializer_list):
         self.initializer_list = initializer_list
 
@@ -199,7 +199,7 @@ class BracedInitializerListNode(ASTNode):
         visitor.visit_braced_init_list(self)
 
 
-class EqualInitializerNode(ASTNode):
+class EqualInitializer(ASTNode):
     def __init__(self, initializer_clause):
         self.initializer_clause = initializer_clause
 
@@ -207,7 +207,7 @@ class EqualInitializerNode(ASTNode):
         visitor.visit_equal_initializer(self)
 
 
-class EnclosedInParenthesisNode(ASTNode):
+class EnclosedInParenthesis(ASTNode):
     def __init__(self, expression):
         self.expression = expression
 
@@ -215,7 +215,7 @@ class EnclosedInParenthesisNode(ASTNode):
         visitor.visit_enclosed_in_paren(self)
 
 
-class DeclSpecifierSeqNode(ASTNode):
+class DeclSpecifierSeq(ASTNode):
     def __init__(self):
         self.decl_specifiers = []
 
@@ -227,7 +227,7 @@ class DeclSpecifierSeqNode(ASTNode):
         visitor.visit_decl_specifier_seq(self)
 
 
-class ProgramNode(ASTNode):
+class Program(ASTNode):
     def __init__(self, declarations):
         self.declarations = declarations if declarations is not None else []
 
@@ -235,7 +235,7 @@ class ProgramNode(ASTNode):
         visitor.visit_program(self)
 
 
-class IdentifierNode(ASTNode):
+class Identifier(ASTNode):
     def __init__(self, identifier):
         self.identifier = identifier
 
@@ -243,7 +243,7 @@ class IdentifierNode(ASTNode):
         visitor.visit_identifier(self)
 
 
-class EnumKeyNode(ASTNode):
+class EnumKey(ASTNode):
     def __init__(self, enum_key):
         self.enum_key = enum_key
 

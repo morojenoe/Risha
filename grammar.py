@@ -63,7 +63,7 @@ def p_empty(p):
 def p_translation_unit(p):
     """ translation-unit : declaration-seq
                          | empty """
-    p[0] = risha_ast.ProgramNode(p[1])
+    p[0] = risha_ast.Program(p[1])
 
 
 """
@@ -115,7 +115,7 @@ def p_expression(p):
     """ expression : assignment-expression
                    | expression COMMA assignment-expression """
     if len(p) == 2:
-        p[0] = risha_ast.ExpressionNode().add_expression(p[1])
+        p[0] = risha_ast.Expression().add_expression(p[1])
     else:
         p[0] = p[1].add_expression(p[3])
 
@@ -147,7 +147,7 @@ def p_conditional_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = risha_ast.TernaryOperationNode(p[1], p[3], p[5])
+        p[0] = risha_ast.TernaryOperation(p[1], p[3], p[5])
 
 
 def p_logical_or_expression(p):
@@ -235,7 +235,7 @@ def p_unary_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = risha_ast.PrefixUnaryExpressionNode(p[1], p[2])
+        p[0] = risha_ast.PrefixUnaryExpression(p[1], p[2])
 
 
 def p_unary_operator(p):
@@ -258,7 +258,7 @@ def p_postfix_expression(p):
 def p_postfix_expression_array_subscription(p):
     """ postfix-expression : postfix-expression L_BRACKET expression R_BRACKET
                            | postfix-expression L_BRACKET braced-init-list R_BRACKET """
-    p[0] = risha_ast.ArraySubscriptionNode(p[1], p[3])
+    p[0] = risha_ast.ArraySubscription(p[1], p[3])
 
 
 def p_postfix_expression_func_call(p):
@@ -267,15 +267,15 @@ def p_postfix_expression_func_call(p):
                            | simple-type-specifier L_PAREN R_PAREN
                            | simple-type-specifier L_PAREN expression-list R_PAREN """
     if len(p) == 4:
-        p[0] = risha_ast.FunctionCallNode(p[1], risha_ast.InitializerListNode())
+        p[0] = risha_ast.FunctionCall(p[1], risha_ast.InitializerList())
     else:
-        p[0] = risha_ast.FunctionCallNode(p[1], p[3])
+        p[0] = risha_ast.FunctionCall(p[1], p[3])
 
 
 def p_postfix_expression_inc_dec(p):
     """ postfix-expression : postfix-expression INCREMENT
                            | postfix-expression DECREMENT """
-    p[0] = risha_ast.PostfixUnaryExpressionNode(p[1], p[2])
+    p[0] = risha_ast.PostfixUnaryExpression(p[1], p[2])
 
 
 def p_primary_expression(p):
@@ -286,7 +286,7 @@ def p_primary_expression(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = risha_ast.EnclosedInParenthesisNode(p[2])
+        p[0] = risha_ast.EnclosedInParenthesis(p[2])
 
 
 def p_id_expression(p):
@@ -302,7 +302,7 @@ def p_id_expression(p):
 
 def p_unqualified_id_identifier(p):
     """ unqualified-id : IDENTIFIER """
-    p[0] = risha_ast.IdentifierNode(p[1])
+    p[0] = risha_ast.Identifier(p[1])
 
 
 def p_unqualified_id_operator_function(p):
@@ -355,9 +355,9 @@ def p_compound_statement(p):
     """ compound-statement : L_CURLY statement-seq R_CURLY
                            | L_CURLY R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.CompoundStatementNode(p[2])
+        p[0] = risha_ast.CompoundStatement(p[2])
     else:
-        p[0] = risha_ast.CompoundStatementNode(None)
+        p[0] = risha_ast.CompoundStatement(None)
 
 
 def p_statement_seq(p):
@@ -378,9 +378,9 @@ def p_selection_statement_if(p):
     """ selection-statement : IF L_PAREN condition R_PAREN statement
                             | IF L_PAREN condition R_PAREN statement ELSE statement """
     if len(p) == 6:
-        p[0] = risha_ast.IfNode(p[3], p[5], None)
+        p[0] = risha_ast.IfStatement(p[3], p[5], None)
     else:
-        p[0] = risha_ast.IfNode(p[3], p[5], p[7])
+        p[0] = risha_ast.IfStatement(p[3], p[5], p[7])
 
 
 def p_condition(p):
@@ -402,16 +402,16 @@ def p_iteration_for_statement(p):
                             | FOR L_PAREN for-init-statement SEMICOLON expression R_PAREN statement
                             | FOR L_PAREN for-init-statement condition SEMICOLON expression R_PAREN statement """
     if len(p) == 7:
-        p[0] = risha_ast.ForNode(p[3], None, None, p[6])
+        p[0] = risha_ast.ForLoop(p[3], None, None, p[6])
     elif len(p) == 8:
-        p[0] = risha_ast.ForNode(p[3], None, p[5], p[7])
+        p[0] = risha_ast.ForLoop(p[3], None, p[5], p[7])
     elif len(p) == 9:
-        p[0] = risha_ast.ForNode(p[3], p[4], p[6], p[8])
+        p[0] = risha_ast.ForLoop(p[3], p[4], p[6], p[8])
 
 
 def p_iteration_for_statement_with_condition(p):
     """ iteration-statement : FOR L_PAREN for-init-statement condition SEMICOLON R_PAREN statement """
-    p[0] = risha_ast.ForNode(p[3], p[4], None, p[7])
+    p[0] = risha_ast.ForLoop(p[3], p[4], None, p[7])
 
 
 def p_for_init_statement(p):
@@ -476,7 +476,7 @@ def p_block_declaration(p):
 
 def p_alias_declaration(p):
     """ alias-declaration : USING IDENTIFIER ASSIGNMENT type-id SEMICOLON """
-    p[0] = risha_ast.AliasDeclarationNode(risha_ast.IdentifierNode(p[2]), p[4])
+    p[0] = risha_ast.AliasDeclaration(risha_ast.Identifier(p[2]), p[4])
 
 
 def p_simple_declaration(p):
@@ -505,7 +505,7 @@ def p_decl_specifier_seq(p):
     """ decl-specifier-seq : decl-specifier
                            | decl-specifier-seq decl-specifier """
     if len(p) == 2:
-        p[0] = risha_ast.DeclSpecifierSeqNode().add_decl_specifier(p[1])
+        p[0] = risha_ast.DeclSpecifierSeq().add_decl_specifier(p[1])
     else:
         p[0] = p[1].add_decl_specifier(p[2])
 
@@ -522,7 +522,7 @@ def p_function_specifier(p):
 
 def p_typedef_name(p):
     """ typedef-name : IDENTIFIER """
-    p[0] = risha_ast.IdentifierNode(p[1])
+    p[0] = risha_ast.Identifier(p[1])
 
 
 def p_type_specifier(p):
@@ -597,7 +597,7 @@ def p_elaborated_type_specifier(p):
 
 def p_enum_name(p):
     """ enum-name : IDENTIFIER """
-    p[0] = risha_ast.IdentifierNode(p[1])
+    p[0] = risha_ast.Identifier(p[1])
 
 
 def p_enum_specifier(p):
@@ -605,9 +605,9 @@ def p_enum_specifier(p):
                        | enum-head L_CURLY enumerator-list R_CURLY
                        | enum-head L_CURLY enumerator-list COMMA R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.EnumNode(p[1], risha_ast.EnumeratorList())
+        p[0] = risha_ast.EnumDefinition(p[1], risha_ast.EnumeratorList())
     else:
-        p[0] = risha_ast.EnumNode(p[1], p[3])
+        p[0] = risha_ast.EnumDefinition(p[1], p[3])
 
 
 def p_enum_head(p):
@@ -616,12 +616,12 @@ def p_enum_head(p):
     if len(p) == 2:
         p[0] = risha_ast.EnumHead(p[1], None)
     else:
-        p[0] = risha_ast.EnumHead(p[1], risha_ast.IdentifierNode(p[2]))
+        p[0] = risha_ast.EnumHead(p[1], risha_ast.Identifier(p[2]))
 
 
 def p_opaque_enum_declaration(p):
     """ opaque-enum-declaration : enum-key IDENTIFIER """
-    p[0] = risha_ast.EnumHead(p[1], risha_ast.IdentifierNode(p[2]))
+    p[0] = risha_ast.EnumHead(p[1], risha_ast.Identifier(p[2]))
 
 
 def p_enum_key(p):
@@ -629,9 +629,9 @@ def p_enum_key(p):
                  | ENUM CLASS
                  | ENUM STRUCT """
     if len(p) == 2:
-        p[0] = risha_ast.EnumKeyNode('')
+        p[0] = risha_ast.EnumKey('')
     else:
-        p[0] = risha_ast.EnumKeyNode(p[2])
+        p[0] = risha_ast.EnumKey(p[2])
 
 
 def p_enumerator_list(p):
@@ -654,7 +654,7 @@ def p_enumerator_definition(p):
 
 def p_enumerator(p):
     """ enumerator : IDENTIFIER """
-    p[0] = risha_ast.IdentifierNode(p[1])
+    p[0] = risha_ast.Identifier(p[1])
 
 
 """
@@ -824,7 +824,7 @@ def p_initializer(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = risha_ast.EnclosedInParenthesisNode(p[2])
+        p[0] = risha_ast.EnclosedInParenthesis(p[2])
 
 
 def p_brace_or_equal_initializer(p):
@@ -833,7 +833,7 @@ def p_brace_or_equal_initializer(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = risha_ast.EqualInitializerNode(p[2])
+        p[0] = risha_ast.EqualInitializer(p[2])
 
 
 def p_initializer_clause(p):
@@ -846,7 +846,7 @@ def p_initializer_list(p):
     """ initializer-list : initializer-clause
                          | initializer-list COMMA initializer-clause """
     if len(p) == 2:
-        p[0] = risha_ast.InitializerListNode().add_clause(p[1])
+        p[0] = risha_ast.InitializerList().add_clause(p[1])
     else:
         p[0] = p[1].add_clause(p[3])
 
@@ -856,10 +856,10 @@ def p_braced_init_list(p):
                          | L_CURLY initializer-list COMMA R_CURLY
                          | L_CURLY R_CURLY """
     if len(p) == 3:
-        p[0] = risha_ast.BracedInitializerListNode(
-            risha_ast.InitializerListNode())
+        p[0] = risha_ast.BracedInitializerList(
+            risha_ast.InitializerList())
     else:
-        p[0] = risha_ast.BracedInitializerListNode(p[2])
+        p[0] = risha_ast.BracedInitializerList(p[2])
 
 
 """
@@ -869,7 +869,7 @@ def p_braced_init_list(p):
 
 def p_class_name(p):
     """ class-name : IDENTIFIER """
-    p[0] = risha_ast.IdentifierNode(p[1])
+    p[0] = risha_ast.Identifier(p[1])
 
 
 def p_class_specifier(p):
