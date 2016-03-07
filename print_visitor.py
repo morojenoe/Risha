@@ -162,3 +162,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print('(')
         enclosed_in_paren.expression.accept(self)
         self._print(')')
+
+    def visit_decl_specifier_seq(self, decl_specifier_seq):
+        for decl_specifier in decl_specifier_seq.decl_specifiers:
+            if isinstance(decl_specifier, str):
+                self._print(decl_specifier + ' ')
+            else:
+                decl_specifier.accept(self)
+
+    def visit_program(self, program):
+        for declaration in program.declarations:
+            declaration.accept(self)

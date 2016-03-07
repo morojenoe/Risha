@@ -81,3 +81,12 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_enclosed_in_paren(self, enclosed_in_paren):
         pass
+
+    @abc.abstractclassmethod
+    def visit_decl_specifier_seq(self, decl_specifier_seq):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_program(self, program):
+        pass
+

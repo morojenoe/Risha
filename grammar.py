@@ -2,7 +2,6 @@ import ply.lex
 import ply.yacc
 import lexer
 import risha_ast
-import logging
 
 tokens = lexer.tokens
 
@@ -22,7 +21,6 @@ precedence = (
     ('left', 'PLUS', 'MINUS'),
     ('left', 'MULTIPLY', 'DIVISION', 'MODULO'),
     ('right', 'LOGICAL_NOT', 'BITWISE_NOT', 'INCREMENT', 'DECREMENT'),
-    # ('left', 'SCOPE_RESOLUTION_OPERATOR'),
 )
 
 start = 'translation-unit'
@@ -65,7 +63,7 @@ def p_empty(p):
 def p_translation_unit(p):
     """ translation-unit : declaration-seq
                          | empty """
-    create_args(p)
+    p[0] = risha_ast.ProgramNode(p[1])
 
 
 """
@@ -269,8 +267,7 @@ def p_postfix_expression_func_call(p):
                            | simple-type-specifier L_PAREN R_PAREN
                            | simple-type-specifier L_PAREN expression-list R_PAREN """
     if len(p) == 4:
-        # TODO: change none to empty ExpressionListNode
-        p[0] = risha_ast.FunctionCallNode(p[1], None)
+        p[0] = risha_ast.FunctionCallNode(p[1], risha_ast.InitializerListNode())
     else:
         p[0] = risha_ast.FunctionCallNode(p[1], p[3])
 
@@ -286,7 +283,10 @@ def p_primary_expression(p):
                            | L_PAREN expression R_PAREN
                            | id-expression """
     #                      | THIS
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.EnclosedInParenthesisNode(p[2])
 
 
 def p_id_expression(p):
@@ -449,11 +449,11 @@ def p_declaration_statement(p):
 def p_declaration_seq(p):
     """ declaration-seq : declaration
                         | declaration-seq declaration """
-    create_args(p)
-    # if len(p) == 2:
-    #     p[0] = [p[1]]
-    # else:
-    #     p[0] = list(p[1]) + [p[2]]
+    if len(p) == 2:
+        p[0] = [p[1]]
+    else:
+        p[1].append(p[2])
+        p[0] = p[1]
 
 
 def p_declaration(p):
@@ -500,11 +500,10 @@ def p_decl_specifier(p):
 def p_decl_specifier_seq(p):
     """ decl-specifier-seq : decl-specifier
                            | decl-specifier-seq decl-specifier """
-    create_args(p)
-    # if len(p) == 2:
-    #     p[0] = [p[1]]
-    # else:
-    #     p[0] = list(p[1]) + [p[2]]
+    if len(p) == 2:
+        p[0] = risha_ast.DeclSpecifierSeqNode().add_decl_specifier(p[1])
+    else:
+        p[0] = p[1].add_decl_specifier(p[2])
 
 
 def p_storage_class_specifier(p):

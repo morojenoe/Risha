@@ -214,3 +214,23 @@ class EnclosedInParenthesisNode(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_enclosed_in_paren(self)
+
+
+class DeclSpecifierSeqNode(ASTNode):
+    def __init__(self):
+        self.decl_specifiers = []
+
+    def add_decl_specifier(self, decl_specifier):
+        self.decl_specifiers.append(decl_specifier)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_decl_specifier_seq(self)
+
+
+class ProgramNode(ASTNode):
+    def __init__(self, declarations):
+        self.declarations = declarations if declarations is not None else []
+
+    def accept(self, visitor):
+        visitor.visit_program(self)
