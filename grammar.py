@@ -498,7 +498,7 @@ def p_decl_specifier(p):
                        | type-specifier
                        | function-specifier
                        | TYPEDEF """
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_decl_specifier_seq(p):
@@ -571,8 +571,7 @@ def p_simple_type_specifier(p):
                               | DOUBLE
                               | VOID
                               | AUTO """
-    #                         | nested-name-specifier type-name
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_type_name(p):
@@ -582,12 +581,14 @@ def p_type_name(p):
     p[0] = p[1]
 
 
-def p_elaborated_type_specifier(p):
-    """ elaborated-type-specifier : class-key IDENTIFIER
-                                  | enum-key IDENTIFIER """
-    #                             | class-key nested-name-specifier IDENTIFIER
-    #                             | ENUM nested-name-specifier IDENTIFIER
-    create_args(p)
+def p_elaborated_type_specifier_enum(p):
+    """ elaborated-type-specifier : enum-key IDENTIFIER """
+    p[0] = risha_ast.EnumHead(p[1], risha_ast.Identifier(p[2]))
+
+
+def p_elaborated_type_specifier_class(p):
+    """ elaborated-type-specifier : class-key IDENTIFIER """
+    p[0] = risha_ast.ClassHead(p[1], risha_ast.Identifier(p[2]))
 
 
 """
@@ -875,12 +876,15 @@ def p_class_name(p):
 def p_class_specifier(p):
     """ class-specifier : class-head L_CURLY R_CURLY
                         | class-head L_CURLY member-specification R_CURLY """
-    create_args(p)
+    if len(p) == 4:
+        p[0] = risha_ast.ClassDefinition(p[1], risha_ast.MemberSpecification())
+    else:
+        p[0] = risha_ast.ClassDefinition(p[1], p[3])
 
 
 def p_class_head(p):
     """ class-head : class-key class-head-name """
-    p[0] = p[2]
+    p[0] = risha_ast.ClassHead(p[1], p[2])
 
 
 def p_class_head_name(p):
@@ -894,10 +898,18 @@ def p_class_key(p):
     p[0] = p[1]
 
 
+"""
+ Class.members
+"""
+
+
 def p_member_specification(p):
     """ member-specification : member-declaration
                              | member-declaration member-specification """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.MemberSpecification().add_member(p[1])
+    else:
+        p[0] = p[2].add_member(p[1])
 
 
 def p_member_declaration(p):

@@ -109,3 +109,7 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_enumerator_list(self, enumerator_list):
         pass
+
+    @abc.abstractclassmethod
+    def visit_member_specification(self, member_specification):
+        pass

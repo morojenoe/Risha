@@ -32,7 +32,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def _print(self, text, indentation=False):
         if indentation:
-            print(' '*self.indentation[-1], file=self.output, end='')
+            print(' ' * self.indentation[-1], file=self.output, end='')
         print(text, file=self.output, end='')
 
     def _print_new_line(self):
@@ -78,17 +78,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_class(self, class_node):
         self._print('struct ', True)
-        if class_node.class_name is not None:
-            self._print(class_node.class_name)
-            self._print(' {')
-            self._print_new_line()
-        for alias in class_node.alias_declarations:
-            alias.accept(self)
-        for declaration in class_node.declarations:
-            declaration.accept(self)
-        for function in class_node.functions:
-            function.accept(self)
-        self._print('}')
+        self._new_level_indentation(0)
+        class_node.class_head.class_name.accept(self)
+        self._pop_indentation()
+        self._print(' {')
+        self._print_new_line()
+        self._new_level_indentation()
+        class_node.member_specification.accept(self)
+        self._pop_indentation()
+        self._print('}', True)
         self._print_new_line()
 
     def visit_enum(self, enum_node):
@@ -212,3 +210,8 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if enumerator.const_expression is not None:
             self._print(' = ')
             enumerator.const_expression.accept(self)
+
+    def visit_member_specification(self, member_specification):
+        for member in member_specification.members:
+            member.accept(self)
+            self._print_new_line()
