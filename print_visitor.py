@@ -4,8 +4,16 @@ import abstract_visitor
 class PrintVisitor(abstract_visitor.AbstractVisitor):
     def __init__(self, output, inc_indentation=2):
         self.output = output
-        self.indentation = 0
+        self.indentation = [0]
         self.inc_indentation = inc_indentation
+
+    def _new_level_indentation(self, value=None):
+        if value is None:
+            value = self.indentation[-1] + self.inc_indentation
+        self.indentation.append(value)
+
+    def _pop_indentation(self):
+        self.indentation.pop()
 
     def visit_compound_statement(self, compound_statement):
         if compound_statement.statements is None:
@@ -14,25 +22,27 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
         self._print('{')
         self._print_new_line()
-        self.indentation += self.inc_indentation
+        self._new_level_indentation()
         for statement in compound_statement.statements:
             statement.accept(self)
             self._print_new_line()
-        self.indentation -= self.inc_indentation
-        self._print('}')
+        self._pop_indentation()
+        self._print('}', True)
         self._print_new_line()
 
-    def _print(self, text):
+    def _print(self, text, indentation=False):
+        if indentation:
+            print(' '*self.indentation[-1], file=self.output, end='')
         print(text, file=self.output, end='')
 
     def _print_new_line(self):
         print('\n', file=self.output, end='')
 
     def visit(self, elem):
-        self._print(elem + ' ')
+        self._print(elem + ' ', True)
 
     def visit_for(self, for_node):
-        self._print('for (')
+        self._print('for (', True)
         for_node.for_init_statement.accept(self)
         if for_node.condition is not None:
             for_node.condition.accept(self)
@@ -44,28 +54,30 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         else:
             self._print(' ')
         self._print(') ')
-        self.indentation += self.inc_indentation
+        self._new_level_indentation()
         for_node.statement.accept(self)
-        self.indentation -= self.inc_indentation
+        self._pop_indentation()
 
     def visit_alias_declaration(self, alias_declaration):
-        self._print('using ')
+        self._print('using ', True)
+        self._new_level_indentation(0)
         alias_declaration.identifier.accept(self)
+        self._pop_indentation()
         self._print(' = ')
         alias_declaration.type_id.accept(self)
         self._print(';')
 
     def visit_if(self, if_node):
-        self._print('if (')
+        self._print('if (', True)
         if_node.condition.accept(self)
         self._print(') ')
         if_node.statement.accept(self)
         if if_node.else_statement is not None:
-            self._print(' else')
+            self._print(' else ')
             if_node.else_statement.accept(self)
 
     def visit_class(self, class_node):
-        self._print('struct ')
+        self._print('struct ', True)
         if class_node.class_name is not None:
             self._print(class_node.class_name)
             self._print(' {')
@@ -83,9 +95,11 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         enum_node.enum_head.accept(self)
         self._print(' {')
         self._print_new_line()
+        self._new_level_indentation()
         enum_node.enumerators.accept(self)
+        self._pop_indentation()
         self._print_new_line()
-        self._print('}')
+        self._print('}', True)
 
     def visit_ternary_operation(self, ternary_operation):
         ternary_operation.logical_expression.accept(self)
@@ -144,7 +158,9 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_braced_init_list(self, braced_init_list):
         self._print('{')
+        self._new_level_indentation(0)
         braced_init_list.initializer_list.accept(self)
+        self._pop_indentation()
         self._print('}')
 
     def visit_equal_initializer(self, equal_initializer):
@@ -159,25 +175,30 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_decl_specifier_seq(self, decl_specifier_seq):
         for decl_specifier in decl_specifier_seq.decl_specifiers:
             if isinstance(decl_specifier, str):
-                self._print(decl_specifier + ' ')
+                self._print(decl_specifier + ' ', True)
             else:
                 decl_specifier.accept(self)
 
     def visit_program(self, program):
         for declaration in program.declarations:
             declaration.accept(self)
+            self._print_new_line()
 
     def visit_identifier(self, identifier_node):
-        self._print(identifier_node.identifier)
+        self._print(identifier_node.identifier, True)
 
     def visit_enum_key(self, enum_key):
-        self._print('enum {}'.format(enum_key.enum_key))
+        self._print('enum', True)
+        if enum_key.enum_key is not None:
+            self._print(' {}'.format(enum_key.enum_key), True)
 
     def visit_enum_head(self, enum_head):
         enum_head.enum_key.accept(self)
         self._print(' ')
+        self._new_level_indentation(0)
         if enum_head.identifier is not None:
             enum_head.identifier.accept(self)
+        self._pop_indentation()
 
     def visit_enumerator_list(self, enumerator_list):
         for it, enumerator in enumerate(enumerator_list.enumerators):

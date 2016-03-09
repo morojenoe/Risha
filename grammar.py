@@ -629,7 +629,7 @@ def p_enum_key(p):
                  | ENUM CLASS
                  | ENUM STRUCT """
     if len(p) == 2:
-        p[0] = risha_ast.EnumKey('')
+        p[0] = risha_ast.EnumKey(None)
     else:
         p[0] = risha_ast.EnumKey(p[2])
 
