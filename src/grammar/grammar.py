@@ -1,7 +1,8 @@
 import ply.lex
 import ply.yacc
-import lexer
-import risha_ast
+
+from src.ast import risha_ast
+from src.grammar import lexer
 
 tokens = lexer.tokens
 

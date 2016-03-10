@@ -1,4 +1,4 @@
-import abstract_visitor
+from src.ast import abstract_visitor
 
 
 class PrintVisitor(abstract_visitor.AbstractVisitor):

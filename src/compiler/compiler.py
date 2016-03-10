@@ -1,6 +1,7 @@
 import argparse
-import grammar
-import print_visitor
+
+from src.ast import print_visitor
+from src.grammar import grammar
 
 
 def parse_args():
