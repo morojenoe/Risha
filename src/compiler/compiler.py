@@ -1,7 +1,7 @@
 import argparse
 
-from src.ast import print_visitor
 from src.grammar import grammar
+from src.visitors.pretty_printer import print_visitor
 
 
 def parse_args():

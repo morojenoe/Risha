@@ -1,7 +1,7 @@
 import ply.lex
 import ply.yacc
 
-from src.ast import risha_ast
+import src.ast as risha_ast
 from src.grammar import lexer
 
 tokens = lexer.tokens
@@ -268,7 +268,7 @@ def p_postfix_expression_func_call(p):
                            | simple-type-specifier L_PAREN R_PAREN
                            | simple-type-specifier L_PAREN expression-list R_PAREN """
     if len(p) == 4:
-        p[0] = risha_ast.FunctionCall(p[1], risha_ast.InitializerList())
+        p[0] = risha_ast.FunctionCall(p[1], risha_ast.initializers.InitializerList())
     else:
         p[0] = risha_ast.FunctionCall(p[1], p[3])
 
@@ -584,7 +584,7 @@ def p_type_name(p):
 
 def p_elaborated_type_specifier_enum(p):
     """ elaborated-type-specifier : enum-key IDENTIFIER """
-    p[0] = risha_ast.EnumHead(p[1], risha_ast.Identifier(p[2]))
+    p[0] = risha_ast.enums.EnumHead(p[1], risha_ast.Identifier(p[2]))
 
 
 def p_elaborated_type_specifier_class(p):
@@ -607,23 +607,23 @@ def p_enum_specifier(p):
                        | enum-head L_CURLY enumerator-list R_CURLY
                        | enum-head L_CURLY enumerator-list COMMA R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.EnumDefinition(p[1], risha_ast.EnumeratorList())
+        p[0] = risha_ast.enums.EnumDefinition(p[1], risha_ast.enums.EnumeratorList())
     else:
-        p[0] = risha_ast.EnumDefinition(p[1], p[3])
+        p[0] = risha_ast.enums.EnumDefinition(p[1], p[3])
 
 
 def p_enum_head(p):
     """ enum-head : enum-key
                   | enum-key IDENTIFIER """
     if len(p) == 2:
-        p[0] = risha_ast.EnumHead(p[1], None)
+        p[0] = risha_ast.enums.EnumHead(p[1], None)
     else:
-        p[0] = risha_ast.EnumHead(p[1], risha_ast.Identifier(p[2]))
+        p[0] = risha_ast.enums.EnumHead(p[1], risha_ast.Identifier(p[2]))
 
 
 def p_opaque_enum_declaration(p):
     """ opaque-enum-declaration : enum-key IDENTIFIER """
-    p[0] = risha_ast.EnumHead(p[1], risha_ast.Identifier(p[2]))
+    p[0] = risha_ast.enums.EnumHead(p[1], risha_ast.Identifier(p[2]))
 
 
 def p_enum_key(p):
@@ -631,16 +631,16 @@ def p_enum_key(p):
                  | ENUM CLASS
                  | ENUM STRUCT """
     if len(p) == 2:
-        p[0] = risha_ast.EnumKey(None)
+        p[0] = risha_ast.enums.EnumKey(None)
     else:
-        p[0] = risha_ast.EnumKey(p[2])
+        p[0] = risha_ast.enums.EnumKey(p[2])
 
 
 def p_enumerator_list(p):
     """ enumerator-list : enumerator-definition
                         | enumerator-list COMMA enumerator-definition """
     if len(p) == 2:
-        p[0] = risha_ast.EnumeratorList().add_enumerator(p[1])
+        p[0] = risha_ast.enums.EnumeratorList().add_enumerator(p[1])
     else:
         p[0] = p[1].add_enumerator(p[3])
 
@@ -649,9 +649,9 @@ def p_enumerator_definition(p):
     """ enumerator-definition : enumerator
                               | enumerator ASSIGNMENT constant-expression """
     if len(p) == 2:
-        p[0] = risha_ast.Enumerator(p[1], None)
+        p[0] = risha_ast.enums.Enumerator(p[1], None)
     else:
-        p[0] = risha_ast.Enumerator(p[1], p[3])
+        p[0] = risha_ast.enums.Enumerator(p[1], p[3])
 
 
 def p_enumerator(p):
@@ -835,7 +835,7 @@ def p_brace_or_equal_initializer(p):
     if len(p) == 2:
         p[0] = p[1]
     else:
-        p[0] = risha_ast.EqualInitializer(p[2])
+        p[0] = risha_ast.initializers.EqualInitializer(p[2])
 
 
 def p_initializer_clause(p):
@@ -848,7 +848,7 @@ def p_initializer_list(p):
     """ initializer-list : initializer-clause
                          | initializer-list COMMA initializer-clause """
     if len(p) == 2:
-        p[0] = risha_ast.InitializerList().add_clause(p[1])
+        p[0] = risha_ast.initializers.InitializerList().add_clause(p[1])
     else:
         p[0] = p[1].add_clause(p[3])
 
@@ -858,10 +858,10 @@ def p_braced_init_list(p):
                          | L_CURLY initializer-list COMMA R_CURLY
                          | L_CURLY R_CURLY """
     if len(p) == 3:
-        p[0] = risha_ast.BracedInitializerList(
-            risha_ast.InitializerList())
+        p[0] = risha_ast.initializers.BracedInitializerList(
+            risha_ast.initializers.InitializerList())
     else:
-        p[0] = risha_ast.BracedInitializerList(p[2])
+        p[0] = risha_ast.initializers.BracedInitializerList(p[2])
 
 
 """
