@@ -283,7 +283,6 @@ def p_primary_expression(p):
     """ primary-expression : literal
                            | L_PAREN expression R_PAREN
                            | id-expression """
-    #                      | THIS
     if len(p) == 2:
         p[0] = p[1]
     else:
@@ -292,13 +291,7 @@ def p_primary_expression(p):
 
 def p_id_expression(p):
     """ id-expression : unqualified-id """
-    #                 | qualified-id
     p[0] = p[1]
-
-
-# def p_qualified_id(p):
-#     """ qualified-id : nested-name-specifier unqualified-id """
-#     create_args(p)
 
 
 def p_unqualified_id_identifier(p):
@@ -309,13 +302,6 @@ def p_unqualified_id_identifier(p):
 def p_unqualified_id_operator_function(p):
     """ unqualified-id : operator-function-id """
     p[0] = p[1]
-
-
-# def p_nested_name_specifier(p):
-#     """ nested-name-specifier : SCOPE_RESOLUTION_OPERATOR
-#                               | type-name SCOPE_RESOLUTION_OPERATOR
-#                               | nested-name-specifier IDENTIFIER SCOPE_RESOLUTION_OPERATOR """
-#     create_args(p)
 
 
 def p_expression_list(p):
@@ -667,13 +653,19 @@ def p_enumerator(p):
 def p_init_declarator_list(p):
     """ init-declarator-list : init-declarator
                              | init-declarator-list COMMA init-declarator """
-    p[0] = [p[1]] if len(p) == 2 else list(p[1]) + [p[3]]
+    if len(p) == 2:
+        p[0] = risha_ast.InitDeclaratorList().add_declarator(p[1])
+    else:
+        p[0] = p[1].add_declarator(p[3])
 
 
 def p_init_declarator(p):
     """ init-declarator : declarator
                         | declarator initializer """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.InitDeclarator(p[1], None)
+    else:
+        p[0] = risha_ast.InitDeclarator(p[1], p[2])
 
 
 def p_declarator(p):

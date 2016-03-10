@@ -215,3 +215,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         for member in member_specification.members:
             member.accept(self)
             self._print_new_line()
+
+    def visit_init_declarator(self, init_declarator):
+        init_declarator.declarator.accept(self)
+        if init_declarator.initializer is not None:
+            self._print(' ')
+            init_declarator.initializer.accept(self)
+
+    def visit_init_declarator_list(self, init_declarator_list):
+        for it, declarator in enumerate(init_declarator_list.declarators):
+            if it > 0:
+                self._print(', ')
+            declarator.accept(self)
