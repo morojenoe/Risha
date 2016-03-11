@@ -121,3 +121,11 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_init_declarator(self, init_declarator):
         pass
+
+    @abc.abstractclassmethod
+    def visit_function_declarator(self, function_declarator):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_expression_statement(self, expression_statement):
+        pass

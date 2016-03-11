@@ -227,3 +227,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             if it > 0:
                 self._print(', ')
             declarator.accept(self)
+
+    def visit_function_declarator(self, function_declarator):
+        self._new_level_indentation(0)
+        function_declarator.function_name.accept(self)
+        function_declarator.parameters.accept(self)
+        self._pop_indentation()
+
+    def visit_expression_statement(self, expression_statement):
+        if expression_statement.statement is not None:
+            expression_statement.statement.accept(self)
+        self._print(';')

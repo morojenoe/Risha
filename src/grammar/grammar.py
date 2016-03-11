@@ -2,6 +2,7 @@ import ply.lex
 import ply.yacc
 
 import src.ast as risha_ast
+import src.ast.statements
 from src.grammar import lexer
 
 tokens = lexer.tokens
@@ -268,7 +269,8 @@ def p_postfix_expression_func_call(p):
                            | simple-type-specifier L_PAREN R_PAREN
                            | simple-type-specifier L_PAREN expression-list R_PAREN """
     if len(p) == 4:
-        p[0] = risha_ast.FunctionCall(p[1], risha_ast.initializers.InitializerList())
+        p[0] = risha_ast.FunctionCall(p[1],
+                                      risha_ast.initializers.InitializerList())
     else:
         p[0] = risha_ast.FunctionCall(p[1], p[3])
 
@@ -315,21 +317,13 @@ def p_expression_list(p):
 
 
 def p_statement(p):
-    """ statement : labeled-statement
-                  | expression-statement
+    """ statement : expression-statement
                   | compound-statement
                   | selection-statement
                   | iteration-statement
                   | jump-statement
                   | declaration-statement """
     p[0] = p[1]
-
-
-def p_labeled_statement(p):
-    """ labeled-statement : IDENTIFIER COLON statement
-                          | CASE constant-expression COLON statement
-                          | DEFAULT COLON statement """
-    create_args(p)
 
 
 def p_expression_statement(p):
@@ -342,9 +336,9 @@ def p_compound_statement(p):
     """ compound-statement : L_CURLY statement-seq R_CURLY
                            | L_CURLY R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.CompoundStatement(p[2])
+        p[0] = src.ast.statements.CompoundStatement(p[2])
     else:
-        p[0] = risha_ast.CompoundStatement(None)
+        p[0] = src.ast.statements.CompoundStatement(None)
 
 
 def p_statement_seq(p):
@@ -353,21 +347,17 @@ def p_statement_seq(p):
     if len(p) == 2:
         p[0] = [p[1]]
     else:
-        p[0] = list(p[1]) + [p[2]]
-
-
-def p_selection_statement(p):
-    """ selection-statement : SWITCH L_PAREN condition R_PAREN statement """
-    create_args(p)
+        p[1].append(p[2])
+        p[0] = p[1]
 
 
 def p_selection_statement_if(p):
     """ selection-statement : IF L_PAREN condition R_PAREN statement
                             | IF L_PAREN condition R_PAREN statement ELSE statement """
     if len(p) == 6:
-        p[0] = risha_ast.IfStatement(p[3], p[5], None)
+        p[0] = src.ast.statements.IfStatement(p[3], p[5], None)
     else:
-        p[0] = risha_ast.IfStatement(p[3], p[5], p[7])
+        p[0] = src.ast.statements.IfStatement(p[3], p[5], p[7])
 
 
 def p_condition(p):
@@ -389,16 +379,16 @@ def p_iteration_for_statement(p):
                             | FOR L_PAREN for-init-statement SEMICOLON expression R_PAREN statement
                             | FOR L_PAREN for-init-statement condition SEMICOLON expression R_PAREN statement """
     if len(p) == 7:
-        p[0] = risha_ast.ForLoop(p[3], None, None, p[6])
+        p[0] = src.ast.statements.ForLoop(p[3], None, None, p[6])
     elif len(p) == 8:
-        p[0] = risha_ast.ForLoop(p[3], None, p[5], p[7])
+        p[0] = src.ast.statements.ForLoop(p[3], None, p[5], p[7])
     elif len(p) == 9:
-        p[0] = risha_ast.ForLoop(p[3], p[4], p[6], p[8])
+        p[0] = src.ast.statements.ForLoop(p[3], p[4], p[6], p[8])
 
 
 def p_iteration_for_statement_with_condition(p):
     """ iteration-statement : FOR L_PAREN for-init-statement condition SEMICOLON R_PAREN statement """
-    p[0] = risha_ast.ForLoop(p[3], p[4], None, p[7])
+    p[0] = src.ast.statements.ForLoop(p[3], p[4], None, p[7])
 
 
 def p_for_init_statement(p):
@@ -593,7 +583,8 @@ def p_enum_specifier(p):
                        | enum-head L_CURLY enumerator-list R_CURLY
                        | enum-head L_CURLY enumerator-list COMMA R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.enums.EnumDefinition(p[1], risha_ast.enums.EnumeratorList())
+        p[0] = risha_ast.enums.EnumDefinition(p[1],
+                                              risha_ast.enums.EnumeratorList())
     else:
         p[0] = risha_ast.enums.EnumDefinition(p[1], p[3])
 
@@ -669,18 +660,29 @@ def p_init_declarator(p):
 
 
 def p_declarator(p):
-    """ declarator : noptr-declarator
-                   | noptr-declarator parameters-and-qualifiers trailing-return-type """
-    create_args(p)
+    """ declarator : noptr-declarator """
+    p[0] = p[1]
 
 
 def p_noptr_declarator(p):
     """ noptr-declarator : declarator-id
                          | noptr-declarator parameters-and-qualifiers
                          | noptr-declarator L_BRACKET constant-expression R_BRACKET
-                         | noptr-declarator L_BRACKET  R_BRACKET
-                         | L_PAREN noptr-declarator R_PAREN """
-    create_args(p)
+                         | noptr-declarator L_BRACKET  R_BRACKET """
+    if len(p) == 2:
+        p[0] = p[1]
+    elif len(p) == 3:
+        p[0] = risha_ast.FunctionDeclarator(p[1], p[2])
+    elif len(p) == 4:
+        create_args(p)
+    else:
+        assert len(p) == 5
+        create_args(p)
+
+
+def p_noptr_declarator_paren(p):
+    """ noptr-declarator : L_PAREN noptr-declarator R_PAREN """
+    p[0] = risha_ast.EnclosedInParenthesis(p[2])
 
 
 def p_parameters_and_qualifiers(p):
@@ -691,10 +693,10 @@ def p_parameters_and_qualifiers(p):
     create_args(p)
 
 
-def p_trailing_return_type(p):
-    """ trailing-return-type : ARROW trailing-type-specifier-seq
-                             | ARROW trailing-type-specifier-seq abstract-declarator """
-    create_args(p)
+# def p_trailing_return_type(p):
+#     """ trailing-return-type : ARROW trailing-type-specifier-seq
+#                              | ARROW trailing-type-specifier-seq abstract-declarator """
+#     create_args(p)
 
 
 def p_cv_qualifier_seq(p):
@@ -731,11 +733,11 @@ def p_type_id(p):
 
 
 def p_abstract_declarator(p):
-    """ abstract-declarator : noptr-abstract-declarator
-                            | parameters-and-qualifiers trailing-return-type
-                            | noptr-abstract-declarator parameters-and-qualifiers trailing-return-type
-                            | abstract-pack-declarator """
-    create_args(p)
+    """ abstract-declarator : noptr-abstract-declarator """
+    #                       | abstract-pack-declarator
+    #                       | parameters-and-qualifiers trailing-return-type
+    #                       | noptr-abstract-declarator parameters-and-qualifiers trailing-return-type
+    p[0] = p[1]
 
 
 def p_noptr_abstract_declarator(p):
@@ -749,17 +751,17 @@ def p_noptr_abstract_declarator(p):
     create_args(p)
 
 
-def p_abstract_pack_declarator(p):
-    """ abstract-pack-declarator : noptr-abstract-pack-declarator """
-    create_args(p)
-
-
-def p_noptr_abstract_pack_declarator(p):
-    """ noptr-abstract-pack-declarator : noptr-abstract-pack-declarator parameters-and-qualifiers
-                                       | noptr-abstract-pack-declarator L_BRACKET R_BRACKET
-                                       | noptr-abstract-pack-declarator L_BRACKET constant-expression R_BRACKET
-                                       | empty """
-    create_args(p)
+# def p_abstract_pack_declarator(p):
+#     """ abstract-pack-declarator : noptr-abstract-pack-declarator """
+#     p[0] = p[1]
+#
+#
+# def p_noptr_abstract_pack_declarator(p):
+#     """ noptr-abstract-pack-declarator : noptr-abstract-pack-declarator parameters-and-qualifiers
+#                                        | noptr-abstract-pack-declarator L_BRACKET R_BRACKET
+#                                        | noptr-abstract-pack-declarator L_BRACKET constant-expression R_BRACKET
+#                                        | empty """
+#     create_args(p)
 
 
 """

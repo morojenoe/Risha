@@ -20,3 +20,12 @@ class InitDeclarator(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_init_declarator(self)
+
+
+class FunctionDeclarator(ASTNode):
+    def __init__(self, function_name, parameters):
+        self.function_name = function_name
+        self.parameters = parameters
+
+    def accept(self, visitor):
+        visitor.visit_function_declarator(self)
