@@ -666,18 +666,29 @@ def p_declarator(p):
 
 def p_noptr_declarator(p):
     """ noptr-declarator : declarator-id
-                         | noptr-declarator parameters-and-qualifiers
-                         | noptr-declarator L_BRACKET constant-expression R_BRACKET
-                         | noptr-declarator L_BRACKET  R_BRACKET """
+                         | noptr-declarator parameters-and-qualifiers """
     if len(p) == 2:
         p[0] = p[1]
     elif len(p) == 3:
         p[0] = risha_ast.FunctionDeclarator(p[1], p[2])
-    elif len(p) == 4:
-        create_args(p)
+
+
+def p_noptr_declarator_array_decl_with_param(p):
+    """ noptr-declarator : noptr-declarator L_BRACKET constant-expression R_BRACKET """
+    if isinstance(p[1], risha_ast.Identifier):
+        p[0] = risha_ast.ArrayDeclarator(p[1]).add_parameter(p[3])
     else:
-        assert len(p) == 5
-        create_args(p)
+        assert isinstance(p[1], risha_ast.ArrayDeclarator)
+        p[0] = p[1].add_parameter(p[3])
+
+
+def p_noptr_declarator_array_decl_with_empty_param(p):
+    """ noptr-declarator : noptr-declarator L_BRACKET  R_BRACKET """
+    if isinstance(p[1], risha_ast.Identifier):
+        p[0] = risha_ast.ArrayDeclarator(p[1]).add_parameter(None)
+    else:
+        assert isinstance(p[1], risha_ast.ArrayDeclarator)
+        p[0] = p[1].add_parameter(None)
 
 
 def p_noptr_declarator_paren(p):

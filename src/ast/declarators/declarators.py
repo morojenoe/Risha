@@ -29,3 +29,16 @@ class FunctionDeclarator(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_function_declarator(self)
+
+
+class ArrayDeclarator(ASTNode):
+    def __init__(self, array_name):
+        self.array_name = array_name
+        self.parameters = []
+
+    def add_parameter(self, parameter):
+        self.parameters.append(parameter)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_array_declaration(self)

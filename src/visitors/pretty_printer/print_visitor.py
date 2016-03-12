@@ -238,3 +238,10 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if expression_statement.statement is not None:
             expression_statement.statement.accept(self)
         self._print(';')
+
+    def visit_array_declaration(self, array_declaration):
+        array_declaration.array_name.accept(self)
+        for parameter in array_declaration.parameters:
+            self._print('[')
+            parameter.accept(self)
+            self._print(']')

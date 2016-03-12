@@ -129,3 +129,7 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_expression_statement(self, expression_statement):
         pass
+
+    @abc.abstractclassmethod
+    def visit_array_declaration(self, array_declaration):
+        pass
