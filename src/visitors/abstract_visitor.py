@@ -133,3 +133,23 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_array_declaration(self, array_declaration):
         pass
+
+    @abc.abstractclassmethod
+    def visit_boolean_literal(self, boolean_literal):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_integer_literal(self, integer_literal):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_character_literal(self, character_literal):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_string_literal(self, string_literal):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_floating_literal(self, floating_literal):
+        pass

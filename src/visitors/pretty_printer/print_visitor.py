@@ -245,3 +245,18 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print('[')
             parameter.accept(self)
             self._print(']')
+
+    def visit_string_literal(self, string_literal):
+        self._print(string_literal.value)
+
+    def visit_floating_literal(self, floating_literal):
+        self._print(floating_literal.value)
+
+    def visit_boolean_literal(self, boolean_literal):
+        self._print(boolean_literal.value)
+
+    def visit_integer_literal(self, integer_literal):
+        self._print(integer_literal.value)
+
+    def visit_character_literal(self, character_literal):
+        self._print(character_literal.value)

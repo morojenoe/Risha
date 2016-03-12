@@ -75,11 +75,23 @@ def p_translation_unit(p):
 
 def p_literal(p):
     """ literal : integer-literal
-                | CHARACTER_LITERAL
-                | FLOATING_NUMBER
-                | STRING_LITERAL
                 | boolean-literal """
     p[0] = p[1]
+
+
+def p_literal_character(p):
+    """ literal : CHARACTER_LITERAL """
+    p[0] = risha_ast.CharacterLiteral(p[1])
+
+
+def p_literal_floating(p):
+    """ literal : FLOATING_NUMBER """
+    p[0] = risha_ast.FloatingNumberLiteral(p[1])
+
+
+def p_literal_string(p):
+    """ literal : STRING_LITERAL """
+    p[0] = risha_ast.StringLiteral(p[1])
 
 
 def p_integer_literal(p):
@@ -87,13 +99,13 @@ def p_integer_literal(p):
                         | OCTAL_NUMBER
                         | DECIMAL_NUMBER
                         | HEXADECIMAL_NUMBER """
-    p[0] = p[1]
+    p[0] = risha_ast.IntegerLiteral(p[1])
 
 
 def p_boolean_literal(p):
     """ boolean-literal : TRUE
                         | FALSE """
-    p[0] = p[1]
+    p[0] = risha_ast.BooleanLiteral(p[1])
 
 
 """

@@ -1,7 +1,6 @@
 reserved = {
     'false': 'FALSE',
     'true': 'TRUE',
-    # 'this': 'THIS',
     'case': 'CASE',
     'default': 'DEFAULT',
     'if': 'IF',
@@ -86,7 +85,6 @@ tokens = [
              'LOGICAL_NOT',
              'BITWISE_NOT',
              'DOT',
-             # 'SCOPE_RESOLUTION_OPERATOR',
              'SEMICOLON',
              'ARROW'
          ] + list(reserved.values())
@@ -143,7 +141,6 @@ t_DECREMENT = r'\-\-'
 t_LOGICAL_NOT = r'!'
 t_BITWISE_NOT = r'~'
 t_DOT = r'\.'
-# t_SCOPE_RESOLUTION_OPERATOR = r'::'
 t_SEMICOLON = r';'
 t_ARROW = r'->'
 t_ignore = ' \t'
