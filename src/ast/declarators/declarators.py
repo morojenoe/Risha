@@ -42,3 +42,11 @@ class ArrayDeclarator(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_array_declaration(self)
+
+
+class ParametersAndQualifiers(ASTNode):
+    def __init__(self, ):
+        pass
+
+    def accept(self, visitor):
+        visitor.visit_parameters_and_qualifiers(self)

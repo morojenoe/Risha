@@ -260,3 +260,26 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_character_literal(self, character_literal):
         self._print(character_literal.value)
+
+    def visit_param_decl_list(self, param_decl_list):
+        for it, parameter in enumerate(param_decl_list.parameters):
+            if it > 0:
+                self._print(', ')
+            parameter.accept(self)
+
+    def visit_param_decl(self, param_declaration):
+        param_declaration.decl_specifiers.accept(self)
+        self._print(' ')
+        self._new_level_indentation(0)
+        param_declaration.declarator.accept(self)
+        self._print(' ')
+        param_declaration.initializer.accept(self)
+        self._pop_indentation()
+
+    def visit_function_definition(self, function_definition):
+        function_definition.decl_specifiers.accept(self)
+        self._print(' ')
+        self._new_level_indentation(0)
+        function_definition.declarator.accept(self)
+        self._pop_indentation()
+        function_definition.body.accept(self)

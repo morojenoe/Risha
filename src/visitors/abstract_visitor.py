@@ -153,3 +153,15 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_floating_literal(self, floating_literal):
         pass
+
+    @abc.abstractclassmethod
+    def visit_function_definition(self, function_definition):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_param_decl_list(self, param_decl_list):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_param_decl(self, param_declaration):
+        pass

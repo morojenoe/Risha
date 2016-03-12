@@ -709,23 +709,8 @@ def p_noptr_declarator_paren(p):
 
 
 def p_parameters_and_qualifiers(p):
-    """ parameters-and-qualifiers : L_PAREN parameter-declaration-clause R_PAREN
-                                  | L_PAREN parameter-declaration-clause R_PAREN cv-qualifier-seq
-                                  | L_PAREN parameter-declaration-clause R_PAREN ref-qualifier
-                                  | L_PAREN parameter-declaration-clause R_PAREN cv-qualifier-seq ref-qualifier """
-    create_args(p)
-
-
-# def p_trailing_return_type(p):
-#     """ trailing-return-type : ARROW trailing-type-specifier-seq
-#                              | ARROW trailing-type-specifier-seq abstract-declarator """
-#     create_args(p)
-
-
-def p_cv_qualifier_seq(p):
-    """ cv-qualifier-seq : cv-qualifier
-                         | cv-qualifier cv-qualifier-seq """
-    p[0] = [p[1]] if len(p) == 2 else [p[1]] + list(p[2])
+    """ parameters-and-qualifiers : L_PAREN parameter-declaration-clause R_PAREN """
+    p[0] = risha_ast.EnclosedInParenthesis(p[2])
 
 
 def p_cv_qualifier(p):
@@ -799,16 +784,16 @@ def p_parameter_declaration_clause(p):
 
 def p_parameter_declaration_clause_empty(p):
     """ parameter-declaration-clause : empty """
-    p[0] = []
+    p[0] = risha_ast.ParameterDeclarationList()
 
 
 def p_parameter_declaration_list(p):
     """ parameter-declaration-list : parameter-declaration
                                    | parameter-declaration-list COMMA parameter-declaration """
     if len(p) == 2:
-        p[0] = [p[1]]
+        p[0] = risha_ast.ParameterDeclarationList().add_parameter(p[1])
     else:
-        p[0] = list(p[1]) + [p[3]]
+        p[0] = p[1].add_parameter(p[3])
 
 
 def p_parameter_declaration(p):
@@ -824,7 +809,10 @@ def p_parameter_declaration(p):
 def p_function_definition(p):
     """ function-definition : decl-specifier-seq declarator function-body
                             | declarator function-body """
-    create_args(p)
+    if len(p) == 3:
+        p[0] = risha_ast.FunctionDefinition(None, p[1], p[2])
+    else:
+        p[0] = risha_ast.FunctionDefinition(p[1], p[2], p[3])
 
 
 def p_function_body(p):
