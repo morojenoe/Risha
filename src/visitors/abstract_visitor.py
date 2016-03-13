@@ -165,3 +165,11 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_param_decl(self, param_declaration):
         pass
+
+    @abc.abstractclassmethod
+    def visit_comma_separated_list(self, comma_separated_list):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_member_declarator(self, member_declarator):
+        pass

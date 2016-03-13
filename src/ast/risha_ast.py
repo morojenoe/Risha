@@ -7,6 +7,18 @@ class ASTNode(metaclass=abc.ABCMeta):
         pass
 
 
+class CommaSeparatedList(ASTNode):
+    def __init__(self):
+        self.elements = []
+
+    def add(self, element):
+        self.elements.append(element)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_comma_separated_list(self)
+
+
 class Node(ASTNode):
     def __init__(self, *args):
         self.childs = list(args)

@@ -2,7 +2,6 @@ import ply.lex
 import ply.yacc
 
 import src.ast as risha_ast
-import src.ast.statements
 from src.grammar import lexer
 
 tokens = lexer.tokens
@@ -348,9 +347,9 @@ def p_compound_statement(p):
     """ compound-statement : L_CURLY statement-seq R_CURLY
                            | L_CURLY R_CURLY """
     if len(p) == 4:
-        p[0] = src.ast.statements.CompoundStatement(p[2])
+        p[0] = risha_ast.CompoundStatement(p[2])
     else:
-        p[0] = src.ast.statements.CompoundStatement(None)
+        p[0] = risha_ast.CompoundStatement(None)
 
 
 def p_statement_seq(p):
@@ -367,9 +366,9 @@ def p_selection_statement_if(p):
     """ selection-statement : IF L_PAREN condition R_PAREN statement
                             | IF L_PAREN condition R_PAREN statement ELSE statement """
     if len(p) == 6:
-        p[0] = src.ast.statements.IfStatement(p[3], p[5], None)
+        p[0] = risha_ast.IfStatement(p[3], p[5], None)
     else:
-        p[0] = src.ast.statements.IfStatement(p[3], p[5], p[7])
+        p[0] = risha_ast.IfStatement(p[3], p[5], p[7])
 
 
 def p_condition(p):
@@ -391,16 +390,16 @@ def p_iteration_for_statement(p):
                             | FOR L_PAREN for-init-statement SEMICOLON expression R_PAREN statement
                             | FOR L_PAREN for-init-statement condition SEMICOLON expression R_PAREN statement """
     if len(p) == 7:
-        p[0] = src.ast.statements.ForLoop(p[3], None, None, p[6])
+        p[0] = risha_ast.ForLoop(p[3], None, None, p[6])
     elif len(p) == 8:
-        p[0] = src.ast.statements.ForLoop(p[3], None, p[5], p[7])
+        p[0] = risha_ast.ForLoop(p[3], None, p[5], p[7])
     elif len(p) == 9:
-        p[0] = src.ast.statements.ForLoop(p[3], p[4], p[6], p[8])
+        p[0] = risha_ast.ForLoop(p[3], p[4], p[6], p[8])
 
 
 def p_iteration_for_statement_with_condition(p):
     """ iteration-statement : FOR L_PAREN for-init-statement condition SEMICOLON R_PAREN statement """
-    p[0] = src.ast.statements.ForLoop(p[3], p[4], None, p[7])
+    p[0] = risha_ast.ForLoop(p[3], p[4], None, p[7])
 
 
 def p_for_init_statement(p):
@@ -798,12 +797,23 @@ def p_parameter_declaration_list(p):
 
 def p_parameter_declaration(p):
     """ parameter-declaration : decl-specifier-seq declarator
-                              | decl-specifier-seq declarator ASSIGNMENT initializer-clause
                               | decl-specifier-seq abstract-declarator
                               | decl-specifier-seq
-                              | decl-specifier-seq abstract-declarator ASSIGNMENT initializer-clause
                               | decl-specifier-seq ASSIGNMENT initializer-clause """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.ParameterDeclaration(p[1], None, None)
+    elif len(p) == 3:
+        p[0] = risha_ast.ParameterDeclaration(p[1], p[2], None)
+    elif len(p) == 4:
+        initializer = risha_ast.EqualInitializer(p[3])
+        p[0] = risha_ast.ParameterDeclaration(p[1], None, initializer)
+
+
+def p_parameter_declaration_with_initializer(p):
+    """ parameter-declaration : decl-specifier-seq declarator ASSIGNMENT initializer-clause
+                              | decl-specifier-seq abstract-declarator ASSIGNMENT initializer-clause """
+    initializer = risha_ast.EqualInitializer(p[4])
+    p[0] = risha_ast.ParameterDeclaration(p[1], p[2], initializer)
 
 
 def p_function_definition(p):
@@ -931,13 +941,19 @@ def p_member_declaration(p):
 def p_member_declarator_list(p):
     """ member-declarator-list : member-declarator
                                | member-declarator-list COMMA member-declarator """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.MemberDeclaratorList().add(p[1])
+    else:
+        p[0] = p[1].add(p[3])
 
 
 def p_member_declarator(p):
     """ member-declarator : declarator
                           | declarator brace-or-equal-initializer """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.MemberDeclarator(p[1], None)
+    else:
+        p[0] = risha_ast.MemberDeclarator(p[1], p[2])
 
 
 """
