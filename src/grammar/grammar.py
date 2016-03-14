@@ -424,7 +424,7 @@ def p_for_init_statement(p):
 
 def p_for_range_declaration(p):
     """ for-range-declaration : decl-specifier-seq declarator """
-    create_args(p)
+    p[0] = risha_ast.DeclaratorWithSpecifiers(p[1], p[2])
 
 
 def p_for_range_initializer(p):
@@ -764,9 +764,6 @@ def p_type_id(p):
 
 def p_abstract_declarator(p):
     """ abstract-declarator : noptr-abstract-declarator """
-    #                       | abstract-pack-declarator
-    #                       | parameters-and-qualifiers trailing-return-type
-    #                       | noptr-abstract-declarator parameters-and-qualifiers trailing-return-type
     p[0] = p[1]
 
 
@@ -779,19 +776,6 @@ def p_noptr_abstract_declarator(p):
                                   | L_BRACKET R_BRACKET
                                   | L_PAREN noptr-abstract-declarator R_PAREN """
     create_args(p)
-
-
-# def p_abstract_pack_declarator(p):
-#     """ abstract-pack-declarator : noptr-abstract-pack-declarator """
-#     p[0] = p[1]
-#
-#
-# def p_noptr_abstract_pack_declarator(p):
-#     """ noptr-abstract-pack-declarator : noptr-abstract-pack-declarator parameters-and-qualifiers
-#                                        | noptr-abstract-pack-declarator L_BRACKET R_BRACKET
-#                                        | noptr-abstract-pack-declarator L_BRACKET constant-expression R_BRACKET
-#                                        | empty """
-#     create_args(p)
 
 
 """

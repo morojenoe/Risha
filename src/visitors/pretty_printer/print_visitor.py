@@ -352,3 +352,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             return_statement.expression.accept(self)
             self._pop_indentation()
         self._print(';')
+
+    def visit_declarator_with_specifiers(self, declarator_with_specifiers):
+        if declarator_with_specifiers.specifiers is not None:
+            declarator_with_specifiers.specifiers.accept(self)
+            if declarator_with_specifiers.declarator is not None:
+                self._print(' ')
+                self._new_level_indentation(0)
+                declarator_with_specifiers.declarator.accept(self)
+                self._pop_indentation()
+        elif declarator_with_specifiers.declarator is not None:
+            declarator_with_specifiers.declarator.accept(self)

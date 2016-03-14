@@ -79,3 +79,12 @@ class Identifier(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_identifier(self)
+
+
+class DeclaratorWithSpecifiers(ASTNode):
+    def __init__(self, specifiers, declarator):
+        self.specifiers = specifiers
+        self.declarator = declarator
+
+    def accept(self, visitor):
+        visitor.visit_declarator_with_specifiers(self)
