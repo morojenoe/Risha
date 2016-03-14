@@ -189,3 +189,15 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_range_for_loop(self, range_for):
         pass
+
+    @abc.abstractclassmethod
+    def visit_break(self, break_statement):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_continue(self, continue_statement):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_return(self, return_statement):
+        pass

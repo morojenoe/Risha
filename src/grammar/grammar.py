@@ -391,12 +391,12 @@ def p_iteration_statement_while(p):
 
 def p_iteration_statement_do_while(p):
     """ iteration-statement : DO statement WHILE L_PAREN expression R_PAREN SEMICOLON """
-    create_args(p)
+    p[0] = risha_ast.DoWhileLoop(p[2], p[5])
 
 
 def p_iteration_statement_for(p):
     """ iteration-statement : FOR L_PAREN for-range-declaration COLON for-range-initializer R_PAREN statement """
-    create_args(p)
+    p[0] = risha_ast.RangeForLoop(p[3], p[5], p[7])
 
 
 def p_iteration_for_statement(p):
@@ -419,7 +419,7 @@ def p_iteration_for_statement_with_condition(p):
 def p_for_init_statement(p):
     """ for-init-statement : expression-statement
                            | simple-declaration """
-    create_args(p)
+    p[0] = p[1]
 
 
 def p_for_range_declaration(p):
@@ -430,16 +430,27 @@ def p_for_range_declaration(p):
 def p_for_range_initializer(p):
     """ for-range-initializer : expression
                               | braced-init-list """
-    create_args(p)
+    p[0] = p[1]
 
 
-def p_jump_statement(p):
-    """ jump-statement : BREAK SEMICOLON
-                       | CONTINUE SEMICOLON
-                       | RETURN SEMICOLON
+def p_jump_statement_break(p):
+    """ jump-statement : BREAK SEMICOLON """
+    p[0] = risha_ast.BreakStatement()
+
+
+def p_jump_statement_continue(p):
+    """ jump-statement : CONTINUE SEMICOLON """
+    p[0] = risha_ast.ContinueStatement()
+
+
+def p_jump_statement_return(p):
+    """ jump-statement : RETURN SEMICOLON
                        | RETURN expression SEMICOLON
                        | RETURN braced-init-list SEMICOLON """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.ReturnStatement(None)
+    else:
+        p[0] = risha_ast.ReturnStatement(p[2])
 
 
 def p_declaration_statement(p):

@@ -337,3 +337,18 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._new_level_indentation()
         range_for.statement.accept(self)
         self._pop_indentation()
+
+    def visit_break(self, break_statement):
+        self._print('break;', True)
+
+    def visit_continue(self, continue_statement):
+        self._print('continue;', True)
+
+    def visit_return(self, return_statement):
+        self._print('return', True)
+        if return_statement.expression is not None:
+            self._print(' ')
+            self._new_level_indentation(0)
+            return_statement.expression.accept(self)
+            self._pop_indentation()
+        self._print(';')

@@ -64,3 +64,21 @@ class RangeForLoop(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_range_for_loop(self)
+
+
+class BreakStatement(ASTNode):
+    def accept(self, visitor):
+        visitor.visit_break(self)
+
+
+class ContinueStatement(ASTNode):
+    def accept(self, visitor):
+        visitor.visit_continue(self)
+
+
+class ReturnStatement(ASTNode):
+    def __init__(self, expression):
+        self.expression = expression
+
+    def accept(self, visitor):
+        visitor.visit_return(self)
