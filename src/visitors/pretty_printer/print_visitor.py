@@ -297,3 +297,12 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         member_declarator.declarator.accept(self)
         if member_declarator.initializer is not None:
             member_declarator.initializer.accept(self)
+
+    def visit_assignment_expression(self, assignment_expression):
+        assignment_expression.expression.accept(self)
+        self._print(' ')
+        self._print(assignment_expression.operation)
+        self._print(' ')
+        self._new_level_indentation(0)
+        assignment_expression.initializer.accept(self)
+        self._pop_indentation()

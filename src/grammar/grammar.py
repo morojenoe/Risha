@@ -136,7 +136,10 @@ def p_expression(p):
 def p_assignment_expression(p):
     """ assignment-expression : conditional-expression
                               | logical-or-expression assignment-operator initializer-clause """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        p[0] = risha_ast.AssignmentExpression(p[1], p[2], p[3])
 
 
 def p_assignment_operator(p):
@@ -340,7 +343,10 @@ def p_statement(p):
 def p_expression_statement(p):
     """ expression-statement : expression SEMICOLON
                              | SEMICOLON """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.StatementExpression(None)
+    else:
+        p[0] = risha_ast.StatementExpression(p[1])
 
 
 def p_compound_statement(p):

@@ -30,7 +30,7 @@ class IfStatement(ASTNode):
         visitor.visit_if(self)
 
 
-class ExpressionStatement(ASTNode):
+class StatementExpression(ASTNode):
     def __init__(self, expression):
         self.expression = expression
 

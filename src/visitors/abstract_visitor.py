@@ -173,3 +173,7 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_member_declarator(self, member_declarator):
         pass
+
+    @abc.abstractclassmethod
+    def visit_assignment_expression(self, assignment_expression):
+        pass

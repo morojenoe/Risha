@@ -85,3 +85,13 @@ class ClassMemberAccess(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_member_access(self)
+
+
+class AssignmentExpression(ASTNode):
+    def __init__(self, expression, operator, initializer):
+        self.expression = expression
+        self.operator = operator
+        self.initializer = initializer
+
+    def accept(self, visitor):
+        visitor.visit_assignment_expression(self)
