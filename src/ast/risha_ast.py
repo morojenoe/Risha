@@ -7,6 +7,18 @@ class ASTNode(metaclass=abc.ABCMeta):
         pass
 
 
+class Sequence(ASTNode):
+    def __init__(self):
+        self.sequence = []
+
+    def add(self, element):
+        self.sequence.append(element)
+        return self
+
+    def accept(self, visitor):
+        visitor.visit_sequence(self)
+
+
 class CommaSeparatedList(ASTNode):
     def __init__(self):
         self.elements = []
@@ -51,18 +63,6 @@ class EnclosedInParenthesis(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_enclosed_in_paren(self)
-
-
-class DeclSpecifierSeq(ASTNode):
-    def __init__(self):
-        self.decl_specifiers = []
-
-    def add_decl_specifier(self, decl_specifier):
-        self.decl_specifiers.append(decl_specifier)
-        return self
-
-    def accept(self, visitor):
-        visitor.visit_decl_specifier_seq(self)
 
 
 class Program(ASTNode):

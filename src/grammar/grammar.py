@@ -523,11 +523,10 @@ def p_type_specifier(p):
 def p_type_specifier_seq(p):
     """ type-specifier-seq : type-specifier
                            | type-specifier type-specifier-seq """
-    create_args(p)
-    # if len(p) == 2:
-    #     p[0] = [p[1]]
-    # else:
-    #     p[0] = [p[1]] + list(p[2])
+    if len(p) == 2:
+        p[0] = risha_ast.TypeSpecifierSequence().add(p[1])
+    else:
+        p[0] = p[2].add(p[1])
 
 
 def p_trailing_type_specifier(p):
@@ -540,11 +539,10 @@ def p_trailing_type_specifier(p):
 def p_trailing_type_specifier_seq(p):
     """ trailing-type-specifier-seq : trailing-type-specifier
                                     | trailing-type-specifier trailing-type-specifier-seq """
-    create_args(p)
-    # if len(p) == 2:
-    #     p[0] = [p[1]]
-    # else:
-    #     p[0] = [p[1]] + list(p[2])
+    if len(p) == 2:
+        p[0] = risha_ast.TrailingTypeSpecifierSequence().add(p[1])
+    else:
+        p[0] = p[2].add(p[1])
 
 
 def p_simple_type_specifier(p):
