@@ -127,7 +127,7 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_expression_statement(self, expression_statement):
+    def visit_statement_expression(self, statement_expression):
         pass
 
     @abc.abstractclassmethod
@@ -176,4 +176,16 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_assignment_expression(self, assignment_expression):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_while_loop(self, while_loop):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_do_while_loop(self, do_while_loop):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_range_for_loop(self, range_for):
         pass

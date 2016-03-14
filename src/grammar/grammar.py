@@ -384,10 +384,18 @@ def p_condition(p):
     create_args(p)
 
 
-def p_iteration_statement(p):
-    """ iteration-statement : WHILE L_PAREN condition R_PAREN statement
-                            | DO statement WHILE L_PAREN expression R_PAREN SEMICOLON
-                            | FOR L_PAREN for-range-declaration COLON for-range-initializer R_PAREN statement """
+def p_iteration_statement_while(p):
+    """ iteration-statement : WHILE L_PAREN condition R_PAREN statement """
+    p[0] = risha_ast.WhileLoop(p[3], p[5])
+
+
+def p_iteration_statement_do_while(p):
+    """ iteration-statement : DO statement WHILE L_PAREN expression R_PAREN SEMICOLON """
+    create_args(p)
+
+
+def p_iteration_statement_for(p):
+    """ iteration-statement : FOR L_PAREN for-range-declaration COLON for-range-initializer R_PAREN statement """
     create_args(p)
 
 

@@ -35,4 +35,32 @@ class StatementExpression(ASTNode):
         self.expression = expression
 
     def accept(self, visitor):
-        visitor.visit_expression_statement(self)
+        visitor.visit_statement_expression(self)
+
+
+class WhileLoop(ASTNode):
+    def __init__(self, condition, statement):
+        self.condition = condition
+        self.statement = statement
+
+    def accept(self, visitor):
+        visitor.visit_while_loop(self)
+
+
+class DoWhileLoop(ASTNode):
+    def __init__(self, statement, expression):
+        self.statement = statement
+        self.expression = expression
+
+    def accept(self, visitor):
+        visitor.visit_do_while_loop(self)
+
+
+class RangeForLoop(ASTNode):
+    def __init__(self, declaration, initializer, statement):
+        self.declaration = declaration
+        self.initializer = initializer
+        self.statement = statement
+
+    def accept(self, visitor):
+        visitor.visit_range_for_loop(self)

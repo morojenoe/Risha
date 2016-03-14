@@ -235,9 +235,9 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         function_declarator.parameters.accept(self)
         self._pop_indentation()
 
-    def visit_expression_statement(self, expression_statement):
-        if expression_statement.statement is not None:
-            expression_statement.statement.accept(self)
+    def visit_statement_expression(self, statement_expression):
+        if statement_expression.expression is not None:
+            statement_expression.expression.accept(self)
         self._print(';')
 
     def visit_array_declaration(self, array_declaration):
@@ -305,4 +305,35 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print(' ')
         self._new_level_indentation(0)
         assignment_expression.initializer.accept(self)
+        self._pop_indentation()
+
+    def visit_while_loop(self, while_loop):
+        self._print('while (', True)
+        self._new_level_indentation(0)
+        while_loop.condition.accept(self)
+        self._print(')')
+        self._pop_indentation()
+        self._new_level_indentation()
+        while_loop.statement.accept(self)
+        self._pop_indentation()
+
+    def visit_do_while_loop(self, do_while_loop):
+        self._print('do', True)
+        do_while_loop.statement.accept(self)
+        self._print('while (')
+        self._new_level_indentation(0)
+        do_while_loop.expression.accept(self)
+        self._print(');')
+        self._pop_indentation()
+
+    def visit_range_for_loop(self, range_for):
+        self._print('for (', True)
+        self._new_level_indentation(0)
+        range_for.declaration.accept(self)
+        self._print(' : ')
+        range_for.initializer.accept(self)
+        self._print(')')
+        self._pop_indentation()
+        self._new_level_indentation()
+        range_for.statement.accept(self)
         self._pop_indentation()
