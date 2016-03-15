@@ -269,22 +269,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             parameter.accept(self)
 
     def visit_param_decl(self, param_declaration):
-        param_declaration.decl_specifiers.accept(self)
-        self._new_level_indentation(0)
-        if param_declaration.declarator is not None:
-            self._print(' ')
-            param_declaration.declarator.accept(self)
+        param_declaration.declarator_with_specifiers.accept(self)
         if param_declaration.initializer is not None:
+            self._new_level_indentation(0)
             self._print(' ')
             param_declaration.initializer.accept(self)
-        self._pop_indentation()
+            self._pop_indentation()
 
     def visit_function_definition(self, function_definition):
-        function_definition.decl_specifiers.accept(self)
-        self._print(' ')
-        self._new_level_indentation(0)
-        function_definition.declarator.accept(self)
-        self._pop_indentation()
+        function_definition.declarator_with_specifiers.accept(self)
         function_definition.body.accept(self)
 
     def visit_comma_separated_list(self, comma_separated_list):

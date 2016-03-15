@@ -808,28 +808,34 @@ def p_parameter_declaration(p):
                               | decl-specifier-seq
                               | decl-specifier-seq ASSIGNMENT initializer-clause """
     if len(p) == 2:
-        p[0] = risha_ast.ParameterDeclaration(p[1], None, None)
+        decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(p[1], None)
+        p[0] = risha_ast.ParameterDeclaration(decl_with_specifiers, None)
     elif len(p) == 3:
-        p[0] = risha_ast.ParameterDeclaration(p[1], p[2], None)
+        decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(p[1], p[2])
+        p[0] = risha_ast.ParameterDeclaration(decl_with_specifiers, None)
     elif len(p) == 4:
+        decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(p[1], None)
         initializer = risha_ast.EqualInitializer(p[3])
-        p[0] = risha_ast.ParameterDeclaration(p[1], None, initializer)
+        p[0] = risha_ast.ParameterDeclaration(decl_with_specifiers, initializer)
 
 
 def p_parameter_declaration_with_initializer(p):
     """ parameter-declaration : decl-specifier-seq declarator ASSIGNMENT initializer-clause
                               | decl-specifier-seq abstract-declarator ASSIGNMENT initializer-clause """
+    decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(p[1], p[2])
     initializer = risha_ast.EqualInitializer(p[4])
-    p[0] = risha_ast.ParameterDeclaration(p[1], p[2], initializer)
+    p[0] = risha_ast.ParameterDeclaration(decl_with_specifiers, initializer)
 
 
 def p_function_definition(p):
     """ function-definition : decl-specifier-seq declarator function-body
                             | declarator function-body """
     if len(p) == 3:
-        p[0] = risha_ast.FunctionDefinition(None, p[1], p[2])
+        decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(None, p[1])
+        p[0] = risha_ast.FunctionDefinition(decl_with_specifiers, p[2])
     else:
-        p[0] = risha_ast.FunctionDefinition(p[1], p[2], p[3])
+        decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(p[1], p[2])
+        p[0] = risha_ast.FunctionDefinition(decl_with_specifiers, p[3])
 
 
 def p_function_body(p):

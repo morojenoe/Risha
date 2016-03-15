@@ -2,9 +2,8 @@ from ..risha_ast import ASTNode
 
 
 class FunctionDefinition(ASTNode):
-    def __init__(self, decl_specifiers, declarator, body):
-        self.decl_specifiers = decl_specifiers
-        self.declarator = declarator
+    def __init__(self, declarator_with_specifiers, body):
+        self.declarator_with_specifiers = declarator_with_specifiers
         self.body = body
 
     def accept(self, visitor):
@@ -24,9 +23,8 @@ class ParameterDeclarationList(ASTNode):
 
 
 class ParameterDeclaration(ASTNode):
-    def __init__(self, decl_specifiers, declarator, initializer):
-        self.decl_specifiers = decl_specifiers
-        self.declarator = declarator
+    def __init__(self, declarator_with_specifiers, initializer):
+        self.declarator_with_specifiers = declarator_with_specifiers
         self.initializer = initializer
 
     def accept(self, visitor):
