@@ -221,3 +221,7 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_simple_declaration(self, simple_declaration):
         pass
+
+    @abc.abstractclassmethod
+    def visit_condition_with_declaration(self, condition_with_decl):
+        pass

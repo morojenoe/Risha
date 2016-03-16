@@ -28,3 +28,12 @@ class SimpleDeclaration(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_simple_declaration(self)
+
+
+class ConditionWithDeclaration(ASTNode):
+    def __init__(self, declarator_with_specifiers, initializer):
+        self.declarator_with_specifiers = declarator_with_specifiers
+        self.initializer = initializer
+
+    def accept(self, visitor):
+        visitor.visit_condition_with_declaration(self)

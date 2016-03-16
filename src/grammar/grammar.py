@@ -379,9 +379,12 @@ def p_selection_statement_if(p):
 
 def p_condition(p):
     """ condition : expression
-                  | declarator ASSIGNMENT initializer-clause
-                  | declarator braced-init-list """
-    create_args(p)
+                  | decl-specifier-seq declarator brace-or-equal-initializer """
+    if len(p) == 2:
+        p[0] = p[1]
+    else:
+        decl_with_specifiers = risha_ast.DeclaratorWithSpecifiers(p[1], p[2])
+        p[0] = risha_ast.ConditionWithDeclaration(decl_with_specifiers, p[3])
 
 
 def p_iteration_statement_while(p):

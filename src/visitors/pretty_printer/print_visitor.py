@@ -378,3 +378,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
                 self._print(' ')
             simple_declaration.list_of_declarators.accept(self)
         self._print(';')
+
+    def visit_condition_with_declaration(self, condition_with_decl):
+        condition_with_decl.declarator_with_specifiers.accept(self)
+        condition_with_decl.initializer.accept(self)
