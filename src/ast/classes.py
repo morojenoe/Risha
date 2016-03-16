@@ -42,3 +42,12 @@ class MemberDeclarator(ASTNode):
 
 class MemberDeclaratorList(CommaSeparatedList):
     pass
+
+
+class MemberDeclaration(ASTNode):
+    def __init__(self, specifiers, declarator_list):
+        self.specifiers = specifiers
+        self.declarator_list = declarator_list
+
+    def accept(self, visitor):
+        visitor.visit_member_declaration(self)

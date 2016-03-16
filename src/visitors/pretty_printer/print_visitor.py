@@ -382,3 +382,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_condition_with_declaration(self, condition_with_decl):
         condition_with_decl.declarator_with_specifiers.accept(self)
         condition_with_decl.initializer.accept(self)
+
+    def visit_member_declaration(self, member_declaration):
+        if member_declaration.specifiers is not None:
+            member_declaration.specifiers.accept(self)
+            if member_declaration.declarator_list is not None:
+                self._print(' ')
+                self._new_level_indentation(0)
+                member_declaration.declarator_list.accept(self)
+                self._pop_indentation()
+        elif member_declaration.declarator_list is not None:
+            member_declaration.declarator_list.accept(self)

@@ -985,12 +985,23 @@ def p_member_specification(p):
 
 def p_member_declaration(p):
     """ member-declaration : empty-declaration
-                           | decl-specifier-seq SEMICOLON
-                           | member-declarator-list SEMICOLON
-                           | decl-specifier-seq member-declarator-list SEMICOLON
                            | alias-declaration
                            | function-definition """
-    create_args(p)
+    p[0] = p[1]
+
+
+def p_member_declaration_declarators(p):
+    """ member-declaration : member-declarator-list SEMICOLON
+                           | decl-specifier-seq member-declarator-list SEMICOLON """
+    if len(p) == 3:
+        p[0] = risha_ast.MemberDeclaration(None, p[1])
+    else:
+        p[0] = risha_ast.MemberDeclaration(p[1], p[2])
+
+
+def p_member_declaration_declarators_specifiers(p):
+    """ member-declaration : decl-specifier-seq SEMICOLON """
+    p[0] = risha_ast.MemberDeclaration(p[1], None)
 
 
 def p_member_declarator_list(p):
