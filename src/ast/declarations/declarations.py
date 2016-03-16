@@ -19,3 +19,12 @@ class TypeSpecifierSequence(Sequence):
 
 class TrailingTypeSpecifierSequence(Sequence):
     pass
+
+
+class SimpleDeclaration(ASTNode):
+    def __init__(self, specifiers, list_of_declarators):
+        self.specifiers = specifiers
+        self.list_of_declarators = list_of_declarators
+
+    def accept(self, visitor):
+        visitor.visit_simple_declaration(self)

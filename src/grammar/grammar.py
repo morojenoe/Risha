@@ -381,8 +381,7 @@ def p_condition(p):
     """ condition : expression
                   | declarator ASSIGNMENT initializer-clause
                   | declarator braced-init-list """
-    if len(p) == 2:
-        p[0] = p[1]
+    create_args(p)
 
 
 def p_iteration_statement_while(p):
@@ -499,7 +498,12 @@ def p_simple_declaration(p):
                            | init-declarator-list SEMICOLON
                            | SEMICOLON
                            | """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.SimpleDeclaration(None, None)
+    elif len(p) == 3:
+        p[0] = risha_ast.SimpleDeclaration(None, p[1])
+    else:
+        p[0] = risha_ast.SimpleDeclaration(p[1], p[2])
 
 
 def p_empty_declaration(p):

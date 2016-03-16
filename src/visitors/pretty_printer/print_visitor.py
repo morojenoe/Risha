@@ -369,3 +369,12 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_simple_type(self, simple_type):
         self._print(simple_type.type_name)
+
+    def visit_simple_declaration(self, simple_declaration):
+        if simple_declaration.specifiers is not None:
+            simple_declaration.specifiers.accept(self)
+        if simple_declaration.list_of_declarators is not None:
+            if simple_declaration.specifiers is not None:
+                self._print(' ')
+            simple_declaration.list_of_declarators.accept(self)
+        self._print(';')
