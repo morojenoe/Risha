@@ -976,7 +976,7 @@ def p_member_declarator(p):
 
 def p_operator_function_id(p):
     """ operator-function-id : OPERATOR operator """
-    create_args(p)
+    p[0] = risha_ast.OperatorFunction(p[2])
 
 
 def p_operator(p):

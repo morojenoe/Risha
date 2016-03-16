@@ -205,3 +205,8 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_declarator_with_specifiers(self, declarator_with_specifiers):
         pass
+
+    @abc.abstractclassmethod
+    def visit_operator_function(self, operator_function):
+        pass
+

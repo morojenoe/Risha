@@ -356,3 +356,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
                 self._pop_indentation()
         elif declarator_with_specifiers.declarator is not None:
             declarator_with_specifiers.declarator.accept(self)
+
+    def visit_operator_function(self, operator_function):
+        self._print('operator', True)
+        self._print(operator_function.operator)

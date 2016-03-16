@@ -88,3 +88,11 @@ class DeclaratorWithSpecifiers(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_declarator_with_specifiers(self)
+
+
+class OperatorFunction(ASTNode):
+    def __init__(self, operator):
+        self.operator = operator
+
+    def accept(self, visitor):
+        visitor.visit_operator_function(self)
