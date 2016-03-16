@@ -381,7 +381,8 @@ def p_condition(p):
     """ condition : expression
                   | declarator ASSIGNMENT initializer-clause
                   | declarator braced-init-list """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = p[1]
 
 
 def p_iteration_statement_while(p):
@@ -571,8 +572,7 @@ def p_trailing_type_specifier_seq(p):
 
 
 def p_simple_type_specifier(p):
-    """ simple-type-specifier : type-name
-                              | CHAR
+    """ simple-type-specifier : CHAR
                               | BOOL
                               | SHORT
                               | INT
@@ -582,6 +582,11 @@ def p_simple_type_specifier(p):
                               | DOUBLE
                               | VOID
                               | AUTO """
+    p[0] = risha_ast.SimpleType(p[1])
+
+
+def p_simple_type_specifier_type_name(p):
+    """ simple-type-specifier : type-name """
     p[0] = p[1]
 
 
@@ -759,7 +764,10 @@ def p_declarator_id(p):
 def p_type_id(p):
     """ type-id : type-specifier-seq
                 | type-specifier-seq abstract-declarator """
-    create_args(p)
+    if len(p) == 2:
+        p[0] = risha_ast.DeclaratorWithSpecifiers(p[1], None)
+    else:
+        p[0] = risha_ast.DeclaratorWithSpecifiers(p[1], p[2])
 
 
 def p_abstract_declarator(p):
@@ -767,15 +775,42 @@ def p_abstract_declarator(p):
     p[0] = p[1]
 
 
-def p_noptr_abstract_declarator(p):
+def p_noptr_abstract_declarator_array_with_prefix(p):
+    """ noptr-abstract-declarator : noptr-abstract-declarator L_BRACKET constant-expression R_BRACKET
+                                  | noptr-abstract-declarator L_BRACKET  R_BRACKET """
+    if isinstance(p[1], risha_ast.ArrayDeclarator):
+        if len(p) == 4:
+            p[0] = p[1].add_parameter(None)
+        else:
+            p[0] = p[1].add_parameter(p[3])
+    else:
+        if len(p) == 4:
+            p[0] = risha_ast.ArrayDeclarator(p[1]).add_parameter(None)
+        else:
+            p[0] = risha_ast.ArrayDeclarator(p[1]).add_parameter(p[3])
+
+
+def p_noptr_abstract_declarator_array_without_prefix(p):
+    """ noptr-abstract-declarator : L_BRACKET constant-expression R_BRACKET
+                                  | L_BRACKET R_BRACKET """
+    if len(p) == 3:
+        p[0] = risha_ast.ArrayDeclarator(None).add_parameter(None)
+    else:
+        p[0] = risha_ast.ArrayDeclarator(None).add_parameter(p[2])
+
+
+def p_noptr_abstract_declarator_functions(p):
     """ noptr-abstract-declarator : noptr-abstract-declarator parameters-and-qualifiers
-                                  | parameters-and-qualifiers
-                                  | noptr-abstract-declarator L_BRACKET constant-expression R_BRACKET
-                                  | noptr-abstract-declarator L_BRACKET  R_BRACKET
-                                  | L_BRACKET constant-expression R_BRACKET
-                                  | L_BRACKET R_BRACKET
-                                  | L_PAREN noptr-abstract-declarator R_PAREN """
-    create_args(p)
+                                  | parameters-and-qualifiers """
+    if len(p) == 2:
+        p[0] = risha_ast.FunctionDeclarator(None, p[1])
+    else:
+        p[0] = risha_ast.FunctionDeclarator(p[1], p[2])
+
+
+def p_noptr_abstract_declarator_enclosed_in_paren(p):
+    """ noptr-abstract-declarator : L_PAREN noptr-abstract-declarator R_PAREN """
+    p[0] = risha_ast.EnclosedInParenthesis(p[2])
 
 
 """

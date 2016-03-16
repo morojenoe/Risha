@@ -210,3 +210,10 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     def visit_operator_function(self, operator_function):
         pass
 
+    @abc.abstractclassmethod
+    def visit_sequence(self, sequence):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_simple_type(self, simple_type):
+        pass

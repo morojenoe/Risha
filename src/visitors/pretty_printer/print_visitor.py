@@ -231,7 +231,8 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_function_declarator(self, function_declarator):
         self._new_level_indentation(0)
-        function_declarator.function_name.accept(self)
+        if function_declarator.function_name is not None:
+            function_declarator.function_name.accept(self)
         function_declarator.parameters.accept(self)
         self._pop_indentation()
 
@@ -241,7 +242,8 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print(';')
 
     def visit_array_declaration(self, array_declaration):
-        array_declaration.array_name.accept(self)
+        if array_declaration.array_name is not None:
+            array_declaration.array_name.accept(self)
         for parameter in array_declaration.parameters:
             self._print('[')
             parameter.accept(self)
@@ -360,3 +362,10 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_operator_function(self, operator_function):
         self._print('operator', True)
         self._print(operator_function.operator)
+
+    def visit_sequence(self, sequence):
+        for elem in sequence.elements:
+            elem.accept(self)
+
+    def visit_simple_type(self, simple_type):
+        self._print(simple_type.type_name)

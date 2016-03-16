@@ -9,10 +9,10 @@ class ASTNode(metaclass=abc.ABCMeta):
 
 class Sequence(ASTNode):
     def __init__(self):
-        self.sequence = []
+        self.elements = []
 
     def add(self, element):
-        self.sequence.append(element)
+        self.elements.append(element)
         return self
 
     def accept(self, visitor):
@@ -96,3 +96,11 @@ class OperatorFunction(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_operator_function(self)
+
+
+class SimpleType(ASTNode):
+    def __init__(self, type_name):
+        self.type_name = type_name
+
+    def accept(self, visitor):
+        visitor.visit_simple_type(self)
