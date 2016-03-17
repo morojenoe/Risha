@@ -1,4 +1,4 @@
-from .risha_ast import ASTNode
+from .risha_ast import ASTNode, Sequence
 
 
 class ForLoop(ASTNode):
@@ -10,6 +10,10 @@ class ForLoop(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_for(self)
+
+
+class StatementSequence(Sequence):
+    pass
 
 
 class CompoundStatement(ASTNode):

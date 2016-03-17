@@ -34,9 +34,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print_space()
         self._print('{')
         self._print_new_line()
-        for statement in compound_statement.statements:
-            statement.accept(self)
-            self._print_new_line()
+        compound_statement.statements.accept(self)
         self._print('}', True)
         self._print_new_line()
 
@@ -366,6 +364,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_sequence(self, sequence):
         for elem in sequence.elements:
             elem.accept(self)
+            self._print_new_line()
 
     def visit_simple_type(self, simple_type):
         self._print(simple_type.type_name, True)

@@ -362,10 +362,9 @@ def p_statement_seq(p):
     """ statement-seq : statement
                       | statement-seq statement """
     if len(p) == 2:
-        p[0] = [p[1]]
+        p[0] = risha_ast.StatementSequence().add(p[1])
     else:
-        p[1].append(p[2])
-        p[0] = p[1]
+        p[0] = p[1].add(p[2])
 
 
 def p_selection_statement_if(p):
