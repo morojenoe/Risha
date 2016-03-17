@@ -128,9 +128,9 @@ def p_expression(p):
     """ expression : assignment-expression
                    | expression COMMA assignment-expression """
     if len(p) == 2:
-        p[0] = risha_ast.Expression().add_expression(p[1])
+        p[0] = risha_ast.Expression().add(p[1])
     else:
-        p[0] = p[1].add_expression(p[3])
+        p[0] = p[1].add(p[3])
 
 
 def p_assignment_expression(p):
@@ -690,9 +690,9 @@ def p_init_declarator_list(p):
     """ init-declarator-list : init-declarator
                              | init-declarator-list COMMA init-declarator """
     if len(p) == 2:
-        p[0] = risha_ast.InitDeclaratorList().add_declarator(p[1])
+        p[0] = risha_ast.InitDeclaratorList().add(p[1])
     else:
-        p[0] = p[1].add_declarator(p[3])
+        p[0] = p[1].add(p[3])
 
 
 def p_init_declarator(p):
@@ -838,9 +838,9 @@ def p_parameter_declaration_list(p):
     """ parameter-declaration-list : parameter-declaration
                                    | parameter-declaration-list COMMA parameter-declaration """
     if len(p) == 2:
-        p[0] = risha_ast.ParameterDeclarationList().add_parameter(p[1])
+        p[0] = risha_ast.ParameterDeclarationList().add(p[1])
     else:
-        p[0] = p[1].add_parameter(p[3])
+        p[0] = p[1].add(p[3])
 
 
 def p_parameter_declaration(p):
@@ -917,9 +917,9 @@ def p_initializer_list(p):
     """ initializer-list : initializer-clause
                          | initializer-list COMMA initializer-clause """
     if len(p) == 2:
-        p[0] = risha_ast.initializers.InitializerList().add_clause(p[1])
+        p[0] = risha_ast.initializers.InitializerList().add(p[1])
     else:
-        p[0] = p[1].add_clause(p[3])
+        p[0] = p[1].add(p[3])
 
 
 def p_braced_init_list(p):

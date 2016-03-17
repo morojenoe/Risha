@@ -1,16 +1,8 @@
-from ..risha_ast import ASTNode
+from ..risha_ast import ASTNode, CommaSeparatedList
 
 
-class InitializerList(ASTNode):
-    def __init__(self):
-        self.initializer_clauses = []
-
-    def add_clause(self, clause):
-        self.initializer_clauses.append(clause)
-        return self
-
-    def accept(self, visitor):
-        visitor.visit_initializer_list(self)
+class InitializerList(CommaSeparatedList):
+    pass
 
 
 class BracedInitializerList(ASTNode):

@@ -1,4 +1,4 @@
-from src.ast import ASTNode
+from src.ast import ASTNode, CommaSeparatedList
 
 
 class BinaryOperation(ASTNode):
@@ -30,16 +30,8 @@ class CastExpression(ASTNode):
         visitor.visit_cast_expression(self)
 
 
-class Expression(ASTNode):
-    def __init__(self):
-        self.expressions = []
-
-    def add_expression(self, expression):
-        self.expressions.append(expression)
-        return self
-
-    def accept(self, visitor):
-        visitor.visit_expression(self)
+class Expression(CommaSeparatedList):
+    pass
 
 
 class PrefixUnaryExpression(ASTNode):

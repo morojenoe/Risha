@@ -43,10 +43,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_expression(self, expression_node):
-        pass
-
-    @abc.abstractclassmethod
     def visit_prefix_unary(self, prefix_unary):
         pass
 
@@ -64,10 +60,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_member_access(self, class_member_access):
-        pass
-
-    @abc.abstractclassmethod
-    def visit_initializer_list(self, initializer_list):
         pass
 
     @abc.abstractclassmethod
@@ -115,10 +107,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_init_declarator_list(self, init_declarator_list):
-        pass
-
-    @abc.abstractclassmethod
     def visit_init_declarator(self, init_declarator):
         pass
 
@@ -140,10 +128,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_function_definition(self, function_definition):
-        pass
-
-    @abc.abstractclassmethod
-    def visit_param_decl_list(self, param_decl_list):
         pass
 
     @abc.abstractclassmethod

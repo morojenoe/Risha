@@ -1,4 +1,4 @@
-from ..risha_ast import ASTNode
+from ..risha_ast import ASTNode, CommaSeparatedList
 
 
 class FunctionDefinition(ASTNode):
@@ -10,16 +10,8 @@ class FunctionDefinition(ASTNode):
         visitor.visit_function_definition(self)
 
 
-class ParameterDeclarationList(ASTNode):
-    def __init__(self):
-        self.parameters = []
-
-    def add_parameter(self, parameter):
-        self.parameters.append(parameter)
-        return self
-
-    def accept(self, visitor):
-        visitor.visit_param_decl_list(self)
+class ParameterDeclarationList(CommaSeparatedList):
+    pass
 
 
 class ParameterDeclaration(ASTNode):

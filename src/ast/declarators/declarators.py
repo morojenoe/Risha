@@ -1,16 +1,8 @@
-from ..risha_ast import ASTNode
+from ..risha_ast import ASTNode, CommaSeparatedList
 
 
-class InitDeclaratorList(ASTNode):
-    def __init__(self):
-        self.declarators = []
-
-    def add_declarator(self, declarator):
-        self.declarators.append(declarator)
-        return self
-
-    def accept(self, visitor):
-        visitor.visit_init_declarator_list(self)
+class InitDeclaratorList(CommaSeparatedList):
+    pass
 
 
 class InitDeclarator(ASTNode):

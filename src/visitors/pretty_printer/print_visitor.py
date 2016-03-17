@@ -121,12 +121,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print(')')
         cast_expression.cast_expression.accept(self)
 
-    def visit_expression(self, expression_node):
-        for it, expression in enumerate(expression_node.expressions):
-            if it > 0:
-                self._print(', ')
-            expression.accept(self)
-
     def visit_prefix_unary(self, prefix_unary):
         self._print(prefix_unary.operator)
         prefix_unary.expression.accept(self)
@@ -151,12 +145,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         class_member_access.object_expression.accept(self)
         self._print('.')
         class_member_access.member_expression.accept(self)
-
-    def visit_initializer_list(self, initializer_list):
-        for it, elem in enumerate(initializer_list.initializer_clauses):
-            if it > 0:
-                self._print(', ')
-            elem.accept(self)
 
     def visit_braced_init_list(self, braced_init_list):
         self._print('{')
@@ -231,12 +219,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print_space()
             init_declarator.initializer.accept(self)
 
-    def visit_init_declarator_list(self, init_declarator_list):
-        for it, declarator in enumerate(init_declarator_list.declarators):
-            if it > 0:
-                self._print(', ')
-            declarator.accept(self)
-
     def visit_function_declarator(self, function_declarator):
         self._new_level_indentation(0)
         if function_declarator.function_name is not None:
@@ -259,12 +241,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_literal(self, literal):
         self._print(literal.value, True)
-
-    def visit_param_decl_list(self, param_decl_list):
-        for it, parameter in enumerate(param_decl_list.parameters):
-            if it > 0:
-                self._print(', ')
-            parameter.accept(self)
 
     def visit_param_decl(self, param_declaration):
         param_declaration.declarator_with_specifiers.accept(self)
