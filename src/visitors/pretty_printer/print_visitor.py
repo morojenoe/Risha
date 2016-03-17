@@ -21,11 +21,17 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def _pop_indentation(self):
         self.indentation.pop()
 
+    def _print(self, text, indentation=False):
+        if indentation:
+            print(' ' * self.indentation[-1], file=self.output, end='')
+        print(text, file=self.output, end='')
+
     def visit_compound_statement(self, compound_statement):
         if compound_statement.statements is None:
             self._print('{}')
             return
 
+        self._print_space()
         self._print('{')
         self._print_new_line()
         for statement in compound_statement.statements:
@@ -33,11 +39,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print_new_line()
         self._print('}', True)
         self._print_new_line()
-
-    def _print(self, text, indentation=False):
-        if indentation:
-            print(' ' * self.indentation[-1], file=self.output, end='')
-        print(text, file=self.output, end='')
 
     def _print_new_line(self):
         print('\n', file=self.output, end='')
@@ -258,20 +259,8 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             parameter.accept(self)
             self._print(']')
 
-    def visit_string_literal(self, string_literal):
-        self._print(string_literal.value, True)
-
-    def visit_floating_literal(self, floating_literal):
-        self._print(floating_literal.value, True)
-
-    def visit_boolean_literal(self, boolean_literal):
-        self._print(boolean_literal.value, True)
-
-    def visit_integer_literal(self, integer_literal):
-        self._print(integer_literal.value, True)
-
-    def visit_character_literal(self, character_literal):
-        self._print(character_literal.value, True)
+    def visit_literal(self, literal):
+        self._print(literal.value, True)
 
     def visit_param_decl_list(self, param_decl_list):
         for it, parameter in enumerate(param_decl_list.parameters):
