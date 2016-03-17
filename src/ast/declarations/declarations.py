@@ -1,14 +1,7 @@
 from ..risha_ast import ASTNode, Sequence
 
 
-class DeclSpecifierSeq(ASTNode):
-    def __init__(self):
-        self.decl_specifiers = []
-
-    def add_decl_specifier(self, decl_specifier):
-        self.decl_specifiers.append(decl_specifier)
-        return self
-
+class DeclSpecifierSeq(Sequence):
     def accept(self, visitor):
         visitor.visit_decl_specifier_seq(self)
 

@@ -526,9 +526,9 @@ def p_decl_specifier_seq(p):
     """ decl-specifier-seq : decl-specifier
                            | decl-specifier-seq decl-specifier """
     if len(p) == 2:
-        p[0] = risha_ast.DeclSpecifierSeq().add_decl_specifier(p[1])
+        p[0] = risha_ast.DeclSpecifierSeq().add(p[1])
     else:
-        p[0] = p[1].add_decl_specifier(p[2])
+        p[0] = p[1].add(p[2])
 
 
 def p_storage_class_specifier(p):

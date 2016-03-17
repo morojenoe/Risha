@@ -7,6 +7,12 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self.indentation = [0]
         self.inc_indentation = inc_indentation
 
+    def _print_semicolon(self):
+        self._print(';')
+
+    def _print_space(self):
+        self._print(' ')
+
     def _new_level_indentation(self, value=None):
         if value is None:
             value = self.indentation[-1] + self.inc_indentation
@@ -17,16 +23,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_compound_statement(self, compound_statement):
         if compound_statement.statements is None:
-            self._print('{ }')
+            self._print('{}')
             return
 
         self._print('{')
         self._print_new_line()
-        self._new_level_indentation()
         for statement in compound_statement.statements:
             statement.accept(self)
             self._print_new_line()
-        self._pop_indentation()
         self._print('}', True)
         self._print_new_line()
 
@@ -39,7 +43,8 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         print('\n', file=self.output, end='')
 
     def visit(self, elem):
-        self._print(elem + ' ', True)
+        self._print(elem, True)
+        self._print_space()
 
     def visit_for(self, for_node):
         self._print('for (', True)
@@ -47,12 +52,13 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if for_node.condition is not None:
             for_node.condition.accept(self)
         else:
-            self._print(' ')
-        self._print('; ')
+            self._print_space()
+        self._print_semicolon()
+        self._print_space()
         if for_node.expression is not None:
             for_node.expression.accept(self)
         else:
-            self._print(' ')
+            self._print_space()
         self._print(') ')
         self._new_level_indentation()
         for_node.statement.accept(self)
@@ -65,7 +71,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._pop_indentation()
         self._print(' = ')
         alias_declaration.type_id.accept(self)
-        self._print(';')
+        self._print_semicolon()
 
     def visit_if(self, if_node):
         self._print('if (', True)
@@ -87,7 +93,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         class_node.member_specification.accept(self)
         self._pop_indentation()
         self._print('}', True)
-        self._print_new_line()
 
     def visit_enum(self, enum_node):
         enum_node.enum_head.accept(self)
@@ -171,12 +176,16 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print(')')
 
     def visit_decl_specifier_seq(self, decl_specifier_seq):
-        for decl_specifier in decl_specifier_seq.decl_specifiers:
+        for it, decl_specifier in enumerate(decl_specifier_seq.elements):
+            if it > 0:
+                self._print_space()
+                self._new_level_indentation(0)
             if isinstance(decl_specifier, str):
-                self._print(decl_specifier + ' ', True)
+                self._print(decl_specifier, True)
             else:
                 decl_specifier.accept(self)
-                self._print(' ')
+            if it > 0:
+                self._pop_indentation()
 
     def visit_program(self, program):
         for declaration in program.declarations:
@@ -193,7 +202,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_enum_head(self, enum_head):
         enum_head.enum_key.accept(self)
-        self._print(' ')
+        self._print_space()
         self._new_level_indentation(0)
         if enum_head.identifier is not None:
             enum_head.identifier.accept(self)
@@ -220,7 +229,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_init_declarator(self, init_declarator):
         init_declarator.declarator.accept(self)
         if init_declarator.initializer is not None:
-            self._print(' ')
+            self._print_space()
             init_declarator.initializer.accept(self)
 
     def visit_init_declarator_list(self, init_declarator_list):
@@ -239,7 +248,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_statement_expression(self, statement_expression):
         if statement_expression.expression is not None:
             statement_expression.expression.accept(self)
-        self._print(';')
+        self._print_semicolon()
 
     def visit_array_declaration(self, array_declaration):
         if array_declaration.array_name is not None:
@@ -250,19 +259,19 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print(']')
 
     def visit_string_literal(self, string_literal):
-        self._print(string_literal.value)
+        self._print(string_literal.value, True)
 
     def visit_floating_literal(self, floating_literal):
-        self._print(floating_literal.value)
+        self._print(floating_literal.value, True)
 
     def visit_boolean_literal(self, boolean_literal):
-        self._print(boolean_literal.value)
+        self._print(boolean_literal.value, True)
 
     def visit_integer_literal(self, integer_literal):
-        self._print(integer_literal.value)
+        self._print(integer_literal.value, True)
 
     def visit_character_literal(self, character_literal):
-        self._print(character_literal.value)
+        self._print(character_literal.value, True)
 
     def visit_param_decl_list(self, param_decl_list):
         for it, parameter in enumerate(param_decl_list.parameters):
@@ -274,13 +283,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         param_declaration.declarator_with_specifiers.accept(self)
         if param_declaration.initializer is not None:
             self._new_level_indentation(0)
-            self._print(' ')
+            self._print_space()
             param_declaration.initializer.accept(self)
             self._pop_indentation()
 
     def visit_function_definition(self, function_definition):
         function_definition.declarator_with_specifiers.accept(self)
+        self._new_level_indentation()
         function_definition.body.accept(self)
+        self._pop_indentation()
 
     def visit_comma_separated_list(self, comma_separated_list):
         for it, element in enumerate(comma_separated_list.elements):
@@ -295,9 +306,9 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_assignment_expression(self, assignment_expression):
         assignment_expression.expression.accept(self)
-        self._print(' ')
+        self._print_space()
         self._print(assignment_expression.operation)
-        self._print(' ')
+        self._print_space()
         self._new_level_indentation(0)
         assignment_expression.initializer.accept(self)
         self._pop_indentation()
@@ -342,17 +353,17 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_return(self, return_statement):
         self._print('return', True)
         if return_statement.expression is not None:
-            self._print(' ')
+            self._print_space()
             self._new_level_indentation(0)
             return_statement.expression.accept(self)
             self._pop_indentation()
-        self._print(';')
+        self._print_semicolon()
 
     def visit_declarator_with_specifiers(self, declarator_with_specifiers):
         if declarator_with_specifiers.specifiers is not None:
             declarator_with_specifiers.specifiers.accept(self)
             if declarator_with_specifiers.declarator is not None:
-                self._print(' ')
+                self._print_space()
                 self._new_level_indentation(0)
                 declarator_with_specifiers.declarator.accept(self)
                 self._pop_indentation()
@@ -368,16 +379,16 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             elem.accept(self)
 
     def visit_simple_type(self, simple_type):
-        self._print(simple_type.type_name)
+        self._print(simple_type.type_name, True)
 
     def visit_simple_declaration(self, simple_declaration):
         if simple_declaration.specifiers is not None:
             simple_declaration.specifiers.accept(self)
         if simple_declaration.list_of_declarators is not None:
             if simple_declaration.specifiers is not None:
-                self._print(' ')
+                self._print_space()
             simple_declaration.list_of_declarators.accept(self)
-        self._print(';')
+        self._print_semicolon()
 
     def visit_condition_with_declaration(self, condition_with_decl):
         condition_with_decl.declarator_with_specifiers.accept(self)
@@ -387,9 +398,10 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if member_declaration.specifiers is not None:
             member_declaration.specifiers.accept(self)
             if member_declaration.declarator_list is not None:
-                self._print(' ')
+                self._print_space()
                 self._new_level_indentation(0)
                 member_declaration.declarator_list.accept(self)
                 self._pop_indentation()
         elif member_declaration.declarator_list is not None:
             member_declaration.declarator_list.accept(self)
+        self._print_semicolon()
