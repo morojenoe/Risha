@@ -205,3 +205,7 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_template_argument(self, template_argument):
         pass
+
+    @abc.abstractclassmethod
+    def visit_type_specifier_sequence(self, type_specifier_sequence):
+        pass

@@ -411,3 +411,9 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_template_argument(self, template_argument):
         template_argument.argument.accept(self)
+
+    def visit_type_specifier_sequence(self, type_specifier_sequence):
+        for it, elem in enumerate(type_specifier_sequence.elements):
+            if it > 0:
+                self._print_space()
+            elem.accept(self)

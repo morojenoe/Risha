@@ -7,7 +7,8 @@ class DeclSpecifierSeq(Sequence):
 
 
 class TypeSpecifierSequence(Sequence):
-    pass
+    def accept(self, visitor):
+        visitor.visit_type_specifier_sequence(self)
 
 
 class TrailingTypeSpecifierSequence(Sequence):
