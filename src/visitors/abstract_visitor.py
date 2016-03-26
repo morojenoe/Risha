@@ -197,3 +197,11 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_member_declaration(self, member_declaration):
         pass
+
+    @abc.abstractclassmethod
+    def visit_simple_template(self, simple_template):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_template_argument(self, template_argument):
+        pass

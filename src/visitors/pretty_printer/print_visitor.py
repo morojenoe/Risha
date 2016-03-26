@@ -400,3 +400,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         elif member_declaration.declarator_list is not None:
             member_declaration.declarator_list.accept(self)
         self._print_semicolon()
+
+    def visit_simple_template(self, simple_template):
+        simple_template.template_name.accept(self)
+        self._print('<')
+        self._new_level_indentation(0)
+        simple_template.template_argument_list.accept(self)
+        self._pop_indentation()
+        self._print('>')
+
+    def visit_template_argument(self, template_argument):
+        template_argument.argument.accept(self)
