@@ -1,11 +1,8 @@
 reserved = {
     'false': 'FALSE',
     'true': 'TRUE',
-    'case': 'CASE',
-    'default': 'DEFAULT',
     'if': 'IF',
     'else': 'ELSE',
-    'switch': 'SWITCH',
     'while': 'WHILE',
     'do': 'DO',
     'for': 'FOR',
@@ -86,7 +83,6 @@ tokens = [
              'BITWISE_NOT',
              'DOT',
              'SEMICOLON',
-             'ARROW'
          ] + list(reserved.values())
 
 t_BINARY_NUMBER = r'0[b|B][0|1](_?[0|1])*(LLU|ULL|LL|U)?'
@@ -142,7 +138,6 @@ t_LOGICAL_NOT = r'!'
 t_BITWISE_NOT = r'~'
 t_DOT = r'\.'
 t_SEMICOLON = r';'
-t_ARROW = r'->'
 t_ignore = ' \t'
 
 

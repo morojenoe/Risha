@@ -28,16 +28,16 @@ def get_output_file_name(settings):
 def write_includes(output_file):
     with open('lib/includes.h', 'r') as includes:
         output_file.writelines(includes.readlines())
-        output_file.write('\n')
+    output_file.write('\n')
 
 
 def write_main_function(cpp_file):
-    main_function = [
+    main_function = (
         'int main() {\n',
         '  solution::main();\n',
         '  return 0;\n',
         '}\n',
-    ]
+    )
     cpp_file.writelines(main_function)
 
 
