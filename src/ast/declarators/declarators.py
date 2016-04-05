@@ -42,3 +42,15 @@ class ParametersAndQualifiers(ASTNode):
 
     def accept(self, visitor):
         visitor.visit_parameters_and_qualifiers(self)
+
+
+class QualifiersAndSpecifiers(ASTNode):
+    def __init__(self, name):
+        self.name = name
+
+    def accept(self, visitor):
+        visitor.visit_qualifiers_and_specifiers(self)
+
+
+class RefQualifier(QualifiersAndSpecifiers):
+    pass

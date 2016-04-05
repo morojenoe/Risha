@@ -496,15 +496,19 @@ def p_alias_declaration(p):
 
 
 def p_simple_declaration(p):
-    """ simple-declaration : decl-specifier-seq init-declarator-list SEMICOLON
-                           | decl-specifier-seq SEMICOLON
-                           | init-declarator-list SEMICOLON
-                           | SEMICOLON
-                           | """
+    """ simple-declaration : init-declarator-list SEMICOLON
+                           | SEMICOLON """
     if len(p) == 2:
         p[0] = risha_ast.SimpleDeclaration(None, None)
     elif len(p) == 3:
         p[0] = risha_ast.SimpleDeclaration(None, p[1])
+
+
+def p_simple_declaration_with_specifiers(p):
+    """ simple-declaration : decl-specifier-seq init-declarator-list SEMICOLON
+                           | decl-specifier-seq SEMICOLON """
+    if len(p) == 3:
+        p[0] = risha_ast.SimpleDeclaration(p[1], None)
     else:
         p[0] = risha_ast.SimpleDeclaration(p[1], p[2])
 
@@ -516,6 +520,7 @@ def p_empty_declaration(p):
 
 def p_decl_specifier(p):
     """ decl-specifier : storage-class-specifier
+                       | ref-qualifier
                        | type-specifier
                        | function-specifier
                        | TYPEDEF """
@@ -526,9 +531,16 @@ def p_decl_specifier_seq(p):
     """ decl-specifier-seq : decl-specifier
                            | decl-specifier-seq decl-specifier """
     if len(p) == 2:
-        p[0] = risha_ast.DeclSpecifierSeq().add(p[1])
+        p[0] = risha_ast.DeclSpecifierSeq()
+        if isinstance(p[1], risha_ast.RefQualifier):
+            p[0].set_ref_qualifier()
+        else:
+            p[0] = p[0].add(p[1])
     else:
-        p[0] = p[1].add(p[2])
+        if isinstance(p[2], risha_ast.RefQualifier):
+            p[0] = p[1].set_ref_qualifier()
+        else:
+            p[0] = p[1].add(p[2])
 
 
 def p_storage_class_specifier(p):
@@ -754,9 +766,8 @@ def p_cv_qualifier(p):
 
 
 def p_ref_qualifier(p):
-    """ ref-qualifier : LOGICAL_AND
-                      | BITWISE_AND """
-    p[0] = p[1]
+    """ ref-qualifier : REF """
+    p[0] = risha_ast.RefQualifier(p[1])
 
 
 def p_declarator_id(p):
@@ -979,9 +990,9 @@ def p_member_specification(p):
     """ member-specification : member-declaration
                              | member-declaration member-specification """
     if len(p) == 2:
-        p[0] = risha_ast.MemberSpecification().add_member(p[1])
+        p[0] = risha_ast.MemberSpecification().add(p[1])
     else:
-        p[0] = p[2].add_member(p[1])
+        p[0] = p[2].add(p[1])
 
 
 def p_member_declaration(p):

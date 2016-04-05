@@ -2,8 +2,19 @@ from ..risha_ast import ASTNode, Sequence
 
 
 class DeclSpecifierSeq(Sequence):
+    def __init__(self):
+        super().__init__()
+        self.ref_qualifier = False
+
     def accept(self, visitor):
         visitor.visit_decl_specifier_seq(self)
+
+    def is_ref_qualifier_present(self):
+        return self.ref_qualifier
+
+    def set_ref_qualifier(self):
+        self.ref_qualifier = True
+        return self
 
 
 class TypeSpecifierSequence(Sequence):

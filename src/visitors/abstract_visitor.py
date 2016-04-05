@@ -103,10 +103,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_member_specification(self, member_specification):
-        pass
-
-    @abc.abstractclassmethod
     def visit_init_declarator(self, init_declarator):
         pass
 
@@ -208,4 +204,8 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_type_specifier_sequence(self, type_specifier_sequence):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_qualifiers_and_specifiers(self, qualifiers_and_specifiers):
         pass

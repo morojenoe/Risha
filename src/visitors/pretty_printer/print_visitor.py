@@ -6,6 +6,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self.output = output
         self.indentation = [0]
         self.inc_indentation = inc_indentation
+        self.ref_qualifier = False
 
     def _print_semicolon(self):
         self._print(';')
@@ -229,13 +230,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print(' = ')
             enumerator.const_expression.accept(self)
 
-    def visit_member_specification(self, member_specification):
-        for member in member_specification.members:
-            member.accept(self)
-            self._print_new_line()
-
     def visit_init_declarator(self, init_declarator):
-        init_declarator.declarator.accept(self)
+        if self.ref_qualifier:
+            self._print('&', True)
+            self._new_level_indentation(0)
+            init_declarator.declarator.accept(self)
+            self._pop_indentation()
+        else:
+            init_declarator.declarator.accept(self)
         if init_declarator.initializer is not None:
             self._new_level_indentation(0)
             init_declarator.initializer.accept(self)
@@ -243,6 +245,8 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_function_declarator(self, function_declarator):
         self._new_level_indentation(0)
+        if self.ref_qualifier:
+            self._print('&')
         if function_declarator.function_name is not None:
             function_declarator.function_name.accept(self)
         function_declarator.parameters.accept(self)
@@ -287,7 +291,13 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             element.accept(self)
 
     def visit_member_declarator(self, member_declarator):
-        member_declarator.declarator.accept(self)
+        if self.ref_qualifier:
+            self._print('&')
+            self._new_level_indentation(0)
+            member_declarator.declarator.accept(self)
+            self._pop_indentation()
+        else:
+            member_declarator.declarator.accept(self)
         if member_declarator.initializer is not None:
             member_declarator.initializer.accept(self)
 
@@ -351,12 +361,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_declarator_with_specifiers(self, declarator_with_specifiers):
         if declarator_with_specifiers.specifiers is not None:
+            self.ref_qualifier = declarator_with_specifiers.specifiers \
+                .is_ref_qualifier_present()
             declarator_with_specifiers.specifiers.accept(self)
             if declarator_with_specifiers.declarator is not None:
                 self._print_space()
                 self._new_level_indentation(0)
                 declarator_with_specifiers.declarator.accept(self)
                 self._pop_indentation()
+            self.ref_qualifier = False
         elif declarator_with_specifiers.declarator is not None:
             declarator_with_specifiers.declarator.accept(self)
 
@@ -375,12 +388,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_simple_declaration(self, simple_declaration):
         if simple_declaration.specifiers is not None:
             simple_declaration.specifiers.accept(self)
+            self.ref_qualifier = simple_declaration.specifiers.\
+                is_ref_qualifier_present()
         if simple_declaration.list_of_declarators is not None:
             if simple_declaration.specifiers is not None:
                 self._print_space()
             self._new_level_indentation(0)
             simple_declaration.list_of_declarators.accept(self)
             self._pop_indentation()
+        self.ref_qualifier = False
         self._print_semicolon()
 
     def visit_condition_with_declaration(self, condition_with_decl):
@@ -392,11 +408,14 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_member_declaration(self, member_declaration):
         if member_declaration.specifiers is not None:
             member_declaration.specifiers.accept(self)
+            self.ref_qualifier = member_declaration.specifiers.\
+                is_ref_qualifier_present()
             if member_declaration.declarator_list is not None:
                 self._print_space()
                 self._new_level_indentation(0)
                 member_declaration.declarator_list.accept(self)
                 self._pop_indentation()
+            self.ref_qualifier = False
         elif member_declaration.declarator_list is not None:
             member_declaration.declarator_list.accept(self)
         self._print_semicolon()
@@ -417,3 +436,6 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             if it > 0:
                 self._print_space()
             elem.accept(self)
+
+    def visit_qualifiers_and_specifiers(self, qualifiers_and_specifiers):
+        self._print(qualifiers_and_specifiers.name, True)

@@ -27,7 +27,8 @@ reserved = {
     'auto': 'AUTO',
     'const': 'CONST',
     'typedef': 'TYPEDEF',
-    'operator': 'OPERATOR'
+    'operator': 'OPERATOR',
+    'ref': 'REF',
 }
 
 tokens = [
