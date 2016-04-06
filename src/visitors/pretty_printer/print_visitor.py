@@ -164,7 +164,9 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_member_access(self, class_member_access):
         class_member_access.object_expression.accept(self)
         self._print('.')
+        self._new_level_indentation(0)
         class_member_access.member_expression.accept(self)
+        self._pop_indentation()
 
     def visit_braced_init_list(self, braced_init_list):
         self._print('{')
