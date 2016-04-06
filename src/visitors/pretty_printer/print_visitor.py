@@ -244,13 +244,13 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._pop_indentation()
 
     def visit_function_declarator(self, function_declarator):
-        self._new_level_indentation(0)
         if self.ref_qualifier:
+            self._new_level_indentation(0)
             self._print('&')
+            self._pop_indentation()
         if function_declarator.function_name is not None:
             function_declarator.function_name.accept(self)
         function_declarator.parameters.accept(self)
-        self._pop_indentation()
 
     def visit_statement_expression(self, statement_expression):
         if statement_expression.expression is not None:
@@ -388,7 +388,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_simple_declaration(self, simple_declaration):
         if simple_declaration.specifiers is not None:
             simple_declaration.specifiers.accept(self)
-            self.ref_qualifier = simple_declaration.specifiers.\
+            self.ref_qualifier = simple_declaration.specifiers. \
                 is_ref_qualifier_present()
         if simple_declaration.list_of_declarators is not None:
             if simple_declaration.specifiers is not None:
@@ -408,7 +408,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_member_declaration(self, member_declaration):
         if member_declaration.specifiers is not None:
             member_declaration.specifiers.accept(self)
-            self.ref_qualifier = member_declaration.specifiers.\
+            self.ref_qualifier = member_declaration.specifiers. \
                 is_ref_qualifier_present()
             if member_declaration.declarator_list is not None:
                 self._print_space()
