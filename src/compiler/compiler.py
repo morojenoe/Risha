@@ -26,7 +26,7 @@ def get_output_file_name(settings):
 
 
 def write_includes(output_file):
-    with open('lib/includes.h', 'r') as includes:
+    with open('../../lib/includes.h', 'r') as includes:
         output_file.writelines(includes.readlines())
     output_file.write('\n')
 
