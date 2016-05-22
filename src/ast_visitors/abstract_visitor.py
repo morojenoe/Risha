@@ -419,3 +419,11 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_qualifiers_and_specifiers_after(self, qualifiers_and_specifiers):
         pass
+
+    @abc.abstractclassmethod
+    def visit_class_head_before(self, class_head):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_class_head_after(self, class_head):
+        pass

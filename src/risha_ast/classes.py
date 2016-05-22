@@ -7,7 +7,7 @@ class ClassHead(ASTNode):
         self.class_name = class_name
 
     def accept_print_visitor(self, visitor):
-        pass
+        visitor.visit_class_head_before(self)
 
 
 class ClassDefinition(ASTNode):

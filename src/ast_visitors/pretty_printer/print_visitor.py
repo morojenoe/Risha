@@ -100,10 +100,7 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
             self._pop_indentation()
 
     def visit_class_before(self, class_node):
-        self._print('struct ', True)
-        self._new_level_indentation(0)
-        class_node.class_head.class_name.accept_print_visitor(self)
-        self._pop_indentation()
+        class_node.class_head.accept_print_visitor(self)
         self._print(' {')
         self._print_new_line()
         self._new_level_indentation()
@@ -445,6 +442,12 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
     def visit_qualifiers_and_specifiers_before(self, qualifiers_and_specifiers):
         self._print(qualifiers_and_specifiers.name, True)
 
+    def visit_class_head_before(self, class_head):
+        self._print('struct ', True)
+        self._new_level_indentation(0)
+        class_head.class_name.accept_print_visitor(self)
+        self._pop_indentation()
+
     def visit_return_after(self, return_statement):
         pass
 
@@ -601,3 +604,7 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
 
     def visit_param_decl_after(self, param_declaration):
         pass
+
+    def visit_class_head_after(self, class_head):
+        pass
+
