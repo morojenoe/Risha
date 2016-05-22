@@ -1,3 +1,6 @@
+import warnings
+
+
 class SymbolTable:
     def __init__(self):
         self._variables = {}
@@ -5,6 +8,11 @@ class SymbolTable:
         self._types = {}
 
     def insert_variable(self, variable):
+        if variable.identifier in self._variables:
+            warnings.warn('Identifier {old_id} is already in symbol table. '
+                          'You\'re trying to add new identifier {new_id}. '
+                          'Old value will be rewritten.'.format(
+                old_id=self._variables[variable.identifier], new_id=variable))
         self._variables[variable.identifier] = variable
 
     def insert_function(self, function):
