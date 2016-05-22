@@ -7,7 +7,7 @@ class FunctionDefinition(ASTNode):
         self.body = body
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_function_definition(self)
+        visitor.visit_function_definition_before(self)
 
 
 class ParameterDeclarationList(CommaSeparatedList):
@@ -20,4 +20,4 @@ class ParameterDeclaration(ASTNode):
         self.initializer = initializer
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_param_decl(self)
+        visitor.visit_param_decl_before(self)

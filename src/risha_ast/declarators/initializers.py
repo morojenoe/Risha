@@ -10,7 +10,7 @@ class BracedInitializerList(ASTNode):
         self.initializer_list = initializer_list
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_braced_init_list(self)
+        visitor.visit_braced_init_list_before(self)
 
 
 class EqualInitializer(ASTNode):
@@ -18,4 +18,4 @@ class EqualInitializer(ASTNode):
         self.initializer_clause = initializer_clause
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_equal_initializer(self)
+        visitor.visit_equal_initializer_before(self)

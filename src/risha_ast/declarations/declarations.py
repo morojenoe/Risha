@@ -7,7 +7,7 @@ class DeclSpecifierSeq(Sequence):
         self.ref_qualifier = False
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_decl_specifier_seq(self)
+        visitor.visit_decl_specifier_seq_before(self)
 
     def is_ref_qualifier_present(self):
         return self.ref_qualifier
@@ -19,7 +19,7 @@ class DeclSpecifierSeq(Sequence):
 
 class TypeSpecifierSequence(Sequence):
     def accept_print_visitor(self, visitor):
-        visitor.visit_type_specifier_sequence(self)
+        visitor.visit_type_specifier_sequence_before(self)
 
 
 class TrailingTypeSpecifierSequence(Sequence):
@@ -32,7 +32,7 @@ class SimpleDeclaration(ASTNode):
         self.list_of_declarators = list_of_declarators
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_simple_declaration(self)
+        visitor.visit_simple_declaration_before(self)
 
 
 class ConditionWithDeclaration(ASTNode):
@@ -41,4 +41,4 @@ class ConditionWithDeclaration(ASTNode):
         self.initializer = initializer
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_condition_with_declaration(self)
+        visitor.visit_condition_with_declaration_before(self)

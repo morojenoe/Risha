@@ -8,7 +8,7 @@ class BinaryOperation(ASTNode):
         self.right_expression = second_expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_binary_operation(self)
+        visitor.visit_binary_operation_before(self)
 
 
 class TernaryOperation(ASTNode):
@@ -18,7 +18,7 @@ class TernaryOperation(ASTNode):
         self.false_expression = false_expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_ternary_operation(self)
+        visitor.visit_ternary_operation_before(self)
 
 
 class CastExpression(ASTNode):
@@ -27,7 +27,7 @@ class CastExpression(ASTNode):
         self.new_type = new_type
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_cast_expression(self)
+        visitor.visit_cast_expression_before(self)
 
 
 class Expression(CommaSeparatedList):
@@ -40,7 +40,7 @@ class PrefixUnaryExpression(ASTNode):
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_prefix_unary(self)
+        visitor.visit_prefix_unary_before(self)
 
 
 class PostfixUnaryExpression(ASTNode):
@@ -49,7 +49,7 @@ class PostfixUnaryExpression(ASTNode):
         self.operator = operator
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_postfix_unary(self)
+        visitor.visit_postfix_unary_before(self)
 
 
 class FunctionCall(ASTNode):
@@ -58,7 +58,7 @@ class FunctionCall(ASTNode):
         self.parameters = parameters
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_function_call(self)
+        visitor.visit_function_call_before(self)
 
 
 class ArraySubscription(ASTNode):
@@ -67,7 +67,7 @@ class ArraySubscription(ASTNode):
         self.subscript_expression = subscript_expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_array_subscription(self)
+        visitor.visit_array_subscription_before(self)
 
 
 class ClassMemberAccess(ASTNode):
@@ -76,7 +76,7 @@ class ClassMemberAccess(ASTNode):
         self.member_expression = member_expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_member_access(self)
+        visitor.visit_member_access_before(self)
 
 
 class AssignmentExpression(ASTNode):
@@ -86,4 +86,4 @@ class AssignmentExpression(ASTNode):
         self.initializer = initializer
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_assignment_expression(self)
+        visitor.visit_assignment_expression_before(self)

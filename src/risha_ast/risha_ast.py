@@ -16,7 +16,7 @@ class Sequence(ASTNode):
         return self
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_sequence(self)
+        visitor.visit_sequence_before(self)
 
 
 class CommaSeparatedList(ASTNode):
@@ -28,7 +28,7 @@ class CommaSeparatedList(ASTNode):
         return self
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_comma_separated_list(self)
+        visitor.visit_comma_separated_list_before(self)
 
 
 class Node(ASTNode):
@@ -45,7 +45,7 @@ class Node(ASTNode):
                 for children_of_child in child:
                     children_of_child.accept_print_visitor(visitor)
             else:
-                visitor.visit(child)
+                visitor.visit_before(child)
 
 
 class AliasDeclaration(ASTNode):
@@ -54,7 +54,7 @@ class AliasDeclaration(ASTNode):
         self.type_id = type_id
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_alias_declaration(self)
+        visitor.visit_alias_declaration_before(self)
 
 
 class EnclosedInParenthesis(ASTNode):
@@ -62,7 +62,7 @@ class EnclosedInParenthesis(ASTNode):
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_enclosed_in_paren(self)
+        visitor.visit_enclosed_in_paren_before(self)
 
 
 class Identifier(ASTNode):
@@ -70,7 +70,7 @@ class Identifier(ASTNode):
         self.identifier = identifier
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_identifier(self)
+        visitor.visit_identifier_before(self)
 
 
 class DeclaratorWithSpecifiers(ASTNode):
@@ -79,7 +79,7 @@ class DeclaratorWithSpecifiers(ASTNode):
         self.declarator = declarator
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_declarator_with_specifiers(self)
+        visitor.visit_declarator_with_specifiers_before(self)
 
 
 class OperatorFunction(ASTNode):
@@ -87,7 +87,7 @@ class OperatorFunction(ASTNode):
         self.operator = operator
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_operator_function(self)
+        visitor.visit_operator_function_before(self)
 
 
 class SimpleType(ASTNode):
@@ -95,4 +95,4 @@ class SimpleType(ASTNode):
         self.type_name = type_name
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_simple_type(self)
+        visitor.visit_simple_type_before(self)

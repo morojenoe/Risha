@@ -6,7 +6,7 @@ class Program(ASTNode):
         self.declarations = declarations if declarations is not None else []
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_program(self)
+        visitor.visit_program_before(self)
 
     def get_all_classes(self):
         classes = []

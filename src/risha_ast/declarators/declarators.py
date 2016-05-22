@@ -11,7 +11,7 @@ class InitDeclarator(ASTNode):
         self.initializer = initializer
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_init_declarator(self)
+        visitor.visit_init_declarator_before(self)
 
 
 class FunctionDeclarator(ASTNode):
@@ -20,7 +20,7 @@ class FunctionDeclarator(ASTNode):
         self.parameters = parameters
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_function_declarator(self)
+        visitor.visit_function_declarator_before(self)
 
 
 class ArrayDeclarator(ASTNode):
@@ -33,7 +33,7 @@ class ArrayDeclarator(ASTNode):
         return self
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_array_declaration(self)
+        visitor.visit_array_declaration_before(self)
 
 
 class ParametersAndQualifiers(ASTNode):
@@ -49,7 +49,7 @@ class QualifiersAndSpecifiers(ASTNode):
         self.name = name
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_qualifiers_and_specifiers(self)
+        visitor.visit_qualifiers_and_specifiers_before(self)
 
 
 class RefQualifier(QualifiersAndSpecifiers):

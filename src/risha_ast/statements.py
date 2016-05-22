@@ -9,7 +9,7 @@ class ForLoop(ASTNode):
         self.statement = statement
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_for(self)
+        visitor.visit_for_before(self)
 
 
 class StatementSequence(Sequence):
@@ -21,7 +21,7 @@ class CompoundStatement(ASTNode):
         self.statements = statements
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_compound_statement(self)
+        visitor.visit_compound_statement_before(self)
 
 
 class IfStatement(ASTNode):
@@ -31,7 +31,7 @@ class IfStatement(ASTNode):
         self.else_statement = else_statement
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_if(self)
+        visitor.visit_if_before(self)
 
 
 class StatementExpression(ASTNode):
@@ -39,7 +39,7 @@ class StatementExpression(ASTNode):
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_statement_expression(self)
+        visitor.visit_statement_expression_before(self)
 
 
 class WhileLoop(ASTNode):
@@ -48,7 +48,7 @@ class WhileLoop(ASTNode):
         self.statement = statement
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_while_loop(self)
+        visitor.visit_while_loop_before(self)
 
 
 class DoWhileLoop(ASTNode):
@@ -57,7 +57,7 @@ class DoWhileLoop(ASTNode):
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_do_while_loop(self)
+        visitor.visit_do_while_loop_before(self)
 
 
 class RangeForLoop(ASTNode):
@@ -67,17 +67,17 @@ class RangeForLoop(ASTNode):
         self.statement = statement
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_range_for_loop(self)
+        visitor.visit_range_for_loop_before(self)
 
 
 class BreakStatement(ASTNode):
     def accept_print_visitor(self, visitor):
-        visitor.visit_break(self)
+        visitor.visit_break_before(self)
 
 
 class ContinueStatement(ASTNode):
     def accept_print_visitor(self, visitor):
-        visitor.visit_continue(self)
+        visitor.visit_continue_before(self)
 
 
 class ReturnStatement(ASTNode):
@@ -85,4 +85,4 @@ class ReturnStatement(ASTNode):
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_return(self)
+        visitor.visit_return_before(self)

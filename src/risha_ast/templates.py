@@ -10,7 +10,7 @@ class TemplateArgument(ASTNode):
         self.argument = argument
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_template_argument(self)
+        visitor.visit_template_argument_before(self)
 
 
 class SimpleTemplate(ASTNode):
@@ -19,4 +19,4 @@ class SimpleTemplate(ASTNode):
         self.template_argument_list = template_argument_list
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_simple_template(self)
+        visitor.visit_simple_template_before(self)

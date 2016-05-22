@@ -6,7 +6,7 @@ class Literal(ASTNode):
         self.value = value
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_literal(self)
+        visitor.visit_literal_before(self)
 
 
 class BooleanLiteral(Literal):

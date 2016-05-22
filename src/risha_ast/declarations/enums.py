@@ -7,7 +7,7 @@ class EnumDefinition(ASTNode):
         self.enumerators = enumerators if enumerators is not None else []
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_enum(self)
+        visitor.visit_enum_before(self)
 
 
 class EnumKey(ASTNode):
@@ -15,7 +15,7 @@ class EnumKey(ASTNode):
         self.enum_key = enum_key
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_enum_key(self)
+        visitor.visit_enum_key_before(self)
 
 
 class EnumHead(ASTNode):
@@ -24,7 +24,7 @@ class EnumHead(ASTNode):
         self.identifier = identifier
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_enum_head(self)
+        visitor.visit_enum_head_before(self)
 
 
 class Enumerator(ASTNode):
@@ -33,7 +33,7 @@ class Enumerator(ASTNode):
         self.const_expression = const_expression
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_enumerator(self)
+        visitor.visit_enumerator_before(self)
 
 
 class EnumeratorList(ASTNode):
@@ -45,4 +45,4 @@ class EnumeratorList(ASTNode):
         return self
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_enumerator_list(self)
+        visitor.visit_enumerator_list_before(self)

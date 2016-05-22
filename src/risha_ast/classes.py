@@ -16,7 +16,7 @@ class ClassDefinition(ASTNode):
         self.member_specification = member_specification
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_class(self)
+        visitor.visit_class_before(self)
 
 
 class MemberSpecification(Sequence):
@@ -31,7 +31,7 @@ class MemberDeclarator(ASTNode):
         self.initializer = initializer
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_member_declarator(self)
+        visitor.visit_member_declarator_before(self)
 
 
 class MemberDeclaratorList(CommaSeparatedList):
@@ -44,4 +44,4 @@ class MemberDeclaration(ASTNode):
         self.declarator_list = declarator_list
 
     def accept_print_visitor(self, visitor):
-        visitor.visit_member_declaration(self)
+        visitor.visit_member_declaration_before(self)
