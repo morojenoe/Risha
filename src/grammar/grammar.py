@@ -1,7 +1,7 @@
 import ply.lex
 import ply.yacc
 
-import src.ast as risha_ast
+import src.risha_ast as risha_ast
 from src.grammar import lexer
 
 tokens = lexer.tokens
@@ -64,7 +64,7 @@ def p_empty(p):
 def p_translation_unit(p):
     """ translation-unit : declaration-seq
                          | empty """
-    p[0] = risha_ast.Program(p[1])
+    p[0] = risha_ast.program.Program(p[1])
 
 
 """
@@ -642,8 +642,7 @@ def p_enum_specifier(p):
                        | enum-head L_CURLY enumerator-list R_CURLY
                        | enum-head L_CURLY enumerator-list COMMA R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.enums.EnumDefinition(p[1],
-                                              risha_ast.enums.EnumeratorList())
+        p[0] = risha_ast.EnumDefinition(p[1], risha_ast.EnumeratorList())
     else:
         p[0] = risha_ast.enums.EnumDefinition(p[1], p[3])
 
@@ -930,7 +929,7 @@ def p_initializer_list(p):
     """ initializer-list : initializer-clause
                          | initializer-list COMMA initializer-clause """
     if len(p) == 2:
-        p[0] = risha_ast.initializers.InitializerList().add(p[1])
+        p[0] = risha_ast.InitializerList().add(p[1])
     else:
         p[0] = p[1].add(p[3])
 
@@ -940,10 +939,10 @@ def p_braced_init_list(p):
                          | L_CURLY initializer-list COMMA R_CURLY
                          | L_CURLY R_CURLY """
     if len(p) == 3:
-        p[0] = risha_ast.initializers.BracedInitializerList(
-            risha_ast.initializers.InitializerList())
+        p[0] = risha_ast.BracedInitializerList(
+            risha_ast.InitializerList())
     else:
-        p[0] = risha_ast.initializers.BracedInitializerList(p[2])
+        p[0] = risha_ast.BracedInitializerList(p[2])
 
 
 """

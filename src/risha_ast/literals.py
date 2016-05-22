@@ -5,7 +5,7 @@ class Literal(ASTNode):
     def __init__(self, value):
         self.value = value
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_literal(self)
 
 

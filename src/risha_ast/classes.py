@@ -1,4 +1,4 @@
-from .risha_ast import ASTNode, CommaSeparatedList, Sequence
+from .risha_ast import ASTNode, Sequence, CommaSeparatedList
 
 
 class ClassHead(ASTNode):
@@ -6,7 +6,7 @@ class ClassHead(ASTNode):
         self.class_key = class_key
         self.class_name = class_name
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         pass
 
 
@@ -15,7 +15,7 @@ class ClassDefinition(ASTNode):
         self.class_head = class_head
         self.member_specification = member_specification
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_class(self)
 
 
@@ -30,7 +30,7 @@ class MemberDeclarator(ASTNode):
         self.declarator = declarator
         self.initializer = initializer
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_member_declarator(self)
 
 
@@ -43,5 +43,5 @@ class MemberDeclaration(ASTNode):
         self.specifiers = specifiers
         self.declarator_list = declarator_list
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_member_declaration(self)

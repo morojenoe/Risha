@@ -6,7 +6,7 @@ class FunctionDefinition(ASTNode):
         self.declarator_with_specifiers = declarator_with_specifiers
         self.body = body
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_function_definition(self)
 
 
@@ -19,5 +19,5 @@ class ParameterDeclaration(ASTNode):
         self.declarator_with_specifiers = declarator_with_specifiers
         self.initializer = initializer
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_param_decl(self)

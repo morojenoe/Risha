@@ -1,4 +1,4 @@
-from src.ast import ASTNode, CommaSeparatedList
+from src.risha_ast import ASTNode, CommaSeparatedList
 
 
 class BinaryOperation(ASTNode):
@@ -7,7 +7,7 @@ class BinaryOperation(ASTNode):
         self.operation = operation
         self.right_expression = second_expression
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_binary_operation(self)
 
 
@@ -17,7 +17,7 @@ class TernaryOperation(ASTNode):
         self.true_expression = true_expression
         self.false_expression = false_expression
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_ternary_operation(self)
 
 
@@ -26,7 +26,7 @@ class CastExpression(ASTNode):
         self.cast_expression = cast_expression
         self.new_type = new_type
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_cast_expression(self)
 
 
@@ -39,7 +39,7 @@ class PrefixUnaryExpression(ASTNode):
         self.operator = operator
         self.expression = expression
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_prefix_unary(self)
 
 
@@ -48,7 +48,7 @@ class PostfixUnaryExpression(ASTNode):
         self.expression = expression
         self.operator = operator
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_postfix_unary(self)
 
 
@@ -57,7 +57,7 @@ class FunctionCall(ASTNode):
         self.function = function
         self.parameters = parameters
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_function_call(self)
 
 
@@ -66,7 +66,7 @@ class ArraySubscription(ASTNode):
         self.array_expression = array_expression
         self.subscript_expression = subscript_expression
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_array_subscription(self)
 
 
@@ -75,7 +75,7 @@ class ClassMemberAccess(ASTNode):
         self.object_expression = object_expression
         self.member_expression = member_expression
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_member_access(self)
 
 
@@ -85,5 +85,5 @@ class AssignmentExpression(ASTNode):
         self.operator = operator
         self.initializer = initializer
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_assignment_expression(self)

@@ -1,5 +1,5 @@
 import unittest
-import src.visitors.semantic_analysis.types as types
+import src.ast_visitors.semantic_analysis.types as types
 
 
 class VariableTestCase(unittest.TestCase):

@@ -10,7 +10,7 @@ class InitDeclarator(ASTNode):
         self.declarator = declarator
         self.initializer = initializer
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_init_declarator(self)
 
 
@@ -19,7 +19,7 @@ class FunctionDeclarator(ASTNode):
         self.function_name = function_name
         self.parameters = parameters
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_function_declarator(self)
 
 
@@ -32,7 +32,7 @@ class ArrayDeclarator(ASTNode):
         self.parameters.append(parameter)
         return self
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_array_declaration(self)
 
 
@@ -40,7 +40,7 @@ class ParametersAndQualifiers(ASTNode):
     def __init__(self, ):
         pass
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_parameters_and_qualifiers(self)
 
 
@@ -48,7 +48,7 @@ class QualifiersAndSpecifiers(ASTNode):
     def __init__(self, name):
         self.name = name
 
-    def accept(self, visitor):
+    def accept_print_visitor(self, visitor):
         visitor.visit_qualifiers_and_specifiers(self)
 
 

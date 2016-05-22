@@ -1,7 +1,7 @@
-from src.visitors import abstract_visitor
+import src.ast_visitors.abstract_visitor
 
 
-class PrintVisitor(abstract_visitor.AbstractVisitor):
+class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
     def __init__(self, output, inc_indentation=2):
         self.output = output
         self.indentation = [0]
@@ -42,7 +42,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print_space()
         self._print('{')
         self._print_new_line()
-        compound_statement.statements.accept(self)
+        compound_statement.statements.accept_print_visitor(self)
         self._print_indentation(False)
         self._print('}')
 
@@ -56,133 +56,133 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
     def visit_for(self, for_node):
         self._print('for (', True)
         self._new_level_indentation(0)
-        for_node.for_init_statement.accept(self)
+        for_node.for_init_statement.accept_print_visitor(self)
         self._print_space()
         if for_node.condition is not None:
-            for_node.condition.accept(self)
+            for_node.condition.accept_print_visitor(self)
         else:
             self._print_space()
         self._print_semicolon()
         self._print_space()
         if for_node.expression is not None:
-            for_node.expression.accept(self)
+            for_node.expression.accept_print_visitor(self)
         else:
             self._print_space()
         self._pop_indentation()
         self._print(')')
         self._new_level_indentation()
-        for_node.statement.accept(self)
+        for_node.statement.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_alias_declaration(self, alias_declaration):
         self._print('using ', True)
         self._new_level_indentation(0)
-        alias_declaration.identifier.accept(self)
+        alias_declaration.identifier.accept_print_visitor(self)
         self._pop_indentation()
         self._print(' = ')
-        alias_declaration.type_id.accept(self)
+        alias_declaration.type_id.accept_print_visitor(self)
         self._print_semicolon()
 
     def visit_if(self, if_node):
         self._print('if (', True)
         self._new_level_indentation(0)
-        if_node.condition.accept(self)
+        if_node.condition.accept_print_visitor(self)
         self._pop_indentation()
         self._print(')')
         self._new_level_indentation()
-        if_node.statement.accept(self)
+        if_node.statement.accept_print_visitor(self)
         self._pop_indentation()
         if if_node.else_statement is not None:
             self._print_space()
             self._print('else')
             self._new_level_indentation()
-            if_node.else_statement.accept(self)
+            if_node.else_statement.accept_print_visitor(self)
             self._pop_indentation()
 
     def visit_class(self, class_node):
         self._print('struct ', True)
         self._new_level_indentation(0)
-        class_node.class_head.class_name.accept(self)
+        class_node.class_head.class_name.accept_print_visitor(self)
         self._pop_indentation()
         self._print(' {')
         self._print_new_line()
         self._new_level_indentation()
-        class_node.member_specification.accept(self)
+        class_node.member_specification.accept_print_visitor(self)
         self._pop_indentation()
         self._print('}', True)
 
     def visit_enum(self, enum_node):
-        enum_node.enum_head.accept(self)
+        enum_node.enum_head.accept_print_visitor(self)
         self._print(' {')
         self._print_new_line()
         self._new_level_indentation()
-        enum_node.enumerators.accept(self)
+        enum_node.enumerators.accept_print_visitor(self)
         self._pop_indentation()
         self._print_new_line()
         self._print('}', True)
 
     def visit_ternary_operation(self, ternary_operation):
-        ternary_operation.logical_expression.accept(self)
+        ternary_operation.logical_expression.accept_print_visitor(self)
         self._print('? ')
         ternary_operation.true_expression.accpet(self)
         self._print(' : ')
-        ternary_operation.false_expression.accept(self)
+        ternary_operation.false_expression.accept_print_visitor(self)
 
     def visit_binary_operation(self, binary_operation):
-        binary_operation.left_expression.accept(self)
+        binary_operation.left_expression.accept_print_visitor(self)
         self._print(' {0} '.format(binary_operation.operation))
-        binary_operation.right_expression.accept(self)
+        binary_operation.right_expression.accept_print_visitor(self)
 
     def visit_cast_expression(self, cast_expression):
         self._print('(')
-        cast_expression.new_type.accept(self)
+        cast_expression.new_type.accept_print_visitor(self)
         self._print(')')
-        cast_expression.cast_expression.accept(self)
+        cast_expression.cast_expression.accept_print_visitor(self)
 
     def visit_prefix_unary(self, prefix_unary):
         self._print(prefix_unary.operator)
-        prefix_unary.expression.accept(self)
+        prefix_unary.expression.accept_print_visitor(self)
 
     def visit_postfix_unary(self, postfix_unary):
-        postfix_unary.expression.accept(self)
+        postfix_unary.expression.accept_print_visitor(self)
         self._print(postfix_unary.operator)
 
     def visit_function_call(self, function_call):
-        function_call.function.accept(self)
+        function_call.function.accept_print_visitor(self)
         self._print('(')
         self._new_level_indentation(0)
-        function_call.parameters.accept(self)
+        function_call.parameters.accept_print_visitor(self)
         self._pop_indentation()
         self._print(')')
 
     def visit_array_subscription(self, array_subscription):
-        array_subscription.array_expression.accept(self)
+        array_subscription.array_expression.accept_print_visitor(self)
         self._print('[')
-        array_subscription.subscript_expression.accept(self)
+        array_subscription.subscript_expression.accept_print_visitor(self)
         self._print(']')
 
     def visit_member_access(self, class_member_access):
-        class_member_access.object_expression.accept(self)
+        class_member_access.object_expression.accept_print_visitor(self)
         self._print('.')
         self._new_level_indentation(0)
-        class_member_access.member_expression.accept(self)
+        class_member_access.member_expression.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_braced_init_list(self, braced_init_list):
         self._print('{')
         self._new_level_indentation(0)
-        braced_init_list.initializer_list.accept(self)
+        braced_init_list.initializer_list.accept_print_visitor(self)
         self._pop_indentation()
         self._print('}')
 
     def visit_equal_initializer(self, equal_initializer):
         self._print(' = ')
-        equal_initializer.initializer_clause.accept(self)
+        equal_initializer.initializer_clause.accept_print_visitor(self)
 
     def visit_enclosed_in_paren(self, enclosed_in_paren):
         self._print('(')
         self._new_level_indentation(0)
-        enclosed_in_paren.expression.accept(self)
+        enclosed_in_paren.expression.accept_print_visitor(self)
         self._pop_indentation()
         self._print(')')
 
@@ -194,13 +194,13 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             if isinstance(decl_specifier, str):
                 self._print(decl_specifier, True)
             else:
-                decl_specifier.accept(self)
+                decl_specifier.accept_print_visitor(self)
             if it > 0:
                 self._pop_indentation()
 
     def visit_program(self, program):
         for declaration in program.declarations:
-            declaration.accept(self)
+            declaration.accept_print_visitor(self)
             self._print_new_line()
 
     def visit_identifier(self, identifier_node):
@@ -212,11 +212,11 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print(' {}'.format(enum_key.enum_key), True)
 
     def visit_enum_head(self, enum_head):
-        enum_head.enum_key.accept(self)
+        enum_head.enum_key.accept_print_visitor(self)
         self._print_space()
         self._new_level_indentation(0)
         if enum_head.identifier is not None:
-            enum_head.identifier.accept(self)
+            enum_head.identifier.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_enumerator_list(self, enumerator_list):
@@ -224,25 +224,25 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             if it > 0:
                 self._print(',')
                 self._print_new_line()
-            enumerator.accept(self)
+            enumerator.accept_print_visitor(self)
 
     def visit_enumerator(self, enumerator):
-        enumerator.enumerator.accept(self)
+        enumerator.enumerator.accept_print_visitor(self)
         if enumerator.const_expression is not None:
             self._print(' = ')
-            enumerator.const_expression.accept(self)
+            enumerator.const_expression.accept_print_visitor(self)
 
     def visit_init_declarator(self, init_declarator):
         if self.ref_qualifier:
             self._print('&', True)
             self._new_level_indentation(0)
-            init_declarator.declarator.accept(self)
+            init_declarator.declarator.accept_print_visitor(self)
             self._pop_indentation()
         else:
-            init_declarator.declarator.accept(self)
+            init_declarator.declarator.accept_print_visitor(self)
         if init_declarator.initializer is not None:
             self._new_level_indentation(0)
-            init_declarator.initializer.accept(self)
+            init_declarator.initializer.accept_print_visitor(self)
             self._pop_indentation()
 
     def visit_function_declarator(self, function_declarator):
@@ -251,21 +251,21 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
             self._print('&')
             self._pop_indentation()
         if function_declarator.function_name is not None:
-            function_declarator.function_name.accept(self)
-        function_declarator.parameters.accept(self)
+            function_declarator.function_name.accept_print_visitor(self)
+        function_declarator.parameters.accept_print_visitor(self)
 
     def visit_statement_expression(self, statement_expression):
         if statement_expression.expression is not None:
-            statement_expression.expression.accept(self)
+            statement_expression.expression.accept_print_visitor(self)
         self._print_semicolon()
 
     def visit_array_declaration(self, array_declaration):
         if array_declaration.array_name is not None:
-            array_declaration.array_name.accept(self)
+            array_declaration.array_name.accept_print_visitor(self)
         for parameter in array_declaration.parameters:
             self._print('[')
             self._new_level_indentation(0)
-            parameter.accept(self)
+            parameter.accept_print_visitor(self)
             self._pop_indentation()
             self._print(']')
 
@@ -273,77 +273,77 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         self._print(literal.value, True)
 
     def visit_param_decl(self, param_declaration):
-        param_declaration.declarator_with_specifiers.accept(self)
+        param_declaration.declarator_with_specifiers.accept_print_visitor(self)
         if param_declaration.initializer is not None:
             self._new_level_indentation(0)
             self._print_space()
-            param_declaration.initializer.accept(self)
+            param_declaration.initializer.accept_print_visitor(self)
             self._pop_indentation()
 
     def visit_function_definition(self, function_definition):
-        function_definition.declarator_with_specifiers.accept(self)
+        function_definition.declarator_with_specifiers.accept_print_visitor(self)
         self._new_level_indentation()
-        function_definition.body.accept(self)
+        function_definition.body.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_comma_separated_list(self, comma_separated_list):
         for it, element in enumerate(comma_separated_list.elements):
             if it > 0:
                 self._print(', ')
-            element.accept(self)
+            element.accept_print_visitor(self)
 
     def visit_member_declarator(self, member_declarator):
         if self.ref_qualifier:
             self._print('&')
             self._new_level_indentation(0)
-            member_declarator.declarator.accept(self)
+            member_declarator.declarator.accept_print_visitor(self)
             self._pop_indentation()
         else:
-            member_declarator.declarator.accept(self)
+            member_declarator.declarator.accept_print_visitor(self)
         if member_declarator.initializer is not None:
-            member_declarator.initializer.accept(self)
+            member_declarator.initializer.accept_print_visitor(self)
 
     def visit_assignment_expression(self, assignment_expression):
-        assignment_expression.expression.accept(self)
+        assignment_expression.expression.accept_print_visitor(self)
         self._print_space()
         self._print(assignment_expression.operator)
         self._print_space()
         self._new_level_indentation(0)
-        assignment_expression.initializer.accept(self)
+        assignment_expression.initializer.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_while_loop(self, while_loop):
         self._print('while (', True)
         self._new_level_indentation(0)
-        while_loop.condition.accept(self)
+        while_loop.condition.accept_print_visitor(self)
         self._print(')')
         self._pop_indentation()
         self._new_level_indentation()
-        while_loop.statement.accept(self)
+        while_loop.statement.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_do_while_loop(self, do_while_loop):
         self._print('do', True)
         self._new_level_indentation()
-        do_while_loop.statement.accept(self)
+        do_while_loop.statement.accept_print_visitor(self)
         self._pop_indentation()
         self._print_space()
         self._print('while (')
         self._new_level_indentation(0)
-        do_while_loop.expression.accept(self)
+        do_while_loop.expression.accept_print_visitor(self)
         self._print(');')
         self._pop_indentation()
 
     def visit_range_for_loop(self, range_for):
         self._print('for (', True)
         self._new_level_indentation(0)
-        range_for.declaration.accept(self)
+        range_for.declaration.accept_print_visitor(self)
         self._print(' : ')
-        range_for.initializer.accept(self)
+        range_for.initializer.accept_print_visitor(self)
         self._print(')')
         self._pop_indentation()
         self._new_level_indentation()
-        range_for.statement.accept(self)
+        range_for.statement.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_break(self, break_statement):
@@ -357,7 +357,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if return_statement.expression is not None:
             self._print_space()
             self._new_level_indentation(0)
-            return_statement.expression.accept(self)
+            return_statement.expression.accept_print_visitor(self)
             self._pop_indentation()
         self._print_semicolon()
 
@@ -365,15 +365,15 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
         if declarator_with_specifiers.specifiers is not None:
             self.ref_qualifier = declarator_with_specifiers.specifiers \
                 .is_ref_qualifier_present()
-            declarator_with_specifiers.specifiers.accept(self)
+            declarator_with_specifiers.specifiers.accept_print_visitor(self)
             if declarator_with_specifiers.declarator is not None:
                 self._print_space()
                 self._new_level_indentation(0)
-                declarator_with_specifiers.declarator.accept(self)
+                declarator_with_specifiers.declarator.accept_print_visitor(self)
                 self._pop_indentation()
             self.ref_qualifier = False
         elif declarator_with_specifiers.declarator is not None:
-            declarator_with_specifiers.declarator.accept(self)
+            declarator_with_specifiers.declarator.accept_print_visitor(self)
 
     def visit_operator_function(self, operator_function):
         self._print('operator', True)
@@ -381,7 +381,7 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_sequence(self, sequence):
         for elem in sequence.elements:
-            elem.accept(self)
+            elem.accept_print_visitor(self)
             self._print_new_line()
 
     def visit_simple_type(self, simple_type):
@@ -389,55 +389,55 @@ class PrintVisitor(abstract_visitor.AbstractVisitor):
 
     def visit_simple_declaration(self, simple_declaration):
         if simple_declaration.specifiers is not None:
-            simple_declaration.specifiers.accept(self)
+            simple_declaration.specifiers.accept_print_visitor(self)
             self.ref_qualifier = simple_declaration.specifiers. \
                 is_ref_qualifier_present()
         if simple_declaration.list_of_declarators is not None:
             if simple_declaration.specifiers is not None:
                 self._print_space()
             self._new_level_indentation(0)
-            simple_declaration.list_of_declarators.accept(self)
+            simple_declaration.list_of_declarators.accept_print_visitor(self)
             self._pop_indentation()
         self.ref_qualifier = False
         self._print_semicolon()
 
     def visit_condition_with_declaration(self, condition_with_decl):
-        condition_with_decl.declarator_with_specifiers.accept(self)
+        condition_with_decl.declarator_with_specifiers.accept_print_visitor(self)
         self._new_level_indentation(0)
-        condition_with_decl.initializer.accept(self)
+        condition_with_decl.initializer.accept_print_visitor(self)
         self._pop_indentation()
 
     def visit_member_declaration(self, member_declaration):
         if member_declaration.specifiers is not None:
-            member_declaration.specifiers.accept(self)
+            member_declaration.specifiers.accept_print_visitor(self)
             self.ref_qualifier = member_declaration.specifiers. \
                 is_ref_qualifier_present()
             if member_declaration.declarator_list is not None:
                 self._print_space()
                 self._new_level_indentation(0)
-                member_declaration.declarator_list.accept(self)
+                member_declaration.declarator_list.accept_print_visitor(self)
                 self._pop_indentation()
             self.ref_qualifier = False
         elif member_declaration.declarator_list is not None:
-            member_declaration.declarator_list.accept(self)
+            member_declaration.declarator_list.accept_print_visitor(self)
         self._print_semicolon()
 
     def visit_simple_template(self, simple_template):
-        simple_template.template_name.accept(self)
+        simple_template.template_name.accept_print_visitor(self)
         self._print('<')
         self._new_level_indentation(0)
-        simple_template.template_argument_list.accept(self)
+        simple_template.template_argument_list.accept_print_visitor(self)
         self._pop_indentation()
         self._print('>')
 
     def visit_template_argument(self, template_argument):
-        template_argument.argument.accept(self)
+        template_argument.argument.accept_print_visitor(self)
 
     def visit_type_specifier_sequence(self, type_specifier_sequence):
         for it, elem in enumerate(type_specifier_sequence.elements):
             if it > 0:
                 self._print_space()
-            elem.accept(self)
+            elem.accept_print_visitor(self)
 
     def visit_qualifiers_and_specifiers(self, qualifiers_and_specifiers):
         self._print(qualifiers_and_specifiers.name, True)
