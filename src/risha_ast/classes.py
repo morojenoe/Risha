@@ -9,6 +9,10 @@ class ClassHead(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_class_head_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_class_head_before(self)
+        visitor.visit_class_head_after(self)
+
 
 class ClassDefinition(ASTNode):
     def __init__(self, class_head, member_specification):
@@ -17,6 +21,12 @@ class ClassDefinition(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_class_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_class_before(self)
+        self.class_head.accept_before_after(visitor)
+        self.member_specification.accept_before_after(visitor)
+        visitor.visit_class_after(self)
 
 
 class MemberSpecification(Sequence):
@@ -33,6 +43,13 @@ class MemberDeclarator(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_member_declarator_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_member_declarator_before(self)
+        self.declarator.accept_before_after(visitor)
+        if self.initializer is not None:
+            self.initializer.accept_before_after(visitor)
+        visitor.visit_member_declarator_after(self)
+
 
 class MemberDeclaratorList(CommaSeparatedList):
     pass
@@ -45,3 +62,11 @@ class MemberDeclaration(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_member_declaration_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_member_declaration_before(self)
+        if self.specifiers is not None:
+            self.specifiers.accept_before_after(visitor)
+        if self.declarator_list is not None:
+            self.declarator_list.accept_before_after(visitor)
+        visitor.visit_member_declaration_after(self)
