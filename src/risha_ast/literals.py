@@ -8,6 +8,10 @@ class Literal(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_literal_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_literal_before(self)
+        visitor.visit_literal_after(self)
+
 
 class BooleanLiteral(Literal):
     pass
