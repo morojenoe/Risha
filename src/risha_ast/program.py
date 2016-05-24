@@ -1,4 +1,4 @@
-from . import ASTNode, ClassDefinition
+from . import ASTNode
 
 
 class Program(ASTNode):
@@ -8,9 +8,8 @@ class Program(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_program_before(self)
 
-    def get_all_classes(self):
-        classes = []
-        for decl in self.declarations:
-            if issubclass(decl, ClassDefinition):
-                classes.append(decl)
-        return classes
+    def accept_before_after(self, visitor):
+        visitor.visit_program_before(self)
+        for declaration in self.declarations:
+            declaration.accept_before_after(visitor)
+        visitor.visit_program_after(self)
