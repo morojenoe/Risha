@@ -6,6 +6,10 @@ class ASTNode(metaclass=abc.ABCMeta):
     def accept_print_visitor(self, visitor):
         pass
 
+    @abc.abstractclassmethod
+    def accept_before_after(self, visitor):
+        pass
+
 
 class Sequence(ASTNode):
     def __init__(self):
@@ -17,6 +21,12 @@ class Sequence(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_sequence_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_sequence_before(self)
+        for element in self.elements:
+            element.accept_before_after(visitor)
+        visitor.visit_sequence_after(self)
 
 
 class CommaSeparatedList(ASTNode):
@@ -30,22 +40,11 @@ class CommaSeparatedList(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_comma_separated_list_before(self)
 
-
-class Node(ASTNode):
-    def __init__(self, *args):
-        self.childs = list(args)
-
-    def accept_print_visitor(self, visitor):
-        for child in self.childs:
-            if child is None:
-                continue
-            if isinstance(child, ASTNode):
-                child.accept_print_visitor(visitor)
-            elif isinstance(child, list):
-                for children_of_child in child:
-                    children_of_child.accept_print_visitor(visitor)
-            else:
-                visitor.visit_before(child)
+    def accept_before_after(self, visitor):
+        visitor.visit_comma_separated_list_before(self)
+        for element in self.elements:
+            element.accept_before_after(visitor)
+        visitor.visit_comma_separated_list_after(self)
 
 
 class AliasDeclaration(ASTNode):
@@ -56,6 +55,12 @@ class AliasDeclaration(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_alias_declaration_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_alias_declaration_before(self)
+        self.identifier.accept_before_after(visitor)
+        self.type_id.accept_before_after(visitor)
+        visitor.visit_alias_declaration_after(self)
+
 
 class EnclosedInParenthesis(ASTNode):
     def __init__(self, expression):
@@ -64,6 +69,11 @@ class EnclosedInParenthesis(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_enclosed_in_paren_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_enclosed_in_paren_before(self)
+        self.expression.accept_before_after(visitor)
+        visitor.visit_enclosed_in_paren_after(self)
+
 
 class Identifier(ASTNode):
     def __init__(self, identifier):
@@ -71,6 +81,10 @@ class Identifier(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_identifier_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_identifier_before(self)
+        visitor.visit_identifier_after(self)
 
 
 class DeclaratorWithSpecifiers(ASTNode):
@@ -81,6 +95,14 @@ class DeclaratorWithSpecifiers(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_declarator_with_specifiers_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_declarator_with_specifiers_before(self)
+        if self.specifiers is not None:
+            self.specifiers.accept_before_after(visitor)
+        if self.declarator is not None:
+            self.declarator.accept_before_after(visitor)
+        visitor.visit_declarator_with_specifiers_after(self)
+
 
 class OperatorFunction(ASTNode):
     def __init__(self, operator):
@@ -89,6 +111,10 @@ class OperatorFunction(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_operator_function_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_operator_function_before(self)
+        visitor.visit_operator_function_after(self)
+
 
 class SimpleType(ASTNode):
     def __init__(self, type_name):
@@ -96,3 +122,7 @@ class SimpleType(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_simple_type_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_simple_type_before(self)
+        visitor.visit_simple_type_after(self)
