@@ -10,6 +10,12 @@ class BinaryOperation(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_binary_operation_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_binary_operation_before(self)
+        self.left_expression.accept_before_after(visitor)
+        self.right_expression.accept_before_after(visitor)
+        visitor.visit_binary_operation_after(self)
+
 
 class TernaryOperation(ASTNode):
     def __init__(self, logical_expression, true_expression, false_expression):
@@ -20,6 +26,13 @@ class TernaryOperation(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_ternary_operation_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_ternary_operation_before(self)
+        self.logical_expression.accept_before_after(visitor)
+        self.true_expression.accept_before_after(visitor)
+        self.false_expression.accept_before_after(visitor)
+        visitor.visit_ternary_operation_after(self)
+
 
 class CastExpression(ASTNode):
     def __init__(self, cast_expression, new_type):
@@ -28,6 +41,12 @@ class CastExpression(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_cast_expression_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_cast_expression_before(self)
+        self.new_type.accept_before_after(visitor)
+        self.cast_expression.accept_before_after(visitor)
+        visitor.visit_cast_expression_after(self)
 
 
 class Expression(CommaSeparatedList):
@@ -42,6 +61,11 @@ class PrefixUnaryExpression(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_prefix_unary_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_prefix_unary_before(self)
+        self.expression.accept_before_after(visitor)
+        visitor.visit_prefix_unary_after(self)
+
 
 class PostfixUnaryExpression(ASTNode):
     def __init__(self, expression, operator):
@@ -50,6 +74,11 @@ class PostfixUnaryExpression(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_postfix_unary_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_postfix_unary_before(self)
+        self.expression.accept_before_after(visitor)
+        visitor.visit_postfix_unary_after(self)
 
 
 class FunctionCall(ASTNode):
@@ -60,6 +89,12 @@ class FunctionCall(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_function_call_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_function_call_before(self)
+        self.function.accept_before_after(visitor)
+        self.parameters.accept_before_after(visitor)
+        visitor.visit_function_call_after(self)
+
 
 class ArraySubscription(ASTNode):
     def __init__(self, array_expression, subscript_expression):
@@ -68,6 +103,12 @@ class ArraySubscription(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_array_subscription_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_array_subscription_before(self)
+        self.array_expression.accept_before_after(visitor)
+        self.subscript_expression.accept_before_after(visitor)
+        visitor.visit_array_subscription_after(self)
 
 
 class ClassMemberAccess(ASTNode):
@@ -78,6 +119,12 @@ class ClassMemberAccess(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_member_access_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_member_access_before(self)
+        self.object_expression.accept_before_after(visitor)
+        self.member_expression.accept_before_after(visitor)
+        visitor.visit_member_access_after(self)
+
 
 class AssignmentExpression(ASTNode):
     def __init__(self, expression, operator, initializer):
@@ -87,3 +134,9 @@ class AssignmentExpression(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_assignment_expression_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_assignment_expression_before(self)
+        self.expression.accept_before_after(visitor)
+        self.initializer.accept_before_after(visitor)
+        visitor.visit_assignment_expression_after(self)
