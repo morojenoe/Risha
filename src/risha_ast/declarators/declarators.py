@@ -13,6 +13,13 @@ class InitDeclarator(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_init_declarator_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_init_declarator_before(self)
+        self.declarator.accept_print_visitor(visitor)
+        if self.initializer is not None:
+            self.initializer.accept_print_visitor(visitor)
+        visitor.visit_init_declarator_after(self)
+
 
 class FunctionDeclarator(ASTNode):
     def __init__(self, function_name, parameters):
@@ -21,6 +28,13 @@ class FunctionDeclarator(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_function_declarator_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_function_declarator_before(self)
+        if self.function_name is not None:
+            self.function_name.accept_print_visitor(visitor)
+        self.parameters.accept_print_visitor(visitor)
+        visitor.visit_function_declarator_after(self)
 
 
 class ArrayDeclarator(ASTNode):
@@ -35,13 +49,13 @@ class ArrayDeclarator(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_array_declaration_before(self)
 
-
-class ParametersAndQualifiers(ASTNode):
-    def __init__(self, ):
-        pass
-
-    def accept_print_visitor(self, visitor):
-        visitor.visit_parameters_and_qualifiers(self)
+    def accept_before_after(self, visitor):
+        visitor.visit_array_declaration_before(self)
+        if self.array_name is not None:
+            self.array_name.accept_print_visitor(visitor)
+        for parameter in self.parameters:
+            parameter.accept_print_visitor(visitor)
+        visitor.visit_array_declaration_after(self)
 
 
 class QualifiersAndSpecifiers(ASTNode):
@@ -50,6 +64,10 @@ class QualifiersAndSpecifiers(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_qualifiers_and_specifiers_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_qualifiers_and_specifiers_before(self)
+        visitor.visit_qualifiers_and_specifiers_after(self)
 
 
 class RefQualifier(QualifiersAndSpecifiers):
