@@ -38,7 +38,6 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
         if compound_statement.statements is None:
             self._print('{}')
             return
-
         self._print_space()
         self._print('{')
         self._print_new_line()
@@ -121,7 +120,7 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
     def visit_ternary_operation_before(self, ternary_operation):
         ternary_operation.logical_expression.accept_print_visitor(self)
         self._print('? ')
-        ternary_operation.true_expression.accpet(self)
+        ternary_operation.true_expression.accept_print_visitor(self)
         self._print(' : ')
         ternary_operation.false_expression.accept_print_visitor(self)
 
