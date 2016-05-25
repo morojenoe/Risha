@@ -27,6 +27,10 @@ precedence = (
 start = 'translation-unit'
 
 
+def p_error(p):
+    print("Syntax error at {}".format(p))
+
+
 def p_empty(p):
     """ empty :  """
     p[0] = None
