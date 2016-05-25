@@ -1,7 +1,8 @@
 import argparse
 
-from src.grammar import grammar
-from src.visitors.pretty_printer import print_visitor
+import src.grammar.grammar
+import src.ast_visitors.pretty_printer.print_visitor as print_visitor
+import src.ast_visitors.class_forward_declaration_printer as cls_forward_decl
 
 
 def parse_args():
@@ -31,6 +32,36 @@ def write_includes(output_file):
     output_file.write('\n')
 
 
+def write_forward_class_declarations(ast, cpp_file):
+    visitor = cls_forward_decl.ClassForwardDeclarationVisitor()
+    ast.accept_before_after(visitor)
+
+
+def write_function_declarations(ast, cpp_file):
+    pass
+
+
+def write_class_declaration(ast, cpp_file):
+    pass
+
+
+def write_data(ast, cpp_file):
+    pass
+
+
+def write_function_definitions(ast, cpp_file):
+    pass
+
+
+def write_class_definitions(ast, cpp_file):
+    pass
+
+
+def write_solution(ast, cpp_file):
+    visitor = print_visitor.PrintVisitor(cpp_file)
+    ast.accept_print_visitor(visitor)
+
+
 def write_main_function(cpp_file):
     main_function = (
         'int main() {\n',
@@ -45,8 +76,13 @@ def generate_cpp(ast, output_file):
     with open(output_file, 'w', encoding='utf-8') as cpp_file:
         write_includes(cpp_file)
         cpp_file.write('namespace solution {\n\n')
-        visitor = print_visitor.PrintVisitor(cpp_file)
-        ast.accept(visitor)
+        write_forward_class_declarations(ast, cpp_file)
+        write_function_declarations(ast, cpp_file)
+        write_class_definitions(ast, cpp_file)
+        write_data(ast, cpp_file)
+        write_function_definitions(ast, cpp_file)
+        write_class_definitions(ast, cpp_file)
+        write_solution(ast, cpp_file)
         cpp_file.write('\n}\n\n')
         write_main_function(cpp_file)
 
@@ -56,8 +92,8 @@ def main():
     input_file = get_input_file_name(settings)
     output_file = get_output_file_name(settings)
     source_code = read_source_code(input_file)
-    lexer = grammar.lexer
-    parser = grammar.parser
+    lexer = src.grammar.grammar.lexer
+    parser = src.grammar.grammar.parser
     ast = parser.parse(input=source_code, lexer=lexer)
     generate_cpp(ast, output_file)
 
