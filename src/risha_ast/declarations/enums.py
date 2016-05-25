@@ -9,6 +9,12 @@ class EnumDefinition(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_enum_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_enum_before(self)
+        self.enum_head.accept_before_after(visitor)
+        self.enumerators.accept_before_after(visitor)
+        visitor.visit_enum_after(self)
+
 
 class EnumKey(ASTNode):
     def __init__(self, enum_key):
@@ -16,6 +22,10 @@ class EnumKey(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_enum_key_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_enum_key_before(self)
+        visitor.visit_enum_key_after(self)
 
 
 class EnumHead(ASTNode):
@@ -26,6 +36,13 @@ class EnumHead(ASTNode):
     def accept_print_visitor(self, visitor):
         visitor.visit_enum_head_before(self)
 
+    def accept_before_after(self, visitor):
+        visitor.visit_enum_head_before(self)
+        self.enum_key.accept_before_after(visitor)
+        if self.identifier is not None:
+            self.identifier.accept_before_after(visitor)
+        visitor.visit_enum_head_after(self)
+
 
 class Enumerator(ASTNode):
     def __init__(self, enumerator, const_expression):
@@ -33,6 +50,13 @@ class Enumerator(ASTNode):
         self.const_expression = const_expression
 
     def accept_print_visitor(self, visitor):
+        visitor.visit_enumerator_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_enumerator_before(self)
+        self.enumerator.accept_before_after(visitor)
+        if self.const_expression is not None:
+            self.const_expression.accept_before_after(visitor)
         visitor.visit_enumerator_before(self)
 
 
@@ -46,3 +70,9 @@ class EnumeratorList(ASTNode):
 
     def accept_print_visitor(self, visitor):
         visitor.visit_enumerator_list_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_enumerator_list_before(self)
+        for enumerator in self.enumerators:
+            enumerator.accept_before_after(visitor)
+        visitor.visit_enumerator_list_after(self)
