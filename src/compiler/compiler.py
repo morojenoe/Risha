@@ -3,6 +3,7 @@ import argparse
 import src.grammar.grammar
 import src.ast_visitors.pretty_printer.print_visitor as print_visitor
 import src.ast_visitors.class_forward_declaration_printer as cls_forward_decl
+import src.ast_visitors.tools.classes as tools_classes
 
 
 def parse_args():
@@ -26,6 +27,20 @@ def get_output_file_name(settings):
     return settings['o']
 
 
+def _write_comments(comments, output_file):
+    output_file.write('/*\n')
+    for comment in comments:
+        output_file.write(' * ' + comment + '\n')
+    output_file.write(' */\n')
+
+
+def write_comments(comments, output_file):
+    if isinstance(comments, str):
+        _write_comments([comments], output_file)
+    else:
+        _write_comments(comments, output_file)
+
+
 def write_includes(output_file):
     with open('../../lib/includes.h', 'r') as includes:
         output_file.writelines(includes.readlines())
@@ -33,8 +48,13 @@ def write_includes(output_file):
 
 
 def write_forward_class_declarations(ast, cpp_file):
+    write_comments('class declarations', cpp_file)
     visitor = cls_forward_decl.ClassForwardDeclarationVisitor()
     ast.accept_before_after(visitor)
+    printer = print_visitor.PrintVisitor(cpp_file)
+    class_declarations = tools_classes.make_class_declarations(
+        visitor.get_classes())
+    class_declarations.accept_print_visitor(printer)
 
 
 def write_function_declarations(ast, cpp_file):
