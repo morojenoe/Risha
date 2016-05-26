@@ -195,9 +195,10 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
                 self._pop_indentation()
 
     def visit_program_before(self, program):
-        for declaration in program.declarations:
+        for declaration in program.get_declarations():
             declaration.accept_print_visitor(self)
-            self._print_new_line()
+            for _ in range(program.get_new_lines()):
+                self._print_new_line()
 
     def visit_identifier_before(self, identifier_node):
         self._print(identifier_node.identifier, True)
