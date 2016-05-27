@@ -359,20 +359,20 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
             self._pop_indentation()
         self._print_semicolon()
 
-    def visit_declarator_with_specifiers_before(self,
-                                                declarator_with_specifiers):
-        if declarator_with_specifiers.specifiers is not None:
-            self.ref_qualifier = declarator_with_specifiers.specifiers \
-                .is_ref_qualifier_present()
-            declarator_with_specifiers.specifiers.accept_print_visitor(self)
-            if declarator_with_specifiers.declarator is not None:
+    def visit_simple_declaration_before(self, simple_declaration):
+        if simple_declaration.get_specifiers() is not None:
+            simple_declaration.get_specifiers().accept_print_visitor(self)
+            self.ref_qualifier = simple_declaration.get_specifiers(). \
+                is_ref_qualifier_present()
+        if simple_declaration.get_declarators() is not None:
+            if simple_declaration.get_specifiers() is not None:
                 self._print_space()
-                self._new_level_indentation(0)
-                declarator_with_specifiers.declarator.accept_print_visitor(self)
-                self._pop_indentation()
-            self.ref_qualifier = False
-        elif declarator_with_specifiers.declarator is not None:
-            declarator_with_specifiers.declarator.accept_print_visitor(self)
+            self._new_level_indentation(0)
+            simple_declaration.get_declarators().accept_print_visitor(self)
+            self._pop_indentation()
+        self.ref_qualifier = False
+        if simple_declaration.need_a_semicolon():
+            self._print_semicolon()
 
     def visit_operator_function_before(self, operator_function):
         self._print('operator', True)
@@ -385,20 +385,6 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
 
     def visit_simple_type_before(self, simple_type):
         self._print(simple_type.type_name, True)
-
-    def visit_simple_declaration_before(self, simple_declaration):
-        if simple_declaration.specifiers is not None:
-            simple_declaration.specifiers.accept_print_visitor(self)
-            self.ref_qualifier = simple_declaration.specifiers. \
-                is_ref_qualifier_present()
-        if simple_declaration.list_of_declarators is not None:
-            if simple_declaration.specifiers is not None:
-                self._print_space()
-            self._new_level_indentation(0)
-            simple_declaration.list_of_declarators.accept_print_visitor(self)
-            self._pop_indentation()
-        self.ref_qualifier = False
-        self._print_semicolon()
 
     def visit_condition_with_declaration_before(self, condition_with_decl):
         condition_with_decl.declarator_with_specifiers.accept_print_visitor(
@@ -578,10 +564,6 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
         pass
 
     def visit_class_after(self, class_node):
-        pass
-
-    def visit_declarator_with_specifiers_after(self,
-                                               declarator_with_specifiers):
         pass
 
     def visit_simple_declaration_after(self, simple_declaration):

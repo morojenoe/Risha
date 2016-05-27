@@ -87,23 +87,6 @@ class Identifier(ASTNode):
         visitor.visit_identifier_after(self)
 
 
-class DeclaratorWithSpecifiers(ASTNode):
-    def __init__(self, specifiers, declarator):
-        self.specifiers = specifiers
-        self.declarator = declarator
-
-    def accept_print_visitor(self, visitor):
-        visitor.visit_declarator_with_specifiers_before(self)
-
-    def accept_before_after(self, visitor):
-        visitor.visit_declarator_with_specifiers_before(self)
-        if self.specifiers is not None:
-            self.specifiers.accept_before_after(visitor)
-        if self.declarator is not None:
-            self.declarator.accept_before_after(visitor)
-        visitor.visit_declarator_with_specifiers_after(self)
-
-
 class OperatorFunction(ASTNode):
     def __init__(self, operator):
         self.operator = operator

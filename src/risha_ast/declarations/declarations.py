@@ -34,20 +34,30 @@ class TrailingTypeSpecifierSequence(Sequence):
 
 
 class SimpleDeclaration(ASTNode):
-    def __init__(self, specifiers, list_of_declarators):
-        self.specifiers = specifiers
-        self.list_of_declarators = list_of_declarators
+    def __init__(self, specifiers, declarators, need_a_semicolon=True):
+        self._specifiers = specifiers
+        self._declarators = declarators
+        self._need_a_semicolon = need_a_semicolon
 
     def accept_print_visitor(self, visitor):
         visitor.visit_simple_declaration_before(self)
 
     def accept_before_after(self, visitor):
         visitor.visit_simple_declaration_before(self)
-        if self.specifiers is not None:
-            self.specifiers.accept_before_after(visitor)
-        if self.list_of_declarators is not None:
-            self.list_of_declarators.accept_before_after(visitor)
+        if self._specifiers is not None:
+            self._specifiers.accept_before_after(visitor)
+        if self._declarators is not None:
+            self._declarators.accept_before_after(visitor)
         visitor.visit_simple_declaration_after(self)
+
+    def get_specifiers(self):
+        return self._specifiers
+
+    def get_declarators(self):
+        return self._declarators
+
+    def need_a_semicolon(self):
+        return self._need_a_semicolon
 
 
 class ConditionWithDeclaration(ASTNode):
