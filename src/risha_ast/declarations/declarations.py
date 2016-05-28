@@ -50,12 +50,15 @@ class SimpleDeclaration(ASTNode):
             self._declarators.accept_before_after(visitor)
         visitor.visit_simple_declaration_after(self)
 
-    def get_specifiers(self):
+    @property
+    def specifiers(self):
         return self._specifiers
 
-    def get_declarators(self):
+    @property
+    def declarators(self):
         return self._declarators
 
+    @property
     def need_a_semicolon(self):
         return self._need_a_semicolon
 
