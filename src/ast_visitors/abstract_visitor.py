@@ -167,11 +167,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_declarator_with_specifiers_before(self,
-                                                declarator_with_specifiers):
-        pass
-
-    @abc.abstractclassmethod
     def visit_operator_function_before(self, operator_function):
         pass
 
@@ -373,11 +368,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_return_after(self, return_statement):
-        pass
-
-    @abc.abstractclassmethod
-    def visit_declarator_with_specifiers_after(self,
-                                               declarator_with_specifiers):
         pass
 
     @abc.abstractclassmethod

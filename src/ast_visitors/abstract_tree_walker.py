@@ -1,7 +1,7 @@
-import src.ast_visitors.abstract_visitor
+from .abstract_visitor import AbstractVisitor
 
 
-class AbstractTreeWalker(src.ast_visitors.abstract_visitor.AbstractVisitor):
+class AbstractTreeWalker(AbstractVisitor):
     def __init__(self):
         pass
 

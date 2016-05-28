@@ -1,8 +1,7 @@
-import src.ast_visitors.abstract_tree_walker
+from .abstract_tree_walker import AbstractTreeWalker
 
 
-class ClassForwardDeclarationVisitor(
-    src.ast_visitors.abstract_tree_walker.AbstractTreeWalker):
+class ClassVisitor(AbstractTreeWalker):
     def __init__(self):
         super().__init__()
         self._classes = []

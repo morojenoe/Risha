@@ -1,7 +1,7 @@
-import src.ast_visitors.abstract_visitor
+from ..abstract_visitor import AbstractVisitor
 
 
-class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
+class PrintVisitor(AbstractVisitor):
     def __init__(self, output, inc_indentation=2):
         self.output = output
         self.indentation = [0]
@@ -278,8 +278,7 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
             self._pop_indentation()
 
     def visit_function_definition_before(self, function_definition):
-        function_definition.declarator_with_specifiers.accept_print_visitor(
-            self)
+        function_definition.simple_declaration.accept_print_visitor(self)
         self._new_level_indentation()
         function_definition.body.accept_print_visitor(self)
         self._pop_indentation()
@@ -360,18 +359,18 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
         self._print_semicolon()
 
     def visit_simple_declaration_before(self, simple_declaration):
-        if simple_declaration.get_specifiers() is not None:
-            simple_declaration.get_specifiers().accept_print_visitor(self)
-            self.ref_qualifier = simple_declaration.get_specifiers(). \
+        if simple_declaration.specifiers is not None:
+            simple_declaration.specifiers.accept_print_visitor(self)
+            self.ref_qualifier = simple_declaration.specifiers. \
                 is_ref_qualifier_present()
-        if simple_declaration.get_declarators() is not None:
-            if simple_declaration.get_specifiers() is not None:
+        if simple_declaration.declarators is not None:
+            if simple_declaration.declarators is not None:
                 self._print_space()
             self._new_level_indentation(0)
-            simple_declaration.get_declarators().accept_print_visitor(self)
+            simple_declaration.declarators.accept_print_visitor(self)
             self._pop_indentation()
         self.ref_qualifier = False
-        if simple_declaration.need_a_semicolon():
+        if simple_declaration.need_a_semicolon:
             self._print_semicolon()
 
     def visit_operator_function_before(self, operator_function):
@@ -589,4 +588,3 @@ class PrintVisitor(src.ast_visitors.abstract_visitor.AbstractVisitor):
 
     def visit_class_head_after(self, class_head):
         pass
-
