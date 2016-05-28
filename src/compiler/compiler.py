@@ -1,9 +1,7 @@
 import argparse
 
 import src.grammar.grammar
-import src.ast_visitors.pretty_printer.print_visitor as print_visitor
-import src.ast_visitors.class_forward_declaration_printer as cls_forward_decl
-import src.ast_visitors.tools.classes as tools_classes
+import src.ast_visitors
 
 
 def parse_args():
@@ -49,16 +47,22 @@ def write_includes(output_file):
 
 def write_forward_class_declarations(ast, cpp_file):
     write_comments('class declarations', cpp_file)
-    visitor = cls_forward_decl.ClassForwardDeclarationVisitor()
-    ast.accept_before_after(visitor)
-    printer = print_visitor.PrintVisitor(cpp_file)
-    class_declarations = tools_classes.make_class_declarations(
-        visitor.get_classes())
-    class_declarations.accept_print_visitor(printer)
+    class_visitor = src.ast_visitors.ClassVisitor()
+    ast.accept_before_after(class_visitor)
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
+    class_declarations = src.ast_visitors.make_class_declarations(
+        class_visitor.get_classes())
+    class_declarations.accept_print_visitor(print_visitor)
 
 
 def write_function_declarations(ast, cpp_file):
-    pass
+    write_comments('function declarations', cpp_file)
+    function_visitor = src.ast_visitors.FunctionVisitor()
+    ast.accept_before_after(function_visitor)
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
+    function_declarations = src.ast_visitors.make_function_declarations(
+        function_visitor.get_functions())
+    function_declarations.accept_print_visitor(print_visitor)
 
 
 def write_class_declaration(ast, cpp_file):
@@ -78,7 +82,7 @@ def write_class_definitions(ast, cpp_file):
 
 
 def write_solution(ast, cpp_file):
-    visitor = print_visitor.PrintVisitor(cpp_file)
+    visitor = src.ast_visitors.PrintVisitor(cpp_file)
     ast.accept_print_visitor(visitor)
 
 
