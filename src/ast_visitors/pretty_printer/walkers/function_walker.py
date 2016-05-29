@@ -1,4 +1,4 @@
-from src.ast_visitors.pretty_printer.walkers.abstract_tree_walker import AbstractTreeWalker
+from .abstract_tree_walker import AbstractTreeWalker
 
 
 class FunctionWalker(AbstractTreeWalker):

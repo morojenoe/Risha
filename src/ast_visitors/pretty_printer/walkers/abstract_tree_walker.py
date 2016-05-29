@@ -1,4 +1,4 @@
-from src.ast_visitors.abstract_visitor import AbstractVisitor
+from src.ast_visitors import AbstractVisitor
 
 
 class AbstractTreeWalker(AbstractVisitor):
