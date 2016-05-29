@@ -47,7 +47,7 @@ def write_includes(output_file):
 
 def write_forward_class_declarations(ast, cpp_file):
     write_comments('class declarations', cpp_file)
-    class_visitor = src.ast_visitors.ClassVisitor()
+    class_visitor = src.ast_visitors.ClassWalker()
     ast.accept_before_after(class_visitor)
     print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     class_declarations = src.ast_visitors.make_class_declarations(
@@ -57,7 +57,7 @@ def write_forward_class_declarations(ast, cpp_file):
 
 def write_function_declarations(ast, cpp_file):
     write_comments('function declarations', cpp_file)
-    function_visitor = src.ast_visitors.FunctionVisitor()
+    function_visitor = src.ast_visitors.FunctionWalker()
     ast.accept_before_after(function_visitor)
     print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     function_declarations = src.ast_visitors.make_function_declarations(
