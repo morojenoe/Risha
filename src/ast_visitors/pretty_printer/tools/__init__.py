@@ -1,2 +1,2 @@
-from .classes import *
-from .functions import *
+from .classes import make_class_declarations
+from .functions import make_function_declarations, make_function_definitions

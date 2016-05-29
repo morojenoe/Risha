@@ -22,3 +22,7 @@ def make_function_declarations(function_definitions):
         if fun_decl is not None:
             function_declarations.add(fun_decl)
     return function_declarations
+
+
+def make_function_definitions(function_definitions):
+    return src.risha_ast.Program(function_definitions)

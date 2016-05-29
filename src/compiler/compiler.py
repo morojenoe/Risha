@@ -74,7 +74,13 @@ def write_data(ast, cpp_file):
 
 
 def write_function_definitions(ast, cpp_file):
-    pass
+    write_comments('function definitions', cpp_file)
+    function_visitor = src.ast_visitors.FunctionWalker()
+    ast.accept_before_after(function_visitor)
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
+    function_definitions = src.ast_visitors.make_function_definitions(
+        function_visitor.get_functions())
+    function_definitions.accept_print_visitor(print_visitor)
 
 
 def write_class_definitions(ast, cpp_file):
