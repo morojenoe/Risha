@@ -88,8 +88,12 @@ def write_class_definitions(ast, cpp_file):
 
 
 def write_solution(ast, cpp_file):
-    visitor = src.ast_visitors.PrintVisitor(cpp_file)
-    ast.accept_print_visitor(visitor)
+    write_forward_class_declarations(ast, cpp_file)
+    write_function_declarations(ast, cpp_file)
+    write_class_definitions(ast, cpp_file)
+    write_data(ast, cpp_file)
+    write_function_definitions(ast, cpp_file)
+    write_class_definitions(ast, cpp_file)
 
 
 def write_main_function(cpp_file):
@@ -106,12 +110,6 @@ def generate_cpp(ast, output_file):
     with open(output_file, 'w', encoding='utf-8') as cpp_file:
         write_includes(cpp_file)
         cpp_file.write('namespace solution {\n\n')
-        write_forward_class_declarations(ast, cpp_file)
-        write_function_declarations(ast, cpp_file)
-        write_class_definitions(ast, cpp_file)
-        write_data(ast, cpp_file)
-        write_function_definitions(ast, cpp_file)
-        write_class_definitions(ast, cpp_file)
         write_solution(ast, cpp_file)
         cpp_file.write('\n}\n\n')
         write_main_function(cpp_file)
