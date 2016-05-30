@@ -270,7 +270,7 @@ class PrintVisitor(AbstractVisitor):
         self._print(literal.value, True)
 
     def visit_param_decl_before(self, param_declaration):
-        param_declaration.declarator_with_specifiers.accept_print_visitor(self)
+        param_declaration.simple_declaration.accept_print_visitor(self)
         if param_declaration.initializer is not None:
             self._new_level_indentation(0)
             self._print_space()
@@ -360,16 +360,17 @@ class PrintVisitor(AbstractVisitor):
 
     def visit_simple_declaration_before(self, simple_declaration):
         if simple_declaration.specifiers is not None:
-            simple_declaration.specifiers.accept_print_visitor(self)
             self.ref_qualifier = simple_declaration.specifiers. \
                 is_ref_qualifier_present()
-        if simple_declaration.declarators is not None:
+            simple_declaration.specifiers.accept_print_visitor(self)
             if simple_declaration.declarators is not None:
                 self._print_space()
-            self._new_level_indentation(0)
+                self._new_level_indentation(0)
+                simple_declaration.declarators.accept_print_visitor(self)
+                self._pop_indentation()
+            self.ref_qualifier = False
+        else:
             simple_declaration.declarators.accept_print_visitor(self)
-            self._pop_indentation()
-        self.ref_qualifier = False
         if simple_declaration.need_a_semicolon:
             self._print_semicolon()
 
