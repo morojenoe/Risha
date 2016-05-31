@@ -836,23 +836,20 @@ def p_parameter_declaration(p):
                               | decl-specifier-seq
                               | decl-specifier-seq ASSIGNMENT initializer-clause """
     if len(p) == 2:
-        simple_decl = risha_ast.SimpleDeclaration(p[1], None, False)
-        p[0] = risha_ast.ParameterDeclaration(simple_decl, None)
+        p[0] = risha_ast.SimpleDeclaration(p[1], None, False)
     elif len(p) == 3:
-        simple_decl = risha_ast.SimpleDeclaration(p[1], p[2], False)
-        p[0] = risha_ast.ParameterDeclaration(simple_decl, None)
+        p[0] = risha_ast.SimpleDeclaration(p[1], p[2], False)
     elif len(p) == 4:
-        simple_decl = risha_ast.SimpleDeclaration(p[1], None, False)
-        initializer = risha_ast.EqualInitializer(p[3])
-        p[0] = risha_ast.ParameterDeclaration(simple_decl, initializer)
+        p[0] = risha_ast.SimpleDeclaration(p[1],
+                                           risha_ast.EqualInitializer(p[3]),
+                                           False)
 
 
 def p_parameter_declaration_with_initializer(p):
     """ parameter-declaration : decl-specifier-seq declarator ASSIGNMENT initializer-clause
                               | decl-specifier-seq abstract-declarator ASSIGNMENT initializer-clause """
-    simple_decl = risha_ast.SimpleDeclaration(p[1], p[2], False)
-    initializer = risha_ast.EqualInitializer(p[4])
-    p[0] = risha_ast.ParameterDeclaration(simple_decl, initializer)
+    specifier = risha_ast.InitDeclarator(p[2], risha_ast.EqualInitializer(p[4]))
+    p[0] = risha_ast.SimpleDeclaration(p[1], specifier, False)
 
 
 def p_function_definition(p):

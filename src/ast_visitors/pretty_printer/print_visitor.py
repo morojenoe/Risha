@@ -270,14 +270,6 @@ class PrintVisitor(AbstractVisitor):
     def visit_literal_before(self, literal):
         self._print(literal.value, True)
 
-    def visit_param_decl_before(self, param_declaration):
-        param_declaration.simple_declaration.accept_print_visitor(self)
-        if param_declaration.initializer is not None:
-            self._new_level_indentation(0)
-            self._print_spaces()
-            param_declaration.initializer.accept_print_visitor(self)
-            self._pop_indentation()
-
     def visit_function_definition_before(self, function_definition):
         function_definition.simple_declaration.accept_print_visitor(self)
         self._new_level_indentation()
@@ -585,9 +577,5 @@ class PrintVisitor(AbstractVisitor):
     def visit_init_declarator_after(self, init_declarator):
         pass
 
-    def visit_param_decl_after(self, param_declaration):
-        pass
-
     def visit_class_head_after(self, class_head):
         pass
-

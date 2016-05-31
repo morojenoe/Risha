@@ -127,10 +127,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_param_decl_before(self, param_declaration):
-        pass
-
-    @abc.abstractclassmethod
     def visit_comma_separated_list_before(self, comma_separated_list):
         pass
 
@@ -328,10 +324,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_function_definition_after(self, function_definition):
-        pass
-
-    @abc.abstractclassmethod
-    def visit_param_decl_after(self, param_declaration):
         pass
 
     @abc.abstractclassmethod
