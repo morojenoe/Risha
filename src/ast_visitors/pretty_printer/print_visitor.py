@@ -271,7 +271,7 @@ class PrintVisitor(AbstractVisitor):
         self._print(literal.value, True)
 
     def visit_function_definition_before(self, function_definition):
-        function_definition.simple_declaration.accept_print_visitor(self)
+        function_definition.function_head.accept_print_visitor(self)
         self._new_level_indentation()
         function_definition.body.accept_print_visitor(self)
         self._pop_indentation()

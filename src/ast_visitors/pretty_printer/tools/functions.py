@@ -9,8 +9,8 @@ def _fun_def2fun_decl(function_definition):
         return None
     function_declaration = \
         src.risha_ast.SimpleDeclaration(
-            function_definition.simple_declaration.specifiers,
-            function_definition.simple_declaration.declarators,
+            function_definition.function_head.specifiers,
+            function_definition.function_head.declarators,
             True)
     return function_declaration
 
