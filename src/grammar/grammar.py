@@ -425,7 +425,7 @@ def p_jump_statement_return(p):
     """ jump-statement : RETURN SEMICOLON
                        | RETURN expression SEMICOLON
                        | RETURN braced-init-list SEMICOLON """
-    if len(p) == 2:
+    if len(p) == 3:
         p[0] = risha_ast.ReturnStatement(None)
     else:
         p[0] = risha_ast.ReturnStatement(p[2])
