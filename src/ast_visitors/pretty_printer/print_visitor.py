@@ -282,17 +282,6 @@ class PrintVisitor(AbstractVisitor):
                 self._print(', ')
             element.accept_print_visitor(self)
 
-    def visit_member_declarator_before(self, member_declarator):
-        if self.ref_qualifier:
-            self._print('&')
-            self._new_level_indentation(0)
-            member_declarator.declarator.accept_print_visitor(self)
-            self._pop_indentation()
-        else:
-            member_declarator.declarator.accept_print_visitor(self)
-        if member_declarator.initializer is not None:
-            member_declarator.initializer.accept_print_visitor(self)
-
     def visit_assignment_expression_before(self, assignment_expression):
         assignment_expression.expression.accept_print_visitor(self)
         self._print_spaces()
@@ -482,9 +471,6 @@ class PrintVisitor(AbstractVisitor):
         pass
 
     def visit_compound_statement_after(self, compound_statement):
-        pass
-
-    def visit_member_declarator_after(self, member_declarator):
         pass
 
     def visit_function_definition_after(self, function_definition):

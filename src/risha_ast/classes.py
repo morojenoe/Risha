@@ -35,21 +35,5 @@ class MemberSpecification(Sequence):
         return self
 
 
-class MemberDeclarator(ASTNode):
-    def __init__(self, declarator, initializer):
-        self.declarator = declarator
-        self.initializer = initializer
-
-    def accept_print_visitor(self, visitor):
-        visitor.visit_member_declarator_before(self)
-
-    def accept_before_after(self, visitor):
-        visitor.visit_member_declarator_before(self)
-        self.declarator.accept_before_after(visitor)
-        if self.initializer is not None:
-            self.initializer.accept_before_after(visitor)
-        visitor.visit_member_declarator_after(self)
-
-
 class MemberDeclaratorList(CommaSeparatedList):
     pass

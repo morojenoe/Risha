@@ -1000,9 +1000,9 @@ def p_member_declarator(p):
     """ member-declarator : declarator
                           | declarator brace-or-equal-initializer """
     if len(p) == 2:
-        p[0] = risha_ast.MemberDeclarator(p[1], None)
+        p[0] = risha_ast.InitDeclarator(p[1], None)
     else:
-        p[0] = risha_ast.MemberDeclarator(p[1], p[2])
+        p[0] = risha_ast.InitDeclarator(p[1], p[2])
 
 
 """

@@ -131,10 +131,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_member_declarator_before(self, member_declarator):
-        pass
-
-    @abc.abstractclassmethod
     def visit_assignment_expression_before(self, assignment_expression):
         pass
 
@@ -324,10 +320,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_comma_separated_list_after(self, comma_separated_list):
-        pass
-
-    @abc.abstractclassmethod
-    def visit_member_declarator_after(self, member_declarator):
         pass
 
     @abc.abstractclassmethod
