@@ -1,4 +1,5 @@
-from .risha_ast import ASTNode, Sequence, CommaSeparatedList
+from .risha_ast import ASTNode, CommaSeparatedList
+from .sequence import Sequence
 
 
 class ClassHead(ASTNode):

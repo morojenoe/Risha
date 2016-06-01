@@ -7,3 +7,4 @@ from .statements import *
 from .literals import *
 from .templates import *
 from .program import *
+from .sequence import *

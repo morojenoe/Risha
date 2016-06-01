@@ -1,4 +1,4 @@
-from . import ASTNode
+from .risha_ast import ASTNode
 
 
 class Program(ASTNode):

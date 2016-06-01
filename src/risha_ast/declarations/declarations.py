@@ -1,4 +1,5 @@
-from ..risha_ast import ASTNode, Sequence
+from ..risha_ast import ASTNode
+from ..sequence import Sequence
 
 
 class DeclSpecifierSeq(Sequence):
