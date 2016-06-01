@@ -183,10 +183,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
         pass
 
     @abc.abstractclassmethod
-    def visit_member_declaration_before(self, member_declaration):
-        pass
-
-    @abc.abstractclassmethod
     def visit_simple_template_before(self, simple_template):
         pass
 
@@ -380,10 +376,6 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
 
     @abc.abstractclassmethod
     def visit_condition_with_declaration_after(self, condition_with_decl):
-        pass
-
-    @abc.abstractclassmethod
-    def visit_member_declaration_after(self, member_declaration):
         pass
 
     @abc.abstractclassmethod

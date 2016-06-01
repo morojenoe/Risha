@@ -386,21 +386,6 @@ class PrintVisitor(AbstractVisitor):
         condition_with_decl.initializer.accept_print_visitor(self)
         self._pop_indentation()
 
-    def visit_member_declaration_before(self, member_declaration):
-        if member_declaration.specifiers is not None:
-            member_declaration.specifiers.accept_print_visitor(self)
-            self.ref_qualifier = member_declaration.specifiers. \
-                is_ref_qualifier_present()
-            if member_declaration.declarator_list is not None:
-                self._print_spaces()
-                self._new_level_indentation(0)
-                member_declaration.declarator_list.accept_print_visitor(self)
-                self._pop_indentation()
-            self.ref_qualifier = False
-        elif member_declaration.declarator_list is not None:
-            member_declaration.declarator_list.accept_print_visitor(self)
-        self._print_semicolon()
-
     def visit_simple_template_before(self, simple_template):
         simple_template.template_name.accept_print_visitor(self)
         self._print('<')
@@ -467,9 +452,6 @@ class PrintVisitor(AbstractVisitor):
         pass
 
     def visit_simple_type_after(self, simple_type):
-        pass
-
-    def visit_member_declaration_after(self, member_declaration):
         pass
 
     def visit_if_after(self, if_node):

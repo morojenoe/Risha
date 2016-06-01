@@ -53,20 +53,3 @@ class MemberDeclarator(ASTNode):
 
 class MemberDeclaratorList(CommaSeparatedList):
     pass
-
-
-class MemberDeclaration(ASTNode):
-    def __init__(self, specifiers, declarator_list):
-        self.specifiers = specifiers
-        self.declarator_list = declarator_list
-
-    def accept_print_visitor(self, visitor):
-        visitor.visit_member_declaration_before(self)
-
-    def accept_before_after(self, visitor):
-        visitor.visit_member_declaration_before(self)
-        if self.specifiers is not None:
-            self.specifiers.accept_before_after(visitor)
-        if self.declarator_list is not None:
-            self.declarator_list.accept_before_after(visitor)
-        visitor.visit_member_declaration_after(self)
