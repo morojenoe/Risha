@@ -59,7 +59,7 @@ class EnclosedInParenthesis(ASTNode):
 
 class Identifier(ASTNode):
     def __init__(self, identifier):
-        self.identifier = identifier
+        self._identifier = identifier
 
     def accept_print_visitor(self, visitor):
         visitor.visit_identifier_before(self)
@@ -67,6 +67,13 @@ class Identifier(ASTNode):
     def accept_before_after(self, visitor):
         visitor.visit_identifier_before(self)
         visitor.visit_identifier_after(self)
+
+    def as_string(self):
+        return self._identifier
+
+    @property
+    def identifier(self):
+        return self._identifier
 
 
 class OperatorFunction(ASTNode):

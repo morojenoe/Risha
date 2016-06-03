@@ -102,7 +102,7 @@ class PrintVisitor(AbstractVisitor):
         self._print(' {')
         self._print_new_line()
         self._new_level_indentation()
-        class_node.member_specification.accept_print_visitor(self)
+        class_node.members.accept_print_visitor(self)
         self._pop_indentation()
         self._print('}', True)
 
@@ -401,6 +401,12 @@ class PrintVisitor(AbstractVisitor):
         class_head.class_name.accept_print_visitor(self)
         self._pop_indentation()
 
+    def visit_nested_name_specifier_before(self, nested_name_specifier):
+        for it, elem in enumerate(nested_name_specifier.elements):
+            if it > 0:
+                self._print('::')
+            elem.accept_print_visitor(self)
+
     def visit_return_after(self, return_statement):
         pass
 
@@ -546,4 +552,7 @@ class PrintVisitor(AbstractVisitor):
         pass
 
     def visit_class_head_after(self, class_head):
+        pass
+
+    def visit_nested_name_specifier_after(self, nested_name_specifier):
         pass

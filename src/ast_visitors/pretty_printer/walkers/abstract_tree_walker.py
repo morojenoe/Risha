@@ -1,4 +1,4 @@
-from src.ast_visitors import AbstractVisitor
+from ...abstract_visitor import AbstractVisitor
 
 
 class AbstractTreeWalker(AbstractVisitor):
@@ -323,4 +323,10 @@ class AbstractTreeWalker(AbstractVisitor):
         pass
 
     def visit_class_head_after(self, class_head):
+        pass
+
+    def visit_nested_name_specifier_before(self, nested_name_specifier):
+        pass
+
+    def visit_nested_name_specifier_after(self, nested_name_specifier):
         pass

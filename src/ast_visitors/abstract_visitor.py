@@ -393,3 +393,11 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_class_head_after(self, class_head):
         pass
+
+    @abc.abstractclassmethod
+    def visit_nested_name_specifier_before(self, nested_name_specifier):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_nested_name_specifier_after(self, nested_name_specifier):
+        pass

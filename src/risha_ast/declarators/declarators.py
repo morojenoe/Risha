@@ -1,4 +1,4 @@
-from ..risha_ast import ASTNode, CommaSeparatedList
+from ..risha_ast import ASTNode, CommaSeparatedList, Identifier
 
 
 class InitDeclaratorList(CommaSeparatedList):
@@ -23,18 +23,33 @@ class InitDeclarator(ASTNode):
 
 class FunctionDeclarator(ASTNode):
     def __init__(self, function_name, parameters):
-        self.function_name = function_name
-        self.parameters = parameters
+        self._function_name = function_name
+        self._parameters = parameters
 
     def accept_print_visitor(self, visitor):
         visitor.visit_function_declarator_before(self)
 
     def accept_before_after(self, visitor):
         visitor.visit_function_declarator_before(self)
-        if self.function_name is not None:
-            self.function_name.accept_print_visitor(visitor)
-        self.parameters.accept_print_visitor(visitor)
+        if self._function_name is not None:
+            self._function_name.accept_print_visitor(visitor)
+        self._parameters.accept_print_visitor(visitor)
         visitor.visit_function_declarator_after(self)
+
+    @property
+    def function_name(self):
+        return self._function_name
+
+    @property
+    def parameters(self):
+        return self._parameters
+
+    @function_name.setter
+    def function_name(self, value):
+        if isinstance(value, str):
+            self._function_name = Identifier(value)
+        else:
+            self._function_name = value
 
 
 class ArrayDeclarator(ASTNode):

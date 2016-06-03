@@ -8,3 +8,4 @@ from .literals import *
 from .templates import *
 from .program import *
 from .sequence import *
+from .nested_name_specifier import *

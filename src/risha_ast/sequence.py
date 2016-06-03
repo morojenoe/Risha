@@ -1,5 +1,5 @@
-from .risha_ast import ASTNode
 from .declarators.functions import FunctionDefinition
+from .risha_ast import ASTNode
 
 
 class Sequence(ASTNode):
