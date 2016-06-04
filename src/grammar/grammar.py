@@ -855,12 +855,10 @@ def p_parameter_declaration_with_initializer(p):
 def p_function_definition(p):
     """ function-definition : decl-specifier-seq declarator function-body
                             | declarator function-body """
-    if len(p) == 3:
-        simple_decl = risha_ast.SimpleDeclaration(None, p[1], False)
-        p[0] = risha_ast.FunctionDefinition(simple_decl, p[2])
+    if len(p) == 4:
+        p[0] = risha_ast.FunctionDefinition(p[1], p[2], p[3])
     else:
-        simple_decl = risha_ast.SimpleDeclaration(p[1], p[2], False)
-        p[0] = risha_ast.FunctionDefinition(simple_decl, p[3])
+        p[0] = risha_ast.FunctionDefinition(None, p[1], p[2])
 
 
 def p_function_body(p):
@@ -931,7 +929,7 @@ def p_class_specifier(p):
     """ class-specifier : class-head L_CURLY R_CURLY
                         | class-head L_CURLY member-specification R_CURLY """
     if len(p) == 4:
-        p[0] = risha_ast.ClassDefinition(p[1], risha_ast.MemberSpecification())
+        p[0] = risha_ast.ClassDefinition(p[1], risha_ast.MemberSpecifications())
     else:
         p[0] = risha_ast.ClassDefinition(p[1], p[3])
 
@@ -961,7 +959,7 @@ def p_member_specification(p):
     """ member-specification : member-declaration
                              | member-declaration member-specification """
     if len(p) == 2:
-        p[0] = risha_ast.MemberSpecification().add(p[1])
+        p[0] = risha_ast.MemberSpecifications().add(p[1])
     else:
         p[0] = p[2].add(p[1])
 

@@ -1,5 +1,5 @@
 from .risha_ast import ASTNode, CommaSeparatedList
-from .sequence import Sequence
+from .sequence import Sequence, FunctionDefinition
 
 
 class ClassHead(ASTNode):
@@ -40,6 +40,19 @@ class ClassDefinition(ASTNode):
         self._members.accept_before_after(visitor)
         visitor.visit_class_after(self)
 
+    def get_all_functions(self):
+        return self._members.extract_functions()
+
+    def remove_all_functions(self):
+        self._members = MemberSpecifications().add(
+            [member for member in self._members if
+             not isinstance(member, FunctionDefinition)])
+        return self
+
+    def add_members(self, new_members):
+        self._members.add(new_members)
+        return self
+
     @property
     def name_as_string(self):
         return self._class_head.name_as_string
@@ -57,10 +70,8 @@ class ClassDefinition(ASTNode):
         return self._class_head.class_name
 
 
-class MemberSpecification(Sequence):
-    def add(self, element):
-        self.elements.insert(0, element)
-        return self
+class MemberSpecifications(Sequence):
+    pass
 
 
 class MemberDeclaratorList(CommaSeparatedList):

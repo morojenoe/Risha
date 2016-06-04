@@ -12,7 +12,7 @@ class DeclSpecifierSeq(Sequence):
 
     def accept_before_after(self, visitor):
         visitor.visit_decl_specifier_seq_before(self)
-        for decl_specifier in self.elements:
+        for decl_specifier in self._elements:
             if not isinstance(decl_specifier, str):
                 decl_specifier.accept_before_after(visitor)
         visitor.visit_decl_specifier_seq_after(self)

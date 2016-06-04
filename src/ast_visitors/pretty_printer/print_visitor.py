@@ -271,9 +271,15 @@ class PrintVisitor(AbstractVisitor):
         self._print(literal.value, True)
 
     def visit_function_definition_before(self, function_definition):
+        if function_definition.return_type is not None:
+            function_definition.return_type.accept_print_visitor(self)
+            self._print_spaces()
         function_definition.function_head.accept_print_visitor(self)
         self._new_level_indentation()
-        function_definition.body.accept_print_visitor(self)
+        if function_definition.body is not None:
+            function_definition.body.accept_print_visitor(self)
+        else:
+            self._print_semicolon()
         self._pop_indentation()
 
     def visit_comma_separated_list_before(self, comma_separated_list):

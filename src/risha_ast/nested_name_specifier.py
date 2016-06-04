@@ -7,6 +7,6 @@ class NestedNameSpecifier(Sequence):
 
     def accept_before_after(self, visitor):
         visitor.visit_nested_name_specifier_before(self)
-        for element in self.elements:
+        for element in self._elements:
             element.accept_before_after(visitor)
         visitor.visit_nested_name_specifier_after(self)
