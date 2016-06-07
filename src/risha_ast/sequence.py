@@ -5,6 +5,7 @@ from .risha_ast import ASTNode
 class Sequence(ASTNode):
     def __init__(self):
         self._elements = []
+        super().__init__()
 
     def add(self, element):
         if isinstance(element, list):

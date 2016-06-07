@@ -495,7 +495,6 @@ def p_empty_declaration(p):
 
 def p_decl_specifier(p):
     """ decl-specifier : storage-class-specifier
-                       | ref-qualifier
                        | type-specifier
                        | function-specifier
                        | TYPEDEF """
@@ -535,6 +534,7 @@ def p_typedef_name(p):
 
 def p_type_specifier(p):
     """ type-specifier : trailing-type-specifier
+                       | ref-qualifier
                        | class-specifier
                        | enum-specifier """
     p[0] = p[1]

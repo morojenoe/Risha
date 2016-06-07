@@ -13,4 +13,4 @@ def make_function_declarations(function_definitions):
 
 
 def make_function_definitions(function_definitions):
-    return src.risha_ast.Program(function_definitions)
+    return src.risha_ast.Program(list(function_definitions))

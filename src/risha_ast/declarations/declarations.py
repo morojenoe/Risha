@@ -2,11 +2,21 @@ from ..risha_ast import ASTNode
 from ..sequence import Sequence
 
 
-class DeclSpecifierSeq(Sequence):
+class ReferenceQualifier:
     def __init__(self):
-        super().__init__()
-        self.ref_qualifier = False
+        self._reference_qualifier = False
+        print('ReferenceQualifier __init__')
 
+    @property
+    def reference_qualifier(self):
+        return self._reference_qualifier
+
+    @reference_qualifier.setter
+    def reference_qualifier(self, value):
+        self._reference_qualifier = value
+
+
+class DeclSpecifierSeq(Sequence, ReferenceQualifier):
     def accept_print_visitor(self, visitor):
         visitor.visit_decl_specifier_seq_before(self)
 
@@ -17,15 +27,8 @@ class DeclSpecifierSeq(Sequence):
                 decl_specifier.accept_before_after(visitor)
         visitor.visit_decl_specifier_seq_after(self)
 
-    def is_ref_qualifier_present(self):
-        return self.ref_qualifier
 
-    def set_ref_qualifier(self):
-        self.ref_qualifier = True
-        return self
-
-
-class TypeSpecifierSequence(Sequence):
+class TypeSpecifierSequence(Sequence, ReferenceQualifier):
     def accept_print_visitor(self, visitor):
         visitor.visit_type_specifier_sequence_before(self)
 

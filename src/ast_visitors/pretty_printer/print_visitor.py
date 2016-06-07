@@ -44,8 +44,8 @@ class PrintVisitor(AbstractVisitor):
         self._print_indentation(False)
         self._print('}')
 
-    def _print_new_line(self):
-        print('\n', file=self.output, end='')
+    def _print_new_line(self, num=1):
+        print('\n' * num, file=self.output, end='')
 
     def visit_before(self, elem):
         self._print(elem, True)
@@ -194,14 +194,11 @@ class PrintVisitor(AbstractVisitor):
                 self._pop_indentation()
 
     def visit_program_before(self, program):
-        for declaration in program.get_declarations():
+        for declaration in program.elements:
             declaration.accept_print_visitor(self)
-            for _ in range(program.get_new_lines()):
-                self._print_new_line()
+            self._print_new_line(program.number_of_new_lines)
 
     def visit_identifier_before(self, identifier_node):
-        # if self.ref_qualifier:
-        #     self._print_ampersand()
         self._print(identifier_node.identifier, True)
 
     def visit_enum_key_before(self, enum_key):
@@ -348,8 +345,8 @@ class PrintVisitor(AbstractVisitor):
 
     def visit_simple_declaration_before(self, simple_declaration):
         if simple_declaration.specifiers is not None:
-            self.ref_qualifier = simple_declaration.specifiers. \
-                is_ref_qualifier_present()
+            self.ref_qualifier = \
+                simple_declaration.specifiers._reference_qualifier
             simple_declaration.specifiers.accept_print_visitor(self)
             if simple_declaration.declarators is not None:
                 self._print_spaces()

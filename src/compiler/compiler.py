@@ -2,6 +2,7 @@ import argparse
 
 import src.grammar.grammar
 import src.ast_visitors
+import src.risha_ast
 
 
 def parse_args():
@@ -65,6 +66,15 @@ def write_function_declarations(ast, cpp_file):
     function_declarations.accept_print_visitor(print_visitor)
 
 
+def write_alias_declarations(ast, cpp_file):
+    write_comments('alias declarations', cpp_file)
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
+    alias_declarations = src.risha_ast.get_alias_declarations(ast)
+    alias_declarations = src.ast_visitors.make_alias_declarations(
+        list(alias_declarations))
+    alias_declarations.accept_print_visitor(print_visitor)
+
+
 def write_class_declaration(ast, cpp_file):
     write_comments('class declarations', cpp_file)
     class_visitor = src.ast_visitors.ClassWalker()
@@ -102,6 +112,7 @@ def write_class_definitions(ast, cpp_file):
 def write_solution(ast, cpp_file):
     write_forward_class_declarations(ast, cpp_file)
     write_function_declarations(ast, cpp_file)
+    write_alias_declarations(ast, cpp_file)
     write_class_declaration(ast, cpp_file)
     write_data(ast, cpp_file)
     write_function_definitions(ast, cpp_file)
