@@ -5,7 +5,6 @@ from ..sequence import Sequence
 class ReferenceQualifier:
     def __init__(self):
         self._reference_qualifier = False
-        print('ReferenceQualifier __init__')
 
     @property
     def reference_qualifier(self):
