@@ -47,7 +47,7 @@ def write_includes(output_file):
 
 
 def write_forward_class_declarations(ast, cpp_file):
-    write_comments('class declarations', cpp_file)
+    write_comments('forward class declarations', cpp_file)
     class_visitor = src.ast_visitors.ClassWalker()
     ast.accept_before_after(class_visitor)
     print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
@@ -134,7 +134,6 @@ def generate_cpp(ast, output_file):
         write_includes(cpp_file)
         cpp_file.write('namespace solution {\n\n')
         write_solution(ast, cpp_file)
-        # ast.accept_print_visitor(src.ast_visitors.PrintVisitor(cpp_file))
         cpp_file.write('\n} // namespace solution\n\n')
         write_main_function(cpp_file)
 
