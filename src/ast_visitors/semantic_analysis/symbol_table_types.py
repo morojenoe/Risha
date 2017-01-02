@@ -1,7 +1,8 @@
 class Variable:
-    def __init__(self, identifier, variable_type):
+    def __init__(self, identifier, variable_type, default_value):
         self.identifier = identifier
         self.variable_type = variable_type
+        self.has_default_value = default_value
 
     def __str__(self):
         return '{type} {name}'.format(type=self.variable_type,
@@ -37,6 +38,13 @@ class Function:
         self.identifier = identifier
         self.return_type = return_type
         self.parameters = parameters
+
+    def parameters_range(self):
+        default_params = list(filter(lambda i, param: param.has_default_value,
+                                     enumerate(self.parameters)))
+        if len(default_params) == 0:
+            return len(self.parameters), len(self.parameters)
+        return default_params[0][0], len(self.parameters)
 
     def __str__(self):
         result = '{return_type} {identifier}('.format(

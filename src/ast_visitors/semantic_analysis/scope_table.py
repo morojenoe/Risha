@@ -1,4 +1,5 @@
 import warnings
+
 from .symbol_table import SymbolTable
 
 
