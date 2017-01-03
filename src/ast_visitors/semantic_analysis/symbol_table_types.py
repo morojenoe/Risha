@@ -5,6 +5,9 @@ class Variable:
         self.has_default_value = default_value
 
     def __str__(self):
+        if self.has_default_value:
+            return '{type} {name} = default'.format(type=self.variable_type,
+                                                    name=self.identifier)
         return '{type} {name}'.format(type=self.variable_type,
                                       name=self.identifier)
 
@@ -40,7 +43,7 @@ class Function:
         self.parameters = parameters
 
     def parameters_range(self):
-        default_params = list(filter(lambda i, param: param.has_default_value,
+        default_params = list(filter(lambda param: param[1].has_default_value,
                                      enumerate(self.parameters)))
         if len(default_params) == 0:
             return len(self.parameters), len(self.parameters)

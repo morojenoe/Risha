@@ -16,7 +16,7 @@ class SymbolTable:
                           'Old value will be overwritten.'.format(
                 old_id=self._variables[variable.identifier], new_id=variable))
 
-        if not issubclass(variable, Variable):
+        if not issubclass(type(variable), Variable):
             raise TypeError('SymbolTable expects variable of type Variable, '
                             'got {type}'.format(type=type(variable)))
         self._variables[variable.identifier] = variable
@@ -33,8 +33,11 @@ class SymbolTable:
         return self._variables.get(identifier)
 
     def lookup_function(self, function):
-        functions = list(filter(self._is_functions_similar, self._functions[
-            function.identifier]))
+        def similar_functions(func_in_table):
+            return self._is_functions_similar(function, func_in_table)
+
+        functions = list(filter(similar_functions,
+                                self._functions.get(function.identifier, [])))
         if len(functions) == 0:
             return None
         if len(functions) == 1:
@@ -44,7 +47,8 @@ class SymbolTable:
 
     def _is_functions_similar(self, called_func, func_in_table):
         """
-        Return True if func_in_table is suited for calling like called_func.
+        Return True if func_in_table is suited for calling with params
+        called_func, otherwise return False
         """
         if called_func.identifier != func_in_table.identifier:
             return False
