@@ -87,12 +87,11 @@ def write_class_declaration(ast, cpp_file):
 
 def write_data(ast, cpp_file):
     write_comments('global data', cpp_file)
-    class_visitor = src.ast_visitors.ClassWalker()
-    ast.accept_before_after(class_visitor)
-    class_declarations = src.ast_visitors.make_class_declarations(
-        class_visitor.get_classes())
+    data_visitor = src.ast_visitors.DataWalker()
+    ast.accept_before_after(data_visitor)
+    data = src.ast_visitors.make_data(list(data_visitor.get_data()))
     print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
-    class_declarations.accept_print_visitor(print_visitor)
+    data.accept_print_visitor(print_visitor)
 
 
 def write_function_definitions(ast, cpp_file):
