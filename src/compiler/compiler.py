@@ -60,18 +60,18 @@ def write_function_declarations(ast, cpp_file):
     write_comments('function declarations', cpp_file)
     function_visitor = src.ast_visitors.FunctionWalker()
     ast.accept_before_after(function_visitor)
-    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     function_declarations = src.ast_visitors.make_function_declarations(
         function_visitor.get_functions())
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     function_declarations.accept_print_visitor(print_visitor)
 
 
 def write_alias_declarations(ast, cpp_file):
     write_comments('alias declarations', cpp_file)
-    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     alias_declarations = src.risha_ast.get_alias_declarations(ast)
     alias_declarations = src.ast_visitors.make_alias_declarations(
         list(alias_declarations))
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     alias_declarations.accept_print_visitor(print_visitor)
 
 
@@ -79,23 +79,29 @@ def write_class_declaration(ast, cpp_file):
     write_comments('class declarations', cpp_file)
     class_visitor = src.ast_visitors.ClassWalker()
     ast.accept_before_after(class_visitor)
-    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     class_declarations = src.ast_visitors.make_class_declarations(
         class_visitor.get_classes())
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     class_declarations.accept_print_visitor(print_visitor)
 
 
 def write_data(ast, cpp_file):
-    pass
+    write_comments('global data', cpp_file)
+    class_visitor = src.ast_visitors.ClassWalker()
+    ast.accept_before_after(class_visitor)
+    class_declarations = src.ast_visitors.make_class_declarations(
+        class_visitor.get_classes())
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
+    class_declarations.accept_print_visitor(print_visitor)
 
 
 def write_function_definitions(ast, cpp_file):
     write_comments('function definitions', cpp_file)
     function_visitor = src.ast_visitors.FunctionWalker()
     ast.accept_before_after(function_visitor)
-    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     function_definitions = src.ast_visitors.make_function_definitions(
         function_visitor.get_functions())
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     function_definitions.accept_print_visitor(print_visitor)
 
 
@@ -103,9 +109,9 @@ def write_class_definitions(ast, cpp_file):
     write_comments('class definitions', cpp_file)
     class_visitor = src.ast_visitors.ClassWalker()
     ast.accept_before_after(class_visitor)
-    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     class_definitions = src.ast_visitors.make_class_definitions(
         class_visitor.get_classes())
+    print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
     class_definitions.accept_print_visitor(print_visitor)
 
 
