@@ -1,7 +1,7 @@
 from ...abstract_visitor import AbstractVisitor
 
 
-class AbstractTreeWalker(AbstractVisitor):
+class EmptyTreeWalker(AbstractVisitor):
     def __init__(self):
         pass
 

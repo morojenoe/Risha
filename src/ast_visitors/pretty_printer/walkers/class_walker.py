@@ -1,7 +1,8 @@
-from .abstract_tree_walker import AbstractTreeWalker
+from src.ast_visitors.pretty_printer.walkers.empty_tree_walker \
+    import EmptyTreeWalker
 
 
-class ClassWalker(AbstractTreeWalker):
+class ClassWalker(EmptyTreeWalker):
     def __init__(self):
         super().__init__()
         self._classes = []
