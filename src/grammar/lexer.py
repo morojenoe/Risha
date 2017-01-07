@@ -11,7 +11,6 @@ reserved = {
     'return': 'RETURN',
     'using': 'USING',
     'static': 'STATIC',
-    'inline': 'INLINE',
     'enum': 'ENUM',
     'class': 'CLASS',
     'struct': 'STRUCT',

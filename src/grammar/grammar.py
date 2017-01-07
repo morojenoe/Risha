@@ -495,8 +495,7 @@ def p_empty_declaration(p):
 
 def p_decl_specifier(p):
     """ decl-specifier : storage-class-specifier
-                       | type-specifier
-                       | function-specifier """
+                       | type-specifier """
     p[0] = p[1]
 
 
@@ -518,11 +517,6 @@ def p_decl_specifier_seq(p):
 
 def p_storage_class_specifier(p):
     """ storage-class-specifier : STATIC """
-    p[0] = p[1]
-
-
-def p_function_specifier(p):
-    """ function-specifier : INLINE """
     p[0] = p[1]
 
 
