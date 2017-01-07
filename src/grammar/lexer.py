@@ -26,7 +26,6 @@ reserved = {
     'void': 'VOID',
     'auto': 'AUTO',
     'const': 'CONST',
-    'typedef': 'TYPEDEF',
     'operator': 'OPERATOR',
     'ref': 'REF',
 }

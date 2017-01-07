@@ -496,8 +496,7 @@ def p_empty_declaration(p):
 def p_decl_specifier(p):
     """ decl-specifier : storage-class-specifier
                        | type-specifier
-                       | function-specifier
-                       | TYPEDEF """
+                       | function-specifier """
     p[0] = p[1]
 
 
@@ -525,11 +524,6 @@ def p_storage_class_specifier(p):
 def p_function_specifier(p):
     """ function-specifier : INLINE """
     p[0] = p[1]
-
-
-def p_typedef_name(p):
-    """ typedef-name : IDENTIFIER """
-    p[0] = risha_ast.Identifier(p[1])
 
 
 def p_type_specifier(p):
@@ -587,7 +581,6 @@ def p_simple_type_specifier_type_name(p):
 def p_type_name(p):
     """ type-name : class-name
                   | enum-name
-                  | typedef-name
                   | simple-template-id """
     p[0] = p[1]
 
