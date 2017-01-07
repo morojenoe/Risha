@@ -291,8 +291,7 @@ def p_unqualified_id_identifier(p):
 
 
 def p_unqualified_id_operator_function(p):
-    """ unqualified-id : operator-function-id
-                       | template-id """
+    """ unqualified-id : operator-function-id """
     p[0] = p[1]
 
 
@@ -574,8 +573,7 @@ def p_simple_type_specifier_type_name(p):
 
 def p_type_name(p):
     """ type-name : class-name
-                  | enum-name
-                  | simple-template-id """
+                  | enum-name """
     p[0] = p[1]
 
 
@@ -922,13 +920,8 @@ def p_class_specifier(p):
 
 
 def p_class_head(p):
-    """ class-head : class-key class-head-name """
+    """ class-head : class-key class-name """
     p[0] = risha_ast.ClassHead(p[1], p[2])
-
-
-def p_class_head_name(p):
-    """ class-head-name : class-name """
-    p[0] = p[1]
 
 
 def p_class_key(p):
@@ -1032,46 +1025,6 @@ def p_operator(p):
                  | MODULO
                  | LOGICAL_NOT
                  | BITWISE_NOT """
-    p[0] = p[1]
-
-
-"""
-  Templates
-"""
-
-
-def p_simple_template_id(p):
-    """ simple-template-id : template-name LESS template-argument-list GREATER
-                           | template-name LESS GREATER """
-    if len(p) == 4:
-        p[0] = risha_ast.SimpleTemplate(p[1], risha_ast.TemplateArgumentList())
-    else:
-        p[0] = risha_ast.SimpleTemplate(p[1], p[3])
-
-
-def p_template_name(p):
-    """ template-name : IDENTIFIER """
-    p[0] = risha_ast.Identifier(p[1])
-
-
-def p_template_argument_list(p):
-    """ template-argument-list : template-argument-list COMMA template-argument
-                               | template-argument """
-    if len(p) == 2:
-        p[0] = risha_ast.TemplateArgumentList().add(p[1])
-    else:
-        p[0] = p[1].add(p[3])
-
-
-def p_template_argument(p):
-    """ template-argument : constant-expression
-                          | type-id
-                          | id-expression """
-    p[0] = risha_ast.TemplateArgument(p[1])
-
-
-def p_template_id(p):
-    """ template-id : simple-template-id """
     p[0] = p[1]
 
 
