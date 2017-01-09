@@ -32,6 +32,12 @@ class DataWalker(EmptyTreeWalker):
                     self._count_class_enterings == 1):
             self._count_class_enterings = 0
 
+    def visit_alias_declaration_before(self, alias_declaration):
+        self._count_scope_enterings += 1
+
+    def visit_alias_declaration_after(self, alias_declaration):
+        self._count_scope_enterings -= 1
+
     def get_data(self):
         for data in self._data:
             yield data
