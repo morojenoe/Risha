@@ -1,5 +1,4 @@
-from src.ast_visitors.pretty_printer.walkers.empty_tree_walker \
-    import EmptyTreeWalker
+from .empty_tree_walker import EmptyTreeWalker
 
 
 class FunctionWalker(EmptyTreeWalker):
