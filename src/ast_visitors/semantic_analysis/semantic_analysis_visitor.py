@@ -1,10 +1,10 @@
-import src.ast_visitors.abstract_visitor as abstract_visitor
-import src.ast_visitors.semantic_analysis as semantic_analysis
+from .. import AbstractVisitor
+from . import ScopeTable
 
 
-class SemanticAnalysisVisitor(abstract_visitor.AbstractVisitor):
+class SemanticAnalysisVisitor(AbstractVisitor):
     def __init__(self):
-        self.scope_table = semantic_analysis.ScopeTable()
+        self.scope_table = ScopeTable()
 
     def visit_nested_name_specifier_after(self, nested_name_specifier):
         pass
