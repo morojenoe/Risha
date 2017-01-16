@@ -24,6 +24,24 @@ class VariableClassTest(unittest.TestCase):
         var_int_2 = VariableClass('map', 'int', 'unsigned long long')
         self.assertNotEqual(var_int_1, var_int_2)
 
+    def test_nested_equal(self):
+        var_int_1 = VariableClass('map',
+                                  VariableClass('int'),
+                                  VariableClass('long long'))
+        var_int_2 = VariableClass('map',
+                                  VariableClass('int'),
+                                  VariableClass('long long'))
+        self.assertEqual(var_int_1, var_int_2)
+
+    def test_nested_not_equal(self):
+        var_int_1 = VariableClass('map',
+                                  VariableClass('int'),
+                                  VariableClass('long long'))
+        var_int_2 = VariableClass('map',
+                                  VariableClass('int'),
+                                  VariableClass('unsigned long long'))
+        self.assertNotEqual(var_int_1, var_int_2)
+
 
 if __name__ == '__main__':
     unittest.main()
