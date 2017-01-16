@@ -1,8 +1,10 @@
 import argparse
+import logging
 
 import src.grammar.grammar
 import src.ast_visitors
 import src.risha_ast
+import src.ast_visitors.semantic_analysis
 
 
 def parse_args():
@@ -143,6 +145,13 @@ def generate_cpp(ast, output_file):
         write_main_function(cpp_file)
 
 
+def check_errors(ast):
+    semantic_analysis_visitor = \
+        src.ast_visitors.semantic_analysis.SemanticAnalysisVisitor()
+    ast.accept_before_after(semantic_analysis_visitor)
+    return len(semantic_analysis_visitor.get_errors()) == 0
+
+
 def main():
     settings = parse_args()
     input_file = get_input_file_name(settings)
@@ -151,7 +160,9 @@ def main():
     lexer = src.grammar.grammar.lexer
     parser = src.grammar.grammar.parser
     ast = parser.parse(input=source_code, lexer=lexer)
-    generate_cpp(ast, output_file)
+    there_is_no_errors = check_errors(ast)
+    if there_is_no_errors:
+        generate_cpp(ast, output_file)
 
 
 if __name__ == '__main__':

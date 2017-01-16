@@ -14,9 +14,6 @@ class ScopeTable:
         if len(self._symbol_tables) == 0:
             raise IndexError("There is no scope you've entered")
         self._symbol_tables.pop()
-        if len(self._symbol_tables) == 0:
-            warnings.warn('Number of scope enterings is less than '
-                          'number of scope exiting.')
 
     def insert_variable(self, variable):
         if len(self._symbol_tables) == 0:

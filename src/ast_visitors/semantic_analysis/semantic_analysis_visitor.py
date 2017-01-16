@@ -1,10 +1,23 @@
-from .. import AbstractVisitor
-from . import ScopeTable
+from ..abstract_visitor import AbstractVisitor
+from .scope_table import ScopeTable
 
 
 class SemanticAnalysisVisitor(AbstractVisitor):
     def __init__(self):
-        self.scope_table = ScopeTable()
+        self._scope_table = ScopeTable()
+        self._errors = []
+
+    def _enter_new_scope(self):
+        self._scope_table.enter_scope()
+
+    def _exit_scope(self):
+        self._scope_table.exit_scope()
+
+    def _add_error(self, message):
+        self._errors.append(message)
+
+    def get_errors(self):
+        return self._errors
 
     def visit_nested_name_specifier_after(self, nested_name_specifier):
         pass
@@ -55,7 +68,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_definition_before(self, function_definition):
-        pass
+        self._enter_new_scope()
 
     def visit_braced_init_list_after(self, braced_init_list):
         pass
@@ -76,7 +89,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_compound_statement_before(self, compound_statement):
-        pass
+        self._enter_new_scope()
 
     def visit_comma_separated_list_after(self, comma_separated_list):
         pass
@@ -109,7 +122,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_compound_statement_after(self, compound_statement):
-        pass
+        self._exit_scope()
 
     def visit_continue_after(self, continue_statement):
         pass
@@ -136,7 +149,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_definition_after(self, function_definition):
-        pass
+        self._exit_scope()
 
     def visit_enum_key_after(self, enum_key):
         pass
