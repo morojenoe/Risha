@@ -58,3 +58,20 @@ class Function:
             result = result[0: len(result) - 2]
         result += ')'
         return result
+
+
+class VariableIdentifier:
+    def __init__(self, identifier, *template_args):
+        self.identifier = identifier
+        self.template_args = tuple(template_args)
+
+    def __eq__(self, other):
+        return (self.identifier == other.identifier and
+                self.template_args == other.template_args)
+
+    def __ne__(self, other):
+        return (self.identifier != other.identifier or
+                self.template_args != other.template_args)
+
+    def __hash__(self):
+        return hash((self.identifier, self.template_args))
