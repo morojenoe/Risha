@@ -1,5 +1,7 @@
 from ..abstract_visitor import AbstractVisitor
 from .scope_table import ScopeTable
+from .symbol_table_types import *
+from .tools import *
 
 
 class SemanticAnalysisVisitor(AbstractVisitor):
@@ -110,7 +112,9 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_simple_declaration_before(self, simple_declaration):
-        pass
+        variables = make_variables(simple_declaration)
+        for variable in variables:
+            self._scope_table.insert_variable(variable)
 
     def visit_member_access_before(self, class_member_access):
         pass

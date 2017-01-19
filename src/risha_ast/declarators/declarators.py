@@ -87,3 +87,11 @@ class QualifiersAndSpecifiers(ASTNode):
 
 class RefQualifier(QualifiersAndSpecifiers):
     pass
+
+
+class ConstQualifier(QualifiersAndSpecifiers):
+    pass
+
+
+class StorageSpecifier(QualifiersAndSpecifiers):
+    pass

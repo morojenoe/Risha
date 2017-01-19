@@ -98,3 +98,7 @@ class SimpleType(ASTNode):
     def accept_before_after(self, visitor):
         visitor.visit_simple_type_before(self)
         visitor.visit_simple_type_after(self)
+
+    @property
+    def name(self):
+        return self.type_name

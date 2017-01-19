@@ -14,6 +14,9 @@ class ReferenceQualifier:
     def reference_qualifier(self, value):
         self._reference_qualifier = value
 
+    def set_ref_qualifier(self):
+        self.reference_qualifier = True
+
 
 class DeclSpecifierSeq(Sequence, ReferenceQualifier):
     def accept_print_visitor(self, visitor):

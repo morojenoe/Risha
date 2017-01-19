@@ -516,7 +516,7 @@ def p_decl_specifier_seq(p):
 
 def p_storage_class_specifier(p):
     """ storage-class-specifier : STATIC """
-    p[0] = p[1]
+    p[0] = risha_ast.StorageSpecifier(p[1])
 
 
 def p_type_specifier(p):
@@ -721,7 +721,7 @@ def p_parameters_and_qualifiers(p):
 
 def p_cv_qualifier(p):
     """ cv-qualifier : CONST """
-    p[0] = p[1]
+    p[0] = risha_ast.ConstQualifier(p[1])
 
 
 def p_ref_qualifier(p):

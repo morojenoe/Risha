@@ -60,7 +60,7 @@ class Function:
         return result
 
 
-class VariableIdentifier:
+class VariableTypeSpecifier:
     def __init__(self, identifier, *template_args):
         self.identifier = identifier
         self.template_args = tuple(template_args)
