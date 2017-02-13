@@ -42,7 +42,7 @@ class FunctionDeclarator(ASTNode):
 
     @property
     def parameters(self):
-        return self._parameters
+        return self._parameters.expression
 
     @function_name.setter
     def function_name(self, value):

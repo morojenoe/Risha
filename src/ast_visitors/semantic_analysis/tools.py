@@ -4,6 +4,18 @@ from .symbol_table_types import *
 import src.risha_ast
 
 
+def make_function(function_definition):
+    assert isinstance(function_definition, src.risha_ast.FunctionDefinition)
+    identifier = function_definition.name.to_string()
+    return_type = _get_variable_type(
+        src.risha_ast.SimpleDeclaration(function_definition.return_type, None))
+    parameters = []
+    for parameter in function_definition.parameters:
+        variable = make_variables(parameter)
+        parameters.append(variable)
+    return Function(identifier, return_type, parameters)
+
+
 def make_variables(simple_declaration):
     var_type = _get_variable_type(simple_declaration)
     var_identifiers_and_initializers = _get_identifiers_and_initializers(

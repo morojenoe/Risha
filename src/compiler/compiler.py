@@ -149,7 +149,7 @@ def check_errors(ast):
     semantic_analysis_visitor = \
         src.ast_visitors.semantic_analysis.SemanticAnalysisVisitor()
     ast.accept_before_after(semantic_analysis_visitor)
-    return len(semantic_analysis_visitor.get_errors()) == 0
+    return semantic_analysis_visitor.get_errors()
 
 
 def main():
@@ -160,9 +160,13 @@ def main():
     lexer = src.grammar.grammar.lexer
     parser = src.grammar.grammar.parser
     ast = parser.parse(input=source_code, lexer=lexer)
-    there_is_no_errors = check_errors(ast)
-    if there_is_no_errors:
+    errors = check_errors(ast)
+    if len(errors) == 0:
         generate_cpp(ast, output_file)
+    else:
+        for error in errors:
+            logging.getLogger('risha').error(error)
+        logging.getLogger('risha').error('source file was not generated')
 
 
 if __name__ == '__main__':

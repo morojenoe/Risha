@@ -71,6 +71,9 @@ class Identifier(ASTNode):
     def as_string(self):
         return self._identifier
 
+    def to_string(self):
+        return self._identifier
+
     @property
     def identifier(self):
         return self._identifier

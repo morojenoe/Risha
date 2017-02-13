@@ -51,6 +51,10 @@ class FunctionDefinition(ASTNode):
     def name(self, func_name):
         self._function_head.function_name = func_name
 
+    @property
+    def parameters(self):
+        return self._function_head.parameters
+
 
 class ParameterDeclarationList(CommaSeparatedList):
     pass

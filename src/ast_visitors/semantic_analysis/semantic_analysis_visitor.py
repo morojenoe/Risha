@@ -70,6 +70,8 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_definition_before(self, function_definition):
+        function = make_function(function_definition)
+        self._scope_table.insert_function(function)
         self._enter_new_scope()
 
     def visit_braced_init_list_after(self, braced_init_list):
@@ -204,7 +206,10 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_identifier_before(self, identifier_node):
-        pass
+        variable = self._scope_table.lookup_variable(identifier_node.identifier)
+        if variable is None:
+            self._add_error('\'{}\' was not declared in this scope'.format(
+                identifier_node.identifier))
 
     def visit_equal_initializer_after(self, equal_initializer):
         pass
