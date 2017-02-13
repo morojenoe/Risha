@@ -1,5 +1,7 @@
-from .risha_ast import ASTNode, CommaSeparatedList
-from .sequence import Sequence, FunctionDefinition
+from .risha_ast import ASTNode
+from src.risha_ast.comma_separated_list import CommaSeparatedList
+from .sequence import Sequence
+from .declarators.functions import FunctionDefinition
 
 
 class ClassHead(ASTNode):

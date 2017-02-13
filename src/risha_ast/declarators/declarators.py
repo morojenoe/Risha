@@ -1,4 +1,5 @@
-from ..risha_ast import ASTNode, CommaSeparatedList, Identifier
+from ..risha_ast import ASTNode, Identifier
+from ..comma_separated_list import CommaSeparatedList
 
 
 class InitDeclaratorList(CommaSeparatedList):

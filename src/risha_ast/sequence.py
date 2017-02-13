@@ -1,4 +1,3 @@
-from .declarators.functions import FunctionDefinition
 from .risha_ast import ASTNode
 
 
@@ -26,10 +25,6 @@ class Sequence(ASTNode):
     @property
     def elements(self):
         return self._elements
-
-    def extract_functions(self):
-        return filter(lambda elem: isinstance(elem, FunctionDefinition),
-                      self._elements)
 
     def __iter__(self):
         self._index_for_iter = 0

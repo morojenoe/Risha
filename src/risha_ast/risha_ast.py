@@ -11,24 +11,6 @@ class ASTNode(metaclass=abc.ABCMeta):
         pass
 
 
-class CommaSeparatedList(ASTNode):
-    def __init__(self):
-        self.elements = []
-
-    def add(self, element):
-        self.elements.append(element)
-        return self
-
-    def accept_print_visitor(self, visitor):
-        visitor.visit_comma_separated_list_before(self)
-
-    def accept_before_after(self, visitor):
-        visitor.visit_comma_separated_list_before(self)
-        for element in self.elements:
-            element.accept_before_after(visitor)
-        visitor.visit_comma_separated_list_after(self)
-
-
 class AliasDeclaration(ASTNode):
     def __init__(self, identifier, type_id):
         self.identifier = identifier

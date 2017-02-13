@@ -1,4 +1,5 @@
-from .risha_ast import ASTNode, CommaSeparatedList
+from .risha_ast import ASTNode
+from src.risha_ast import CommaSeparatedList
 
 
 class BinaryOperation(ASTNode):
