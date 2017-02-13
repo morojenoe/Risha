@@ -5,14 +5,13 @@ import src.risha_ast
 
 
 def make_function(function_definition):
-    assert isinstance(function_definition, src.risha_ast.FunctionDefinition)
     identifier = function_definition.name.to_string()
     return_type = _get_variable_type(
         src.risha_ast.SimpleDeclaration(function_definition.return_type, None))
     parameters = []
     for parameter in function_definition.parameters:
         variable = make_variables(parameter)
-        parameters.append(variable)
+        parameters.append(variable[0])
     return Function(identifier, return_type, parameters)
 
 
@@ -29,7 +28,7 @@ def make_variables(simple_declaration):
 def _get_variable_type(simple_declaration):
     const_qualifier = None
     storage_qualifier = None
-    ref_qualifier = None
+    ref_qualifier = simple_declaration.specifiers.reference_qualifier
     var_type_specifier = None
     for specifier in simple_declaration.specifiers:
         if isinstance(specifier, src.risha_ast.ConstQualifier):
@@ -40,6 +39,8 @@ def _get_variable_type(simple_declaration):
             ref_qualifier = True
         elif isinstance(specifier, src.risha_ast.StorageSpecifier):
             storage_qualifier = True
+        elif isinstance(specifier, src.risha_ast.Identifier):
+            var_type_specifier = VariableTypeSpecifier(specifier.identifier)
         else:
             logging.getLogger('risha').warning('Unknown specifier:' + specifier)
 
@@ -57,6 +58,8 @@ def _get_identifiers_and_initializers(simple_declaration):
             result.append((declarator.declarator,
                            declarator.initializer.initializer_clause))
         return result
+    elif isinstance(simple_declaration.declarators, src.risha_ast.Identifier):
+        return [(simple_declaration.declarators, None)]
     else:
-        return [(simple_declaration.declarator.declarator,
-                 simple_declaration.declarator.initializer.initializer_clause)]
+        return [(simple_declaration.declarators.declarator,
+                 simple_declaration.declarators.initializer.initializer_clause)]
