@@ -9,6 +9,9 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         self._scope_table = ScopeTable()
         self._scope_table.enter_scope()
         self._errors = []
+        self._state = {
+            'declaration': 0
+        }
 
     def _enter_new_scope(self):
         self._scope_table.enter_scope()
@@ -109,12 +112,13 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_declarator_after(self, function_declarator):
-        pass
+        self._state['declaration'] = 0
 
     def visit_template_argument_after(self, template_argument):
         pass
 
     def visit_simple_declaration_before(self, simple_declaration):
+        self._state['declaration'] = 1
         variables = make_variables(simple_declaration)
         for variable in variables:
             self._scope_table.insert_variable(variable)
@@ -198,7 +202,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_simple_declaration_after(self, simple_declaration):
-        pass
+        self._state['declaration'] = 0
 
     def visit_enum_head_after(self, enum_head):
         pass
@@ -207,11 +211,12 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_identifier_before(self, identifier_node):
-        # variable = self._scope_table.lookup_variable(identifier_node.identifier)
-        # if variable is None:
-        #     self._add_error('\'{}\' was not declared in this scope'.format(
-        #         identifier_node.identifier))
-        pass
+        if self._state['declaration'] == 0:
+            variable = self._scope_table.lookup_variable(
+                identifier_node.identifier)
+            if variable is None:
+                self._add_error('\'{}\' was not declared in this scope'.format(
+                    identifier_node.identifier))
 
     def visit_equal_initializer_after(self, equal_initializer):
         pass
@@ -241,7 +246,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_declarator_before(self, function_declarator):
-        pass
+        self._state['declaration'] = 1
 
     def visit_cast_expression_before(self, cast_expression):
         pass

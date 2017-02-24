@@ -247,7 +247,7 @@ class PrintVisitor(AbstractVisitor):
             self._pop_indentation()
         if function_declarator.function_name is not None:
             function_declarator.function_name.accept_print_visitor(self)
-        function_declarator.parameters.accept_print_visitor(self)
+        function_declarator.parameters_for_printing.accept_print_visitor(self)
 
     def visit_statement_expression_before(self, statement_expression):
         if statement_expression.expression is not None:

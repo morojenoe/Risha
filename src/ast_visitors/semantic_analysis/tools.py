@@ -42,7 +42,8 @@ def _get_variable_type(simple_declaration):
         elif isinstance(specifier, src.risha_ast.Identifier):
             var_type_specifier = VariableTypeSpecifier(specifier.identifier)
         else:
-            logging.getLogger('risha').warning('Unknown specifier:' + specifier)
+            logging.getLogger('risha').warning('Unknown specifier:' +
+                                               repr(specifier))
 
     return VariableType(const_qualifier,
                         storage_qualifier,
@@ -56,7 +57,8 @@ def _get_identifiers_and_initializers(simple_declaration):
         result = []
         for declarator in simple_declaration.declarators.elements:
             result.append((declarator.declarator,
-                           declarator.initializer.initializer_clause))
+                           declarator.initializer.initializer_clause if
+                           declarator.initializer is not None else None))
         return result
     elif isinstance(simple_declaration.declarators, src.risha_ast.Identifier):
         return [(simple_declaration.declarators, None)]
