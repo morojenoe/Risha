@@ -7,6 +7,7 @@ from .tools import *
 class SemanticAnalysisVisitor(AbstractVisitor):
     def __init__(self):
         self._scope_table = ScopeTable()
+        self._scope_table.enter_scope()
         self._errors = []
 
     def _enter_new_scope(self):
@@ -206,10 +207,11 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_identifier_before(self, identifier_node):
-        variable = self._scope_table.lookup_variable(identifier_node.identifier)
-        if variable is None:
-            self._add_error('\'{}\' was not declared in this scope'.format(
-                identifier_node.identifier))
+        # variable = self._scope_table.lookup_variable(identifier_node.identifier)
+        # if variable is None:
+        #     self._add_error('\'{}\' was not declared in this scope'.format(
+        #         identifier_node.identifier))
+        pass
 
     def visit_equal_initializer_after(self, equal_initializer):
         pass

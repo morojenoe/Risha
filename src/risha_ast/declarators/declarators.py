@@ -16,9 +16,9 @@ class InitDeclarator(ASTNode):
 
     def accept_before_after(self, visitor):
         visitor.visit_init_declarator_before(self)
-        self.declarator.accept_print_visitor(visitor)
+        self.declarator.accept_before_after(visitor)
         if self.initializer is not None:
-            self.initializer.accept_print_visitor(visitor)
+            self.initializer.accept_before_after(visitor)
         visitor.visit_init_declarator_after(self)
 
 
@@ -33,8 +33,8 @@ class FunctionDeclarator(ASTNode):
     def accept_before_after(self, visitor):
         visitor.visit_function_declarator_before(self)
         if self._function_name is not None:
-            self._function_name.accept_print_visitor(visitor)
-        self._parameters.accept_print_visitor(visitor)
+            self._function_name.accept_before_after(visitor)
+        self._parameters.accept_before_after(visitor)
         visitor.visit_function_declarator_after(self)
 
     @property
@@ -68,9 +68,9 @@ class ArrayDeclarator(ASTNode):
     def accept_before_after(self, visitor):
         visitor.visit_array_declaration_before(self)
         if self.array_name is not None:
-            self.array_name.accept_print_visitor(visitor)
+            self.array_name.accept_before_after(visitor)
         for parameter in self.parameters:
-            parameter.accept_print_visitor(visitor)
+            parameter.accept_before_after(visitor)
         visitor.visit_array_declaration_after(self)
 
 
