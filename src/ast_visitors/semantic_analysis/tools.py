@@ -43,6 +43,8 @@ def _get_variable_type(simple_declaration):
             var_type_specifier = VariableTypeSpecifier(specifier.identifier)
         elif isinstance(specifier, src.risha_ast.EnumDefinition):
             var_type_specifier = specifier.identifier
+        elif isinstance(specifier, src.risha_ast.ClassDefinition):
+            var_type_specifier = specifier.name_as_string()
         else:
             logging.getLogger('risha').warning('Unknown specifier:' +
                                                repr(specifier))
@@ -54,8 +56,10 @@ def _get_variable_type(simple_declaration):
 
 
 def _get_identifiers_and_initializers(simple_declaration):
-    if isinstance(simple_declaration.declarators,
-                  src.risha_ast.InitDeclaratorList):
+    if (isinstance(simple_declaration.declarators,
+                   src.risha_ast.InitDeclaratorList) or
+            isinstance(simple_declaration.declarators,
+                       src.risha_ast.MemberDeclaratorList)):
         result = []
         for declarator in simple_declaration.declarators.elements:
             identifier = _get_identifier(declarator.declarator)
@@ -67,7 +71,8 @@ def _get_identifiers_and_initializers(simple_declaration):
         return [(identifier, None)]
     else:
         identifier = _get_identifier(simple_declaration.declarators.declarator)
-        initializer = _get_initializer(simple_declaration.declarators.initializer)
+        initializer = _get_initializer(
+            simple_declaration.declarators.initializer)
         return [(identifier, initializer)]
 
 
