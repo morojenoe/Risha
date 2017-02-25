@@ -15,6 +15,10 @@ class EnumDefinition(ASTNode):
         self.enumerators.accept_before_after(visitor)
         visitor.visit_enum_after(self)
 
+    @property
+    def identifier(self):
+        return self.enum_head.identifier
+
 
 class EnumKey(ASTNode):
     def __init__(self, enum_key):
