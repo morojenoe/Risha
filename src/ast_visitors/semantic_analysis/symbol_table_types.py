@@ -1,5 +1,6 @@
 class Variable:
     def __init__(self, identifier, variable_type, default_value):
+        assert isinstance(identifier, str)
         self.identifier = identifier
         self.variable_type = variable_type
         self.has_default_value = default_value

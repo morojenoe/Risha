@@ -56,12 +56,26 @@ def _get_identifiers_and_initializers(simple_declaration):
                   src.risha_ast.InitDeclaratorList):
         result = []
         for declarator in simple_declaration.declarators.elements:
-            result.append((declarator.declarator,
-                           declarator.initializer.initializer_clause if
-                           declarator.initializer is not None else None))
+            identifier = _get_identifier(declarator.declarator)
+            initializer = _get_initializer(declarator.initializer)
+            result.append((identifier, initializer))
         return result
     elif isinstance(simple_declaration.declarators, src.risha_ast.Identifier):
-        return [(simple_declaration.declarators, None)]
+        identifier = _get_identifier(simple_declaration.declarators)
+        return [(identifier, None)]
     else:
-        return [(simple_declaration.declarators.declarator,
-                 simple_declaration.declarators.initializer.initializer_clause)]
+        identifier = _get_identifier(simple_declaration.declarators.declarator)
+        initializer = _get_initializer(simple_declaration.declarators.initializer)
+        return [(identifier, initializer)]
+
+
+def _get_identifier(declarator):
+    assert isinstance(declarator, src.risha_ast.Identifier)
+    return declarator.identifier
+
+
+def _get_initializer(initializer):
+    if initializer is None:
+        return None
+    assert isinstance(initializer, src.risha_ast.EqualInitializer)
+    return initializer.initializer_clause
