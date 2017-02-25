@@ -41,6 +41,8 @@ def _get_variable_type(simple_declaration):
             storage_qualifier = True
         elif isinstance(specifier, src.risha_ast.Identifier):
             var_type_specifier = VariableTypeSpecifier(specifier.identifier)
+        elif isinstance(specifier, src.risha_ast.EnumDefinition):
+            var_type_specifier = specifier.identifier
         else:
             logging.getLogger('risha').warning('Unknown specifier:' +
                                                repr(specifier))

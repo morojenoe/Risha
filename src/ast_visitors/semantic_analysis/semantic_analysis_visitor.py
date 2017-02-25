@@ -119,9 +119,6 @@ class SemanticAnalysisVisitor(AbstractVisitor):
 
     def visit_simple_declaration_before(self, simple_declaration):
         self._state['declaration'] = 1
-        variables = make_variables(simple_declaration)
-        for variable in variables:
-            self._scope_table.insert_variable(variable)
 
     def visit_member_access_before(self, class_member_access):
         pass
@@ -203,6 +200,9 @@ class SemanticAnalysisVisitor(AbstractVisitor):
 
     def visit_simple_declaration_after(self, simple_declaration):
         self._state['declaration'] = 0
+        variables = make_variables(simple_declaration)
+        for variable in variables:
+            self._scope_table.insert_variable(variable)
 
     def visit_enum_head_after(self, enum_head):
         pass
