@@ -1,7 +1,7 @@
-from ..abstract_visitor import AbstractVisitor
 from .scope_table import ScopeTable
-from .symbol_table_types import *
-from .tools import *
+from .tools import make_function, make_variables
+from ..abstract_visitor import AbstractVisitor
+from .analysis_state import IdentifierCheckState
 
 
 class SemanticAnalysisVisitor(AbstractVisitor):
@@ -10,7 +10,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         self._scope_table.enter_scope()
         self._errors = []
         self._state = {
-            'declaration': 0
+            'identifier_check': []
         }
 
     def _enter_new_scope(self):
@@ -112,13 +112,14 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_declarator_after(self, function_declarator):
-        self._state['declaration'] = 0
+        self._state['identifier_check'].pop()
 
     def visit_template_argument_after(self, template_argument):
         pass
 
     def visit_simple_declaration_before(self, simple_declaration):
-        self._state['declaration'] = 1
+        self._state['identifier_check'].append(
+            IdentifierCheckState.NO_NEED_TO_CHECK_IDENTIFIER)
 
     def visit_member_access_before(self, class_member_access):
         pass
@@ -199,19 +200,21 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_simple_declaration_after(self, simple_declaration):
-        self._state['declaration'] = 0
+        self._state['identifier_check'].pop()
         variables = make_variables(simple_declaration)
         for variable in variables:
             self._scope_table.insert_variable(variable)
 
     def visit_enum_head_after(self, enum_head):
-        pass
+        self._state['identifier_check'].pop()
 
     def visit_class_before(self, class_node):
         pass
 
     def visit_identifier_before(self, identifier_node):
-        if self._state['declaration'] == 0:
+        if (len(self._state['identifier_check']) == 0 or
+                    self._state['identifier_check'][-1] ==
+                    IdentifierCheckState.NEED_TO_CHECK_IDENTIFIER):
             variable = self._scope_table.lookup_variable(
                 identifier_node.identifier)
             if variable is None:
@@ -228,7 +231,8 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_enum_head_before(self, enum_head):
-        pass
+        self._state['identifier_check'].append(
+            IdentifierCheckState.NO_NEED_TO_CHECK_IDENTIFIER)
 
     def visit_function_call_before(self, function_call):
         pass
@@ -246,7 +250,8 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_function_declarator_before(self, function_declarator):
-        self._state['declaration'] = 1
+        self._state['identifier_check'].append(
+            IdentifierCheckState.NO_NEED_TO_CHECK_IDENTIFIER)
 
     def visit_cast_expression_before(self, cast_expression):
         pass

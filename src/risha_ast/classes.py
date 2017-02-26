@@ -1,4 +1,5 @@
 from .risha_ast import ASTNode
+from .tools import get_functions
 from src.risha_ast.comma_separated_list import CommaSeparatedList
 from .sequence import Sequence
 from .declarators.functions import FunctionDefinition
@@ -43,7 +44,7 @@ class ClassDefinition(ASTNode):
         visitor.visit_class_after(self)
 
     def get_all_functions(self):
-        return self._members.extract_functions()
+        return get_functions(self._members)
 
     def remove_all_functions(self):
         self._members = MemberSpecifications().add(
