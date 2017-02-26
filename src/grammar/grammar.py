@@ -646,7 +646,7 @@ def p_enumerator_definition(p):
     if len(p) == 2:
         p[0] = risha_ast.enums.Enumerator(p[1], None)
     else:
-        p[0] = risha_ast.enums.Enumerator(p[1], p[3])
+        p[0] = risha_ast.enums.Enumerator(p[1], risha_ast.IdentifierCheck(p[3]))
 
 
 def p_enumerator(p):

@@ -559,3 +559,9 @@ class PrintVisitor(AbstractVisitor):
 
     def visit_nested_name_specifier_after(self, nested_name_specifier):
         pass
+
+    def visit_identifier_check_after(self, identifier_check):
+        pass
+
+    def visit_identifier_check_before(self, identifier_check):
+        identifier_check.node.accept_print_visitor(self)

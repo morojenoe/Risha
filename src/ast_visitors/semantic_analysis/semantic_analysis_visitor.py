@@ -339,3 +339,10 @@ class SemanticAnalysisVisitor(AbstractVisitor):
 
     def visit_binary_operation_after(self, binary_operation):
         pass
+
+    def visit_identifier_check_after(self, identifier_check):
+        self._state['identifier_check'].pop()
+
+    def visit_identifier_check_before(self, identifier_check):
+        self._state['identifier_check'].append(
+            IdentifierCheckState.NEED_TO_CHECK_IDENTIFIER)

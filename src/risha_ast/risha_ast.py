@@ -87,3 +87,16 @@ class SimpleType(ASTNode):
     @property
     def name(self):
         return self.type_name
+
+
+class IdentifierCheck(ASTNode):
+    def __init__(self, node):
+        self.node = node
+
+    def accept_print_visitor(self, visitor):
+        visitor.visit_identifier_check_before(self)
+
+    def accept_before_after(self, visitor):
+        visitor.visit_identifier_check_before(self)
+        self.node.accept_before_after(visitor)
+        visitor.visit_identifier_check_after(self)

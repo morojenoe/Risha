@@ -401,3 +401,11 @@ class AbstractVisitor(metaclass=abc.ABCMeta):
     @abc.abstractclassmethod
     def visit_nested_name_specifier_after(self, nested_name_specifier):
         pass
+
+    @abc.abstractclassmethod
+    def visit_identifier_check_before(self, identifier_check):
+        pass
+
+    @abc.abstractclassmethod
+    def visit_identifier_check_after(self, identifier_check):
+        pass
