@@ -61,7 +61,7 @@ class Enumerator(ASTNode):
         self.enumerator.accept_before_after(visitor)
         if self.const_expression is not None:
             self.const_expression.accept_before_after(visitor)
-        visitor.visit_enumerator_before(self)
+        visitor.visit_enumerator_after(self)
 
 
 class EnumeratorList(ASTNode):
