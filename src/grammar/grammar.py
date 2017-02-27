@@ -622,9 +622,7 @@ def p_opaque_enum_declaration(p):
 
 
 def p_enum_key(p):
-    """ enum-key : ENUM
-                 | ENUM CLASS
-                 | ENUM STRUCT """
+    """ enum-key : ENUM """
     if len(p) == 2:
         p[0] = risha_ast.enums.EnumKey(None)
     else:
