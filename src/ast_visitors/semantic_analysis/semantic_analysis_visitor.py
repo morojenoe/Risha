@@ -1,5 +1,5 @@
 from .scope_table import ScopeTable
-from .tools import make_function, make_variables
+from .tools import make_function, make_variables, make_variable_from_enumerator
 from ..abstract_visitor import AbstractVisitor
 from .analysis_state import IdentifierCheckState
 
@@ -32,7 +32,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_enum_before(self, enum_node):
-        pass
+        self._state['enum_name'] = enum_node.identifier
 
     def visit_prefix_unary_after(self, prefix_unary):
         pass
@@ -85,7 +85,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_enum_after(self, enum_node):
-        pass
+        del self._state['enum_name']
 
     def visit_simple_type_after(self, simple_type):
         pass
@@ -293,7 +293,9 @@ class SemanticAnalysisVisitor(AbstractVisitor):
         pass
 
     def visit_enumerator_after(self, enumerator):
-        pass
+        variable = make_variable_from_enumerator(enumerator,
+                                                 self._state['enum_name'])
+        self._scope_table.insert_variable(variable)
 
     def visit_break_before(self, break_statement):
         pass

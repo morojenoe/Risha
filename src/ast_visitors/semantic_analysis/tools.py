@@ -25,6 +25,16 @@ def make_variables(simple_declaration):
     return variables
 
 
+def make_variable_from_enumerator(enumerator: src.risha_ast.Enumerator,
+                                  enum_name):
+    var_type_specifier = VariableTypeSpecifier(enum_name)
+    var_type = VariableType(cv_qualifier=True,
+                            storage_qualifier=False,
+                            reference_qualifier=False,
+                            var_type=var_type_specifier)
+    return Variable(enumerator.enumerator.identifier, var_type, True)
+
+
 def _get_variable_type(simple_declaration):
     const_qualifier = None
     storage_qualifier = None
