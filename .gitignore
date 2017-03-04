@@ -9,5 +9,8 @@
 __pycache__/
 *.py[cod]
 
+# python3.6 virtual environment
+venv/
+
 parser.out
 parsetab.py
