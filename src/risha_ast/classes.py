@@ -6,7 +6,8 @@ from .declarators.functions import FunctionDefinition
 
 
 class ClassHead(ASTNode):
-    def __init__(self, class_key, class_name):
+    def __init__(self, class_key, class_name, row, col):
+        super().__init__(row, col)
         self._class_key = class_key
         self._class_name = class_name
 
@@ -30,7 +31,8 @@ class ClassHead(ASTNode):
 
 
 class ClassDefinition(ASTNode):
-    def __init__(self, class_head, member_specification):
+    def __init__(self, class_head, member_specification, row, col):
+        super().__init__(row, col)
         self._class_head = class_head
         self._members = member_specification
 

@@ -2,8 +2,8 @@ from .sequence import Sequence
 
 
 class Program(Sequence):
-    def __init__(self, declarations=None, num_new_lines_after_decl=2):
-        super().__init__()
+    def __init__(self, row, col, declarations=None, num_new_lines_after_decl=2):
+        super().__init__(row, col)
         if declarations is not None:
             self.add(declarations)
         self._num_new_lines = num_new_lines_after_decl

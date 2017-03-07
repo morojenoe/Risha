@@ -40,7 +40,9 @@ class TrailingTypeSpecifierSequence(Sequence):
 
 
 class SimpleDeclaration(ASTNode):
-    def __init__(self, specifiers, declarators, need_a_semicolon=True):
+    def __init__(self, specifiers, declarators, row, col,
+                 need_a_semicolon=True):
+        super().__init__(row, col)
         self._specifiers = specifiers
         self._declarators = declarators
         self._need_a_semicolon = need_a_semicolon
@@ -70,7 +72,8 @@ class SimpleDeclaration(ASTNode):
 
 
 class ConditionWithDeclaration(ASTNode):
-    def __init__(self, declarator_with_specifiers, initializer):
+    def __init__(self, declarator_with_specifiers, initializer, row, col):
+        super().__init__(row, col)
         self.declarator_with_specifiers = declarator_with_specifiers
         self.initializer = initializer
 
@@ -82,3 +85,7 @@ class ConditionWithDeclaration(ASTNode):
         self.declarator_with_specifiers.accept_before_after(visitor)
         self.initializer.accept_before_after(visitor)
         visitor.visit_condition_with_declaration_after(self)
+
+
+class DeclarationSequence(Sequence):
+    pass

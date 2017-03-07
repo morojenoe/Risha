@@ -3,7 +3,9 @@ from .sequence import Sequence
 
 
 class ForLoop(ASTNode):
-    def __init__(self, for_init_statement, condition, expression, statement):
+    def __init__(self, for_init_statement, condition, expression, statement,
+                 row, col):
+        super().__init__(row, col)
         self.for_init_statement = for_init_statement
         self.condition = condition
         self.expression = expression
@@ -28,7 +30,8 @@ class StatementSequence(Sequence):
 
 
 class CompoundStatement(ASTNode):
-    def __init__(self, statements):
+    def __init__(self, statements, row, col):
+        super().__init__(row, col)
         self.statements = statements
 
     def accept_print_visitor(self, visitor):
@@ -42,7 +45,8 @@ class CompoundStatement(ASTNode):
 
 
 class IfStatement(ASTNode):
-    def __init__(self, condition, statement, else_statement):
+    def __init__(self, condition, statement, else_statement, row, col):
+        super().__init__(row, col)
         self.condition = condition
         self.statement = statement
         self.else_statement = else_statement
@@ -60,7 +64,8 @@ class IfStatement(ASTNode):
 
 
 class StatementExpression(ASTNode):
-    def __init__(self, expression):
+    def __init__(self, expression, row, col):
+        super().__init__(row, col)
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
@@ -74,7 +79,8 @@ class StatementExpression(ASTNode):
 
 
 class WhileLoop(ASTNode):
-    def __init__(self, condition, statement):
+    def __init__(self, condition, statement, row, col):
+        super().__init__(row, col)
         self.condition = condition
         self.statement = statement
 
@@ -89,7 +95,8 @@ class WhileLoop(ASTNode):
 
 
 class DoWhileLoop(ASTNode):
-    def __init__(self, statement, expression):
+    def __init__(self, statement, expression, row, col):
+        super().__init__(row, col)
         self.statement = statement
         self.expression = expression
 
@@ -104,7 +111,8 @@ class DoWhileLoop(ASTNode):
 
 
 class RangeForLoop(ASTNode):
-    def __init__(self, declaration, initializer, statement):
+    def __init__(self, declaration, initializer, statement, row, col):
+        super().__init__(row, col)
         self.declaration = declaration
         self.initializer = initializer
         self.statement = statement
@@ -139,7 +147,8 @@ class ContinueStatement(ASTNode):
 
 
 class ReturnStatement(ASTNode):
-    def __init__(self, expression):
+    def __init__(self, expression, row, col):
+        super().__init__(row, col)
         self.expression = expression
 
     def accept_print_visitor(self, visitor):

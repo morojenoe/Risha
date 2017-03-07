@@ -3,7 +3,8 @@ from ..comma_separated_list import CommaSeparatedList
 
 
 class FunctionDefinition(ASTNode):
-    def __init__(self, return_type, function_head, body):
+    def __init__(self, return_type, function_head, body, row, col):
+        super().__init__(row, col)
         self._return_type = return_type
         self._function_head = function_head
         self._body = body

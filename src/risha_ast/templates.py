@@ -7,7 +7,8 @@ class TemplateArgumentList(CommaSeparatedList):
 
 
 class TemplateArgument(ASTNode):
-    def __init__(self, argument):
+    def __init__(self, argument, row, col):
+        super().__init__(row, col)
         self.argument = argument
 
     def accept_print_visitor(self, visitor):
@@ -20,7 +21,8 @@ class TemplateArgument(ASTNode):
 
 
 class SimpleTemplate(ASTNode):
-    def __init__(self, template_name, template_argument_list):
+    def __init__(self, template_name, template_argument_list, row, col):
+        super().__init__(row, col)
         self.template_name = template_name
         self.template_argument_list = template_argument_list
 

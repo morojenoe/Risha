@@ -2,7 +2,8 @@ from ..risha_ast import ASTNode
 
 
 class EnumDefinition(ASTNode):
-    def __init__(self, enum_head, enumerators):
+    def __init__(self, enum_head, enumerators, row, col):
+        super().__init__(row, col)
         self.enum_head = enum_head
         self.enumerators = enumerators if enumerators is not None else []
 
@@ -21,7 +22,8 @@ class EnumDefinition(ASTNode):
 
 
 class EnumKey(ASTNode):
-    def __init__(self, enum_key):
+    def __init__(self, enum_key, row, col):
+        super().__init__(row, col)
         self.enum_key = enum_key
 
     def accept_print_visitor(self, visitor):
@@ -33,7 +35,8 @@ class EnumKey(ASTNode):
 
 
 class EnumHead(ASTNode):
-    def __init__(self, enum_key, identifier):
+    def __init__(self, enum_key, identifier, row, col):
+        super().__init__(row, col)
         self.enum_key = enum_key
         self.identifier = identifier
 
@@ -49,7 +52,8 @@ class EnumHead(ASTNode):
 
 
 class Enumerator(ASTNode):
-    def __init__(self, enumerator, const_expression):
+    def __init__(self, enumerator, const_expression, row, col):
+        super().__init__(row, col)
         self.enumerator = enumerator
         self.const_expression = const_expression
 
@@ -65,7 +69,8 @@ class Enumerator(ASTNode):
 
 
 class EnumeratorList(ASTNode):
-    def __init__(self):
+    def __init__(self, row, col):
+        super().__init__(row, col)
         self.enumerators = []
 
     def add_enumerator(self, enumerator):

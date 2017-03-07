@@ -2,9 +2,9 @@ from .risha_ast import ASTNode
 
 
 class Sequence(ASTNode):
-    def __init__(self):
+    def __init__(self, row, col):
+        super().__init__(row, col)
         self._elements = []
-        super().__init__()
 
     def add(self, element):
         if isinstance(element, list):

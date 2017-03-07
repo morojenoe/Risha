@@ -7,7 +7,8 @@ import src.risha_ast
 def make_function(function_definition):
     identifier = function_definition.name.to_string()
     return_type = _get_variable_type(
-        src.risha_ast.SimpleDeclaration(function_definition.return_type, None))
+        src.risha_ast.SimpleDeclaration(function_definition.return_type,
+                                        None, -1, -1))
     parameters = []
     for parameter in function_definition.parameters:
         variable = make_variables(parameter)

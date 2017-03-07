@@ -5,7 +5,7 @@ from .private_class_helpers import class_def2class_fwd_decl, \
 
 def make_class_forward_declarations(classes):
     class_forward_declarations = src.risha_ast.Program(
-        num_new_lines_after_decl=1)
+        row=-1, col=-1, num_new_lines_after_decl=1)
     for cls in classes:
         class_fwd_decl = class_def2class_fwd_decl(cls)
         if class_fwd_decl is not None:
@@ -14,18 +14,19 @@ def make_class_forward_declarations(classes):
 
 
 def make_class_declarations(classes):
-    class_declarations = src.risha_ast.Program()
+    class_declarations = src.risha_ast.Program(row=-1, col=-1)
     for cls in classes:
         class_decl = class_def2class_decl(cls)
         if class_decl is not None:
             class_decl = src.risha_ast.SimpleDeclaration(
-                src.risha_ast.DeclSpecifierSeq().add(class_decl), None)
+                src.risha_ast.DeclSpecifierSeq(row=-1, col=-1).add(class_decl),
+                None, row=-1, col=-1)
             class_declarations.add(class_decl)
     return class_declarations
 
 
 def make_class_definitions(classes):
-    class_definitions = src.risha_ast.Program()
+    class_definitions = src.risha_ast.Program(row=-1, col=-1)
     for cls in classes:
         fun_definitions = src.risha_ast.get_functions(cls.members)
         for fun_def in fun_definitions:

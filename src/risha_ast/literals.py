@@ -2,7 +2,8 @@ from .risha_ast import ASTNode
 
 
 class Literal(ASTNode):
-    def __init__(self, value):
+    def __init__(self, value, row, col):
+        super().__init__(row, col)
         self.value = value
 
     def accept_print_visitor(self, visitor):

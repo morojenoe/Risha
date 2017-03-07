@@ -7,7 +7,8 @@ class InitDeclaratorList(CommaSeparatedList):
 
 
 class InitDeclarator(ASTNode):
-    def __init__(self, declarator, initializer):
+    def __init__(self, declarator, initializer, row, col):
+        super().__init__(row, col)
         self.declarator = declarator
         self.initializer = initializer
 
@@ -23,7 +24,8 @@ class InitDeclarator(ASTNode):
 
 
 class FunctionDeclarator(ASTNode):
-    def __init__(self, function_name, parameters):
+    def __init__(self, function_name, parameters, row, col):
+        super().__init__(row, col)
         self._function_name = function_name
         self._parameters = parameters
 
@@ -58,7 +60,8 @@ class FunctionDeclarator(ASTNode):
 
 
 class ArrayDeclarator(ASTNode):
-    def __init__(self, array_name):
+    def __init__(self, array_name, row, col):
+        super().__init__(row, col)
         self.array_name = array_name
         self.parameters = []
 
@@ -79,7 +82,8 @@ class ArrayDeclarator(ASTNode):
 
 
 class QualifiersAndSpecifiers(ASTNode):
-    def __init__(self, name):
+    def __init__(self, name, row, col):
+        super().__init__(row, col)
         self.name = name
 
     def accept_print_visitor(self, visitor):

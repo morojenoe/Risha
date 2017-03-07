@@ -7,7 +7,8 @@ class InitializerList(CommaSeparatedList):
 
 
 class BracedInitializerList(ASTNode):
-    def __init__(self, initializer_list):
+    def __init__(self, initializer_list, row, col):
+        super().__init__(row, col)
         self.initializer_list = initializer_list
 
     def accept_print_visitor(self, visitor):
@@ -20,7 +21,8 @@ class BracedInitializerList(ASTNode):
 
 
 class EqualInitializer(ASTNode):
-    def __init__(self, initializer_clause):
+    def __init__(self, initializer_clause, row, col):
+        super().__init__(row, col)
         self.initializer_clause = initializer_clause
 
     def accept_print_visitor(self, visitor):

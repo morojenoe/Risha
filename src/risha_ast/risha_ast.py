@@ -2,6 +2,19 @@ import abc
 
 
 class ASTNode(metaclass=abc.ABCMeta):
+    def __init__(self, row, col):
+        super().__init__()
+        self._row = row
+        self._col = col
+
+    @property
+    def row(self):
+        return self._row
+
+    @property
+    def col(self):
+        return self._col
+
     @abc.abstractclassmethod
     def accept_print_visitor(self, visitor):
         pass
@@ -12,7 +25,8 @@ class ASTNode(metaclass=abc.ABCMeta):
 
 
 class AliasDeclaration(ASTNode):
-    def __init__(self, identifier, type_id):
+    def __init__(self, identifier, type_id, row, col):
+        super().__init__(row, col)
         self.identifier = identifier
         self.type_id = type_id
 
@@ -27,7 +41,8 @@ class AliasDeclaration(ASTNode):
 
 
 class EnclosedInParenthesis(ASTNode):
-    def __init__(self, expression):
+    def __init__(self, expression, row, col):
+        super().__init__(row, col)
         self.expression = expression
 
     def accept_print_visitor(self, visitor):
@@ -40,7 +55,8 @@ class EnclosedInParenthesis(ASTNode):
 
 
 class Identifier(ASTNode):
-    def __init__(self, identifier):
+    def __init__(self, identifier, row, col):
+        super().__init__(row, col)
         self._identifier = identifier
 
     def accept_print_visitor(self, visitor):
@@ -62,7 +78,8 @@ class Identifier(ASTNode):
 
 
 class OperatorFunction(ASTNode):
-    def __init__(self, operator):
+    def __init__(self, operator, row, col):
+        super().__init__(row, col)
         self.operator = operator
 
     def accept_print_visitor(self, visitor):
@@ -74,7 +91,8 @@ class OperatorFunction(ASTNode):
 
 
 class SimpleType(ASTNode):
-    def __init__(self, type_name):
+    def __init__(self, type_name, row, col):
+        super().__init__(row, col)
         self.type_name = type_name
 
     def accept_print_visitor(self, visitor):
@@ -90,7 +108,8 @@ class SimpleType(ASTNode):
 
 
 class IdentifierCheck(ASTNode):
-    def __init__(self, node):
+    def __init__(self, node, row, col):
+        super().__init__(row, col)
         self.node = node
 
     def accept_print_visitor(self, visitor):

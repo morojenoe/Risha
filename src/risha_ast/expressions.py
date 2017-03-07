@@ -3,7 +3,9 @@ from src.risha_ast import CommaSeparatedList
 
 
 class BinaryOperation(ASTNode):
-    def __init__(self, first_expression, operation, second_expression):
+    def __init__(self, first_expression, operation, second_expression, row,
+                 col):
+        super().__init__(row, col)
         self.left_expression = first_expression
         self.operation = operation
         self.right_expression = second_expression
@@ -19,7 +21,9 @@ class BinaryOperation(ASTNode):
 
 
 class TernaryOperation(ASTNode):
-    def __init__(self, logical_expression, true_expression, false_expression):
+    def __init__(self, logical_expression, true_expression, false_expression,
+                 row, col):
+        super().__init__(row, col)
         self.logical_expression = logical_expression
         self.true_expression = true_expression
         self.false_expression = false_expression
@@ -36,7 +40,8 @@ class TernaryOperation(ASTNode):
 
 
 class CastExpression(ASTNode):
-    def __init__(self, cast_expression, new_type):
+    def __init__(self, cast_expression, new_type, row, col):
+        super().__init__(row, col)
         self.cast_expression = cast_expression
         self.new_type = new_type
 
@@ -55,7 +60,8 @@ class Expression(CommaSeparatedList):
 
 
 class PrefixUnaryExpression(ASTNode):
-    def __init__(self, operator, expression):
+    def __init__(self, operator, expression, row, col):
+        super().__init__(row, col)
         self.operator = operator
         self.expression = expression
 
@@ -69,7 +75,8 @@ class PrefixUnaryExpression(ASTNode):
 
 
 class PostfixUnaryExpression(ASTNode):
-    def __init__(self, expression, operator):
+    def __init__(self, expression, operator, row, col):
+        super().__init__(row, col)
         self.expression = expression
         self.operator = operator
 
@@ -83,7 +90,8 @@ class PostfixUnaryExpression(ASTNode):
 
 
 class FunctionCall(ASTNode):
-    def __init__(self, function, parameters):
+    def __init__(self, function, parameters, row, col):
+        super().__init__(row, col)
         self.function = function
         self.parameters = parameters
 
@@ -98,7 +106,8 @@ class FunctionCall(ASTNode):
 
 
 class ArraySubscription(ASTNode):
-    def __init__(self, array_expression, subscript_expression):
+    def __init__(self, array_expression, subscript_expression, row, col):
+        super().__init__(row, col)
         self.array_expression = array_expression
         self.subscript_expression = subscript_expression
 
@@ -113,7 +122,8 @@ class ArraySubscription(ASTNode):
 
 
 class ClassMemberAccess(ASTNode):
-    def __init__(self, object_expression, member_expression):
+    def __init__(self, object_expression, member_expression, row, col):
+        super().__init__(row, col)
         self.object_expression = object_expression
         self.member_expression = member_expression
 
@@ -128,7 +138,8 @@ class ClassMemberAccess(ASTNode):
 
 
 class AssignmentExpression(ASTNode):
-    def __init__(self, expression, operator, initializer):
+    def __init__(self, expression, operator, initializer, row, col):
+        super().__init__(row, col)
         self.expression = expression
         self.operator = operator
         self.initializer = initializer
