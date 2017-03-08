@@ -2,6 +2,7 @@ from .scope_table import ScopeTable
 from .tools import make_function, make_variables, make_variable_from_enumerator
 from ..abstract_visitor import AbstractVisitor
 from .analysis_state import IdentifierCheckState
+from ...compiler.compiler_message import CompilerMessage, MessageType
 
 
 class SemanticAnalysisVisitor(AbstractVisitor):
@@ -19,8 +20,11 @@ class SemanticAnalysisVisitor(AbstractVisitor):
     def _exit_scope(self):
         self._scope_table.exit_scope()
 
-    def _add_error(self, message):
-        self._errors.append(message)
+    def _add_error(self, error_type, message, row, col):
+        self._errors.append(CompilerMessage(msg_type=error_type,
+                                            row=row,
+                                            col=col,
+                                            message=message))
 
     def get_errors(self):
         return self._errors
@@ -218,8 +222,11 @@ class SemanticAnalysisVisitor(AbstractVisitor):
             variable = self._scope_table.lookup_variable(
                 identifier_node.identifier)
             if variable is None:
-                self._add_error('\'{}\' was not declared in this scope'.format(
-                    identifier_node.identifier))
+                self._add_error(MessageType.ERROR,
+                                '\'{}\' was not declared in this '
+                                'scope'.format(identifier_node.identifier),
+                                identifier_node.row,
+                                identifier_node.col)
 
     def visit_equal_initializer_after(self, equal_initializer):
         pass

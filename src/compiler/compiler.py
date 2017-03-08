@@ -1,10 +1,12 @@
 import argparse
 import logging
+import pathlib
 
 import src.grammar.grammar
 import src.ast_visitors
 import src.risha_ast
 import src.ast_visitors.semantic_analysis
+import src.compiler.compiler_message as compiler_message
 
 
 def parse_args():
@@ -13,6 +15,10 @@ def parse_args():
     arg_parser.add_argument('-o', nargs='?', default='a.cpp',
                             help='an output file')
     return vars(arg_parser.parse_args())
+
+
+def get_filename(path):
+    return pathlib.Path(path).name
 
 
 def read_source_code(file):
@@ -152,6 +158,57 @@ def check_errors(ast):
     return semantic_analysis_visitor.get_errors()
 
 
+def print_errors(messages, filename, source_code):
+    def find_column(source, col):
+        last_cr = source.rfind('\n', 0, col)
+        if last_cr < 0:
+            last_cr = 0
+        column = col - last_cr
+        return column
+
+    source_code_by_lines = source_code.splitlines()
+    # print(*source_code_by_lines, sep='\n')
+
+    compiler_messages = {}
+    for msg_type in compiler_message.MessageType:
+        compiler_messages[msg_type] = []
+
+    for message in messages:
+        message.col = find_column(source_code, message.col)
+        compiler_messages[message.type].append(message)
+
+    count_errors = len(compiler_messages[compiler_message.MessageType.ERROR])
+    count_warnings = len(compiler_messages[
+                             compiler_message.MessageType.WARNING])
+    logging.getLogger('risha').error('Found {errors} errors, {warns} '
+                                     'warnings.'.format(errors=count_errors,
+                                                        warns=count_warnings))
+
+    for msg_type in compiler_message.MessageType:
+        for message in compiler_messages[msg_type]:
+            if message.type == compiler_message.MessageType.ERROR:
+                logging.getLogger('risha').error(
+                    '{filename}:{row}:{col}: error: {msg}'.format(
+                        filename=filename,
+                        row=message.row,
+                        col=message.col,
+                        msg=message.message))
+                logging.getLogger('risha').error(
+                    source_code_by_lines[message.row - 1])
+                logging.getLogger('risha').error(' ' * (message.col - 1) + '^')
+            elif message.type == compiler_message.MessageType.WARNING:
+                logging.getLogger('risha').warning(
+                    '{filename}:{row}:{col}: error: {msg}'.format(
+                        filename=filename,
+                        row=message.row,
+                        col=message.col,
+                        msg=message.message))
+                logging.getLogger('risha').warning(
+                    source_code_by_lines[message.row - 1])
+                logging.getLogger('risha').warning(
+                    ' ' * (message.col - 1) + '^')
+
+
 def main():
     settings = parse_args()
     input_file = get_input_file_name(settings)
@@ -164,9 +221,7 @@ def main():
     if len(errors) == 0:
         generate_cpp(ast, output_file)
     else:
-        for error in errors:
-            logging.getLogger('risha').error(error)
-        logging.getLogger('risha').error('source file was not generated')
+        print_errors(errors, get_filename(input_file), source_code)
 
 
 if __name__ == '__main__':

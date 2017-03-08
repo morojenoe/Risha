@@ -2,8 +2,8 @@ import enum
 
 
 class MessageType(enum.Enum):
-    WARNING = 1
-    ERROR = 2
+    ERROR = enum.auto()
+    WARNING = enum.auto()
 
 
 class CompilerMessage:
