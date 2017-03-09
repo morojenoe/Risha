@@ -1,4 +1,5 @@
 from .scope_table import ScopeTable
+from .type_table import TypeTable
 from .tools import make_function, make_variables, make_variable_from_enumerator
 from ..abstract_visitor import AbstractVisitor
 from .analysis_state import IdentifierCheckState
@@ -9,6 +10,7 @@ class SemanticAnalysisVisitor(AbstractVisitor):
     def __init__(self):
         self._scope_table = ScopeTable()
         self._scope_table.enter_scope()
+        self._type_table = TypeTable()
         self._errors = []
         self._state = {
             'identifier_check': []

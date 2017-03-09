@@ -652,8 +652,10 @@ def p_simple_type_specifier(p):
                               | BOOL
                               | SHORT
                               | INT
-                              | SIGNED
-                              | UNSIGNED
+                              | LONG
+                              | USHORT
+                              | UINT
+                              | ULONG
                               | FLOAT
                               | DOUBLE
                               | VOID
