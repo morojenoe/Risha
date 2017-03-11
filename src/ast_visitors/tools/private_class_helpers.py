@@ -11,8 +11,11 @@ def class_def2class_fwd_decl(cls):
                       'risha_ast.ClassDefinition')
         return None
     class_declaration = src.risha_ast.SimpleDeclaration(
-        src.risha_ast.DeclSpecifierSeq().add(cls.class_head),
-        None)
+        specifiers=src.risha_ast.DeclSpecifierSeq(row=cls.row, col=cls.col).add(
+            cls.class_head),
+        declarators=None,
+        row=cls.row,
+        col=cls.col)
     return class_declaration
 
 
@@ -26,7 +29,7 @@ def fun_def2class_fun_def(fun_def, cls):
                       'risha_ast.ClassDefinition')
         return None
     fun = copy.deepcopy(fun_def)
-    fun.name = src.risha_ast.NestedNameSpecifier() \
+    fun.name = src.risha_ast.NestedNameSpecifier(row=-1, col=-1) \
         .add(cls.name) \
         .add(fun_def.name)
     return fun

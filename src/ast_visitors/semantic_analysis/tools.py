@@ -20,6 +20,8 @@ def make_variables(simple_declaration):
     var_type = _get_variable_type(simple_declaration)
     var_identifiers_and_initializers = _get_identifiers_and_initializers(
         simple_declaration)
+    if var_identifiers_and_initializers is None:
+        return []
     variables = [Variable(identifier, var_type, initializer)
                  for identifier, initializer in
                  var_identifiers_and_initializers]
@@ -67,6 +69,8 @@ def _get_variable_type(simple_declaration):
 
 
 def _get_identifiers_and_initializers(simple_declaration):
+    if simple_declaration.declarators is None:
+        return None
     if (isinstance(simple_declaration.declarators,
                    src.risha_ast.InitDeclaratorList) or
             isinstance(simple_declaration.declarators,
@@ -88,7 +92,9 @@ def _get_identifiers_and_initializers(simple_declaration):
 
 
 def _get_identifier(declarator):
-    assert isinstance(declarator, src.risha_ast.Identifier)
+    if (not isinstance(declarator, src.risha_ast.Identifier) and
+            not isinstance(declarator, src.risha_ast.FunctionDeclarator)):
+        assert False
     return declarator.identifier
 
 

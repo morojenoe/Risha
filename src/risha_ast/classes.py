@@ -49,7 +49,7 @@ class ClassDefinition(ASTNode):
         return get_functions(self._members)
 
     def remove_all_functions(self):
-        self._members = MemberSpecifications().add(
+        self._members = MemberSpecifications(row=-1, col=-1).add(
             [member for member in self._members if
              not isinstance(member, FunctionDefinition)])
         return self

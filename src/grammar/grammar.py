@@ -681,21 +681,21 @@ def p_elaborated_type_specifier_enum(p):
     p[0] = risha_ast.enums.EnumHead(enum_key=p[1],
                                     identifier=risha_ast.Identifier(
                                         identifier=p[2],
-                                         row=p.lineno(2),
-                                         col=p.lexpos(2)),
+                                        row=p.lineno(2),
+                                        col=p.lexpos(2)),
                                     row=p[1].row,
                                     col=p[1].col)
 
 
 def p_elaborated_type_specifier_class(p):
-    """ elaborated-type-specifier : class-key IDENTIFIER """
+    """ elaborated-type-specifier : CLASS IDENTIFIER """
     p[0] = risha_ast.ClassHead(class_key=p[1],
                                class_name=risha_ast.Identifier(
                                    identifier=p[2],
                                    row=p.lineno(2),
                                    col=p.lexpos(2)),
-                               row=p[1].row,
-                               col=p[1].col)
+                               row=p.lineno(1),
+                               col=p.lexpos(1))
 
 
 """
@@ -1152,17 +1152,11 @@ def p_class_specifier(p):
 
 
 def p_class_head(p):
-    """ class-head : class-key class-name """
+    """ class-head : CLASS class-name """
     p[0] = risha_ast.ClassHead(class_key=p[1],
                                class_name=p[2],
-                               row=p[1].row,
-                               col=p[1].col)
-
-
-def p_class_key(p):
-    """ class-key : CLASS
-                  | STRUCT """
-    p[0] = p[1]
+                               row=p.lineno(1),
+                               col=p.lexpos(1))
 
 
 """

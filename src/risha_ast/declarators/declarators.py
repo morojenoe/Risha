@@ -44,6 +44,10 @@ class FunctionDeclarator(ASTNode):
         return self._function_name
 
     @property
+    def identifier(self):
+        return self._function_name.identifier
+
+    @property
     def parameters_for_printing(self):
         return self._parameters
 

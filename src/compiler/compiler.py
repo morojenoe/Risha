@@ -167,7 +167,6 @@ def print_errors(messages, filename, source_code):
         return column
 
     source_code_by_lines = source_code.splitlines()
-    # print(*source_code_by_lines, sep='\n')
 
     compiler_messages = {}
     for msg_type in compiler_message.MessageType:

@@ -13,7 +13,6 @@ reserved = {
     'static': 'STATIC',
     'enum': 'ENUM',
     'class': 'CLASS',
-    'struct': 'STRUCT',
     'char': 'CHAR',
     'bool': 'BOOL',
     'short': 'SHORT',
