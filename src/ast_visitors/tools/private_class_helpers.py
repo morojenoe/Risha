@@ -41,6 +41,7 @@ def class_def2class_decl(cls):
                       'risha_ast.ClassDefinition')
         return None
     new_class = copy.deepcopy(cls)
-    cls_fun = new_class.get_all_functions()
+    cls_fun = src.risha_ast.filter_sequence(new_class.members,
+                                            src.risha_ast.FunctionDefinition)
     new_class.remove_all_functions()
     return new_class.add_members([fun_def2fun_decl(fun) for fun in cls_fun])

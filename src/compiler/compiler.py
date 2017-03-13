@@ -7,6 +7,9 @@ import src.ast_visitors
 import src.risha_ast
 import src.ast_visitors.semantic_analysis
 import src.compiler.compiler_message as compiler_message
+import src.ast_visitors.semantic_analysis.scope_table as scope_table_env
+import src.ast_visitors.semantic_analysis.type_table as type_table_env
+import src.ast_visitors.semantic_analysis.tools as semantic_analysis_tools
 
 
 def parse_args():
@@ -76,7 +79,8 @@ def write_function_declarations(ast, cpp_file):
 
 def write_alias_declarations(ast, cpp_file):
     write_comments('alias declarations', cpp_file)
-    alias_declarations = src.risha_ast.get_alias_declarations(ast)
+    alias_declarations = src.risha_ast.filter_sequence(
+        ast, src.risha_ast.AliasDeclaration)
     alias_declarations = src.ast_visitors.make_alias_declarations(
         list(alias_declarations))
     print_visitor = src.ast_visitors.PrintVisitor(cpp_file)
@@ -151,9 +155,48 @@ def generate_cpp(ast, output_file):
         write_main_function(cpp_file)
 
 
+def extract_functions_from_ast(ast):
+    functions = []
+    function_definitions = src.risha_ast.filter_sequence(
+        ast, src.risha_ast.FunctionDefinition)
+    for function_def in function_definitions:
+        functions.append(semantic_analysis_tools.make_function(function_def))
+    return functions
+
+
+def extract_type_from_simple_declaration(simple_declaration, ast_node):
+    if not isinstance(simple_declaration, src.risha_ast.SimpleDeclaration):
+        logging.getLogger('risha').exception('Parameter must be an instance '
+                                             'of risha_ast.SimpleDeclaration ')
+        return None
+    if simple_declaration.specifiers is None:
+        return None
+    for specifier in simple_declaration.specifiers:
+        if isinstance(specifier, ast_node):
+            return specifier
+    return None
+
+
+def extract_types_from_ast(ast, ast_node):
+    new_types = []
+    simple_declarations = src.risha_ast.filter_sequence(
+        ast, src.risha_ast.SimpleDeclaration)
+    for simple_decl in simple_declarations:
+        some_type = extract_type_from_simple_declaration(simple_decl, ast_node)
+        if some_type is not None:
+            new_types.append(some_type)
+    return new_types
+
+
 def check_errors(ast):
+    scope_table = scope_table_env.ScopeTable().enter_scope()
+    type_table = type_table_env.TypeTable()
+    functions = extract_functions_from_ast(ast)
+    classes = extract_types_from_ast(ast, src.risha_ast.ClassDefinition)
+    enums = extract_types_from_ast(ast, src.risha_ast.EnumDefinition)
     semantic_analysis_visitor = \
-        src.ast_visitors.semantic_analysis.SemanticAnalysisVisitor()
+        src.ast_visitors.semantic_analysis.SemanticAnalysisVisitor(
+            scope_table, type_table)
     ast.accept_before_after(semantic_analysis_visitor)
     return semantic_analysis_visitor.get_errors()
 

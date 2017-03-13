@@ -28,7 +28,8 @@ def make_class_declarations(classes):
 def make_class_definitions(classes):
     class_definitions = src.risha_ast.Program(row=-1, col=-1)
     for cls in classes:
-        fun_definitions = src.risha_ast.get_functions(cls.members)
+        fun_definitions = src.risha_ast.filter_sequence(
+            cls.members, src.risha_ast.FunctionDefinition)
         for fun_def in fun_definitions:
             class_definitions.add(fun_def2class_fun_def(fun_def, cls))
     return class_definitions

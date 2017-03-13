@@ -5,7 +5,8 @@ class Program(Sequence):
     def __init__(self, row, col, declarations=None, num_new_lines_after_decl=2):
         super().__init__(row, col)
         if declarations is not None:
-            self.add(declarations)
+            for declaration in declarations:
+                self.add(declaration)
         self._num_new_lines = num_new_lines_after_decl
 
     def accept_print_visitor(self, visitor):
