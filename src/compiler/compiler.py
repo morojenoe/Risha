@@ -194,6 +194,13 @@ def extract_alias_declarations_from_ast(ast):
     return list(alias_declarations)
 
 
+def extract_data_from_ast(ast):
+    simple_declarations = src.risha_ast.filter_sequence(
+        ast, src.risha_ast.SimpleDeclaration)
+
+    return list(simple_declarations)
+
+
 def check_errors(ast):
     scope_table = scope_table_env.ScopeTable().enter_scope()
     type_table = type_table_env.TypeTable()
@@ -201,6 +208,7 @@ def check_errors(ast):
     classes = extract_types_from_ast(ast, src.risha_ast.ClassDefinition)
     enums = extract_types_from_ast(ast, src.risha_ast.EnumDefinition)
     alias_declarations = extract_alias_declarations_from_ast(ast)
+    data = extract_data_from_ast(ast)
     semantic_analysis_visitor = \
         src.ast_visitors.semantic_analysis.SemanticAnalysisVisitor(
             scope_table, type_table)
