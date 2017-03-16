@@ -28,9 +28,8 @@ def make_variables(simple_declaration):
     return variables
 
 
-def make_variable_from_enumerator(enumerator: src.risha_ast.Enumerator,
-                                  enum_name):
-    var_type_specifier = VariableTypeSpecifier(enum_name)
+def make_variable_from_enumerator(enumerator, enum_name):
+    var_type_specifier = VariableTypeSpecifier(enum_name.identifier)
     var_type = VariableType(cv_qualifier=True,
                             storage_qualifier=False,
                             reference_qualifier=False,
@@ -39,8 +38,8 @@ def make_variable_from_enumerator(enumerator: src.risha_ast.Enumerator,
 
 
 def _get_variable_type(simple_declaration):
-    const_qualifier = None
-    storage_qualifier = None
+    const_qualifier = False
+    storage_qualifier = False
     ref_qualifier = simple_declaration.specifiers.reference_qualifier
     var_type_specifier = None
     for specifier in simple_declaration.specifiers:
@@ -61,7 +60,11 @@ def _get_variable_type(simple_declaration):
         else:
             logging.getLogger('risha').warning('Unknown specifier:' +
                                                repr(specifier))
-
+    if var_type_specifier is not None and isinstance(var_type_specifier,
+                                                     src.risha_ast.Identifier):
+        var_type_specifier = var_type_specifier.identifier
+    if isinstance(var_type_specifier, str):
+        var_type_specifier = VariableTypeSpecifier(var_type_specifier)
     return VariableType(const_qualifier,
                         storage_qualifier,
                         ref_qualifier,

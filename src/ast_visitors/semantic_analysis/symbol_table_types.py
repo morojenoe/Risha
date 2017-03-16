@@ -7,8 +7,8 @@ class Variable:
 
     def __str__(self):
         if self.has_default_value:
-            return '{type} {name} = default'.format(type=self.variable_type,
-                                                    name=self.identifier)
+            return '{type} {name} = some value'.format(type=self.variable_type,
+                                                       name=self.identifier)
         return '{type} {name}'.format(type=self.variable_type,
                                       name=self.identifier)
 
@@ -23,15 +23,12 @@ class VariableType:
 
     def __str__(self):
         result = ''
-        if self.storage_qualifier is not None:
-            result += '{storage_qualifier} '.format(
-                storage_qualifier=self.storage_qualifier)
-        if self.cv_qualifier is not None:
-            result += '{cv_qualifier} '.format(
-                cv_qualifier=self.cv_qualifier)
-        if self.reference_qualifier is not None:
-            result += '{ref_qualifier} '.format(
-                ref_qualifier=self.reference_qualifier)
+        if self.storage_qualifier:
+            result += 'static '
+        if self.cv_qualifier:
+            result += 'const '
+        if self.reference_qualifier:
+            result += 'ref '
         if self.var_type is not None:
             result += '{type} '.format(type=self.var_type)
         return result.strip()
@@ -63,6 +60,7 @@ class Function:
 
 class VariableTypeSpecifier:
     def __init__(self, identifier, *template_args):
+        assert isinstance(identifier, str)
         self.identifier = identifier
         self.template_args = tuple(template_args)
 
@@ -76,3 +74,11 @@ class VariableTypeSpecifier:
 
     def __hash__(self):
         return hash((self.identifier, self.template_args))
+
+    def __str__(self):
+        result = self.identifier
+        if self.template_args is not None and len(self.template_args) > 0:
+            result += '<'
+            result += ', '.join(self.template_args)
+            result += '>'
+        return result

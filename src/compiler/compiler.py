@@ -195,10 +195,13 @@ def extract_alias_declarations_from_ast(ast):
 
 
 def extract_data_from_ast(ast):
+    data = []
     simple_declarations = src.risha_ast.filter_sequence(
         ast, src.risha_ast.SimpleDeclaration)
-
-    return list(simple_declarations)
+    for simple_decl in simple_declarations:
+        variables = semantic_analysis_tools.make_variables(simple_decl)
+        data.extend(variables)
+    return data
 
 
 def check_errors(ast):
